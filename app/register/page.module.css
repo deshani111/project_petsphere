@@ -1,0 +1,342 @@
+.registerPage {
+  width: 100%;
+  min-height: 100svh;
+  padding: 20px 4%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(253, 238, 237, 0.88), rgba(255, 255, 255, 0.94) 48%),
+    #fff8f7;
+}
+
+.panelWrap {
+  width: min(1180px, 100%);
+  max-height: calc(100svh - 40px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(330px, 0.9fr) minmax(460px, 1.1fr);
+  gap: 0;
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid #f0ddda;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(87, 52, 48, 0.12);
+}
+
+.infoPanel,
+.formPanel {
+  min-width: 0;
+}
+
+.infoPanel {
+  padding: 28px 34px;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(220px, 1fr);
+  gap: 0;
+  align-content: start;
+  background: #fff8f7;
+  border-right: 1px solid #f0ddda;
+}
+
+.infoPanel .logo {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ad4141;
+  letter-spacing: -0.8px;
+}
+
+.infoPanel h1 {
+  margin: 18px 0 12px;
+  max-width: 430px;
+  font-size: clamp(2rem, 3.4vw, 3.2rem);
+  line-height: 0.98;
+  letter-spacing: -2.4px;
+}
+
+.infoPanel h1 span {
+  color: #ad4141;
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+}
+
+.infoPanel > p {
+  max-width: 410px;
+  margin: 0;
+  color: #706468;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.infoPanel img {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  max-height: 320px;
+  margin-top: 22px;
+  align-self: end;
+  display: block;
+  border-radius: 22px;
+  border: 7px solid #fff;
+  object-fit: cover;
+  object-position: 54% center;
+  box-shadow: 0 18px 38px rgba(122, 88, 79, 0.14);
+}
+
+.formPanel {
+  padding: 30px clamp(26px, 4.4vw, 52px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.formPanel h2 {
+  margin: 0 0 6px;
+  color: #2a2021;
+  font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  line-height: 1;
+  letter-spacing: -1.4px;
+}
+
+.formPanel > p {
+  margin: 0 0 18px;
+  color: #766c6f;
+  line-height: 1.45;
+}
+
+.roleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.roleGrid button {
+  min-height: 82px;
+  border: 1.5px solid #ead6d4;
+  background: #fff;
+  border-radius: 12px;
+  text-align: left;
+  padding: 13px 14px;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.roleGrid button strong {
+  font-size: 1rem;
+}
+
+.roleGrid button span {
+  color: #7f7477;
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.activeRole {
+  border-color: #ad4141 !important;
+  background: #fff3f2 !important;
+  box-shadow: inset 0 0 0 1px rgba(173, 65, 65, 0.08);
+}
+
+.registerForm {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px 14px;
+}
+
+.registerForm label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #4d4044;
+  font-size: 0.82rem;
+}
+
+.registerForm input {
+  width: 100%;
+  height: 43px;
+  border: 1px solid #e8d5d3;
+  border-radius: 10px;
+  padding: 0 14px;
+  background: #fffdfd;
+  font-size: 0.9rem;
+  color: #2a2021;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.registerForm input:focus {
+  border-color: #ad4141;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(173, 65, 65, 0.12);
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.submitBtn {
+  grid-column: 1 / -1;
+  margin-top: 5px;
+  height: 48px;
+  border: 0;
+  border-radius: 11px;
+  background: #ad4141;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(173, 65, 65, 0.2);
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.submitBtn:not(:disabled):hover {
+  background: #9e3638;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 26px rgba(173, 65, 65, 0.22);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.successMessage,
+.errorMessage {
+  margin: 10px 0 0;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.successMessage {
+  color: #1f7a5c;
+}
+
+.errorMessage {
+  color: #b33b3e;
+}
+
+.signInText {
+  margin: 22px 0 0;
+  color: #766c6f;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.signInText a {
+  color: #ad4141;
+  font-weight: 700;
+}
+
+@media (max-width: 1060px) {
+  .registerPage {
+    place-items: start center;
+    overflow: auto;
+  }
+
+  .panelWrap {
+    grid-template-columns: 1fr;
+    max-width: 720px;
+    max-height: none;
+  }
+
+  .infoPanel {
+    border-right: 0;
+    border-bottom: 1px solid #f0ddda;
+  }
+
+  .infoPanel img {
+    height: 300px;
+    min-height: 0;
+    margin-top: 26px;
+  }
+}
+
+@media (min-width: 1061px) and (max-height: 720px) {
+  .registerPage {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .panelWrap {
+    max-height: calc(100svh - 24px);
+  }
+
+  .infoPanel {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .infoPanel h1 {
+    margin-top: 14px;
+    font-size: clamp(1.85rem, 3vw, 2.85rem);
+  }
+
+  .infoPanel img {
+    min-height: 190px;
+    max-height: 275px;
+    margin-top: 16px;
+    object-position: 55% center;
+  }
+
+  .formPanel {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .roleGrid button {
+    min-height: 76px;
+  }
+
+  .registerForm input {
+    height: 40px;
+  }
+
+  .submitBtn {
+    height: 45px;
+  }
+}
+
+@media (max-width: 760px) {
+  .registerPage {
+    padding: 18px 14px 28px;
+    display: block;
+  }
+
+  .panelWrap {
+    border-radius: 20px;
+  }
+
+  .infoPanel {
+    padding: 28px 22px 22px;
+  }
+
+  .infoPanel h1 {
+    letter-spacing: -1.6px;
+  }
+
+  .infoPanel img {
+    height: 230px;
+    border-width: 5px;
+    border-radius: 18px;
+    margin-top: 22px;
+    object-position: 56% center;
+  }
+
+  .formPanel {
+    padding: 30px 20px 28px;
+  }
+
+  .roleGrid,
+  .registerForm {
+    grid-template-columns: 1fr;
+  }
+
+  .roleGrid button {
+    min-height: auto;
+  }
+}

@@ -1,0 +1,33 @@
+.articlePage { background: #fffaf9; color: #2a2021; }
+.blogLink { color: #ad4141 !important; font-weight: 700 !important; }
+.articleHeader { max-width: 980px; margin: 0 auto; padding: 54px 24px 46px; text-align: center; }
+.backLink { display: inline-block; margin-bottom: 27px; color: #ad4141; font-size: 13px; font-weight: 700; }
+.articleLabel { display: inline-block; padding: 7px 14px; border: 1px solid #f1ceca; border-radius: 20px; background: #fff0ee; color: #ad4141; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
+.articleHeader h1 { margin: 18px auto 15px; max-width: 800px; color: #211819; font-size: clamp(42px, 5vw, 70px); line-height: .98; letter-spacing: -3.4px; }
+.articleLead { max-width: 680px; margin: 0 auto 28px; color: #75686a; font-size: 17px; line-height: 1.6; }
+.author { display: inline-flex; align-items: center; gap: 11px; text-align: left; }
+.avatar { display: inline-grid; width: 43px; height: 43px; place-items: center; border-radius: 50%; background: #f4d9ca; color: #8b4b43; font-size: 11px; font-weight: 700; }
+.author strong, .author span { display: block; }
+.author strong { color: #403536; font-size: 13px; }
+.author span { margin-top: 3px; color: #8f7f80; font-size: 11px; }
+.cover { width: min(1320px, 91.5%); height: 540px; margin: 0 auto; overflow: hidden; border-radius: 30px 30px 64px 30px; box-shadow: 0 18px 38px rgba(82,49,45,.16); }
+.cover img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.articleLayout { width: min(960px, 90%); display: grid; grid-template-columns: 200px minmax(0, 700px); justify-content: center; gap: 60px; margin: 0 auto; padding: 76px 0 95px; }
+.contents { position: sticky; top: 30px; align-self: start; display: flex; flex-direction: column; gap: 13px; padding: 20px 17px; border: 1px solid #f0dedb; border-radius: 14px; background: #fff; box-shadow: 0 8px 20px rgba(82,49,45,.05); }
+.contents strong { margin-bottom: 4px; color: #403536; font-size: 12px; text-transform: uppercase; letter-spacing: .7px; }
+.contents a { color: #8b7a7b; font-size: 12px; }
+.contents a:hover { color: #ad4141; }
+.articleBody { min-width: 0; color: #66595a; font-size: 16px; line-height: 1.8; }
+.articleBody > p:first-child { margin-top: 0; color: #403536; font-size: 20px; line-height: 1.6; }
+.articleBody h2 { margin: 50px 0 14px; color: #2a2021; font-size: 31px; line-height: 1.1; letter-spacing: -.9px; }
+.articleBody p { margin: 0 0 19px; }
+.articleBody ul { margin: 0 0 25px; padding-left: 23px; }
+.articleBody li { margin: 8px 0; }
+.tip { margin: 34px 0; padding: 21px 24px; border: 1px solid #f1d5d1; border-left: 4px solid #ad4141; border-radius: 0 14px 14px 0; background: #fff0ee; }
+.tip strong { color: #ad4141; font-size: 13px; }
+.tip p { margin: 6px 0 0; font-size: 14px; }
+.articleEnd { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 52px; padding: 24px 27px; border: 1px solid #f1d5d1; border-radius: 14px; background: #fff0ee; color: #403536; }
+.articleEnd strong { font-size: 15px; }
+.articleEnd a { color: #ad4141; font-size: 13px; font-weight: 700; white-space: nowrap; }
+@media (max-width: 850px) { .cover { width: 88%; height: 450px; margin-right: 6%; margin-left: 6%; } .articleLayout { width: 84%; grid-template-columns: 1fr; gap: 25px; padding-right: 0; padding-left: 0; } .contents { position: static; padding: 0 0 17px; border-top: 2px solid #efd8d5; border-left: 0; } .contents a { display: inline-block; margin-right: 14px; } }
+@media (max-width: 760px) { .articleHeader { padding-top: 35px; } .articleHeader h1 { letter-spacing: -2px; } .cover { width: 88%; height: 340px; border-radius: 18px; } .articleLayout { width: 88%; } .articleBody h2 { font-size: 25px; } .articleEnd { align-items: flex-start; flex-direction: column; } }

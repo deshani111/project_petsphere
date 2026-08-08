@@ -1,0 +1,49 @@
+/* Blog reference layout */
+.activeLink { color: #ad4141 !important; font-weight: 700 !important; }
+.blogPage { background: #fffaf9; }
+.blogIntro { min-height: 300px; display: block; padding: 43px 4% 28px; text-align: center; background: #fffaf9; }
+.blogIntro h1 { margin: 0 0 15px; color: #211819; font-size: clamp(42px, 4.8vw, 64px); letter-spacing: -2.7px; }
+.blogIntro p { max-width: 700px; margin: 0 auto 39px; color: #75686a; font-size: 16px; line-height: 1.45; }
+.featured { display: block; padding: 0 3.1% 54px; }
+.featuredImage { position: relative; height: 580px; overflow: hidden; border-radius: 27px 27px 48px 27px; background: #cba995; box-shadow: 0 13px 25px rgba(82,49,45,.12); }
+.featuredImage { display: block; color: inherit; text-decoration: none; }
+.featuredImage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(19,12,11,.78) 0%, rgba(19,12,11,.1) 62%, transparent 100%); }
+.featuredImage img { width: 100%; height: 100%; display: block; object-fit: cover; filter: saturate(.85) sepia(.08); }
+.featuredOverlay { position: absolute; z-index: 1; right: 32px; bottom: 30px; left: 32px; color: #fff; }
+.featuredTag { display: inline-block; padding: 6px 13px; border-radius: 20px; background: #eb7e83; color: #5f2529; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
+.featuredOverlay h2 { max-width: 760px; margin: 17px 0 12px; font-size: clamp(30px, 3.7vw, 51px); line-height: 1.02; letter-spacing: -1.8px; }
+.featuredOverlay p { max-width: 720px; margin: 0 0 22px; color: #f5ecea; font-size: 16px; line-height: 1.45; }
+.featuredAuthor { display: flex; align-items: center; gap: 12px; }
+.featuredAuthor strong, .cardMeta strong { display: block; font-size: 14px; }
+.featuredAuthor small, .cardMeta small { display: block; margin-top: 3px; color: #e2d3d0; font-size: 11px; }
+.avatar, .avatarSmall { display: inline-grid; place-items: center; border-radius: 50%; background: #f4d9ca; color: #8b4b43; font-size: 11px; font-weight: 700; }
+.avatar { width: 44px; height: 44px; }
+.articleSection { padding: 0 3.1% 70px; background: #fffaf9; }
+.articleGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 25px; }
+.articleCard { overflow: hidden; border: 1px solid #eadedc; border-radius: 24px; background: #fff; box-shadow: 0 5px 12px rgba(82,49,45,.04); }
+.articleImage { position: relative; height: 250px; background: #f0ddd6; }
+.articleImage img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.articleBody { min-height: 252px; padding: 22px 25px 24px; }
+.articleBody h3 { min-height: 52px; margin: 0 0 11px; color: #322728; font-size: 23px; line-height: 1.1; letter-spacing: -.7px; }
+.articleBody p { min-height: 57px; margin: 0 0 25px; color: #75686a; font-size: 14px; line-height: 1.45; }
+.cardMeta { display: flex; align-items: center; gap: 10px; color: #75686a; }
+.cardMeta > span:last-child { flex: 1; }
+.cardMeta strong { color: #403536; font-size: 12px; }
+.cardMeta small { color: #75686a; font-size: 10px; }
+.avatarSmall { width: 34px; height: 34px; font-size: 9px; }
+.pagination { display: flex; justify-content: center; gap: 9px; margin-top: 48px; }
+.pagination button { width: 48px; height: 48px; border: 1px solid #eadedc; border-radius: 12px; background: transparent; color: #75686a; font: inherit; font-size: 16px; }
+.pagination .current { border-color: #ad4141; background: #ad4141; color: #fff; box-shadow: 0 5px 12px rgba(173,65,65,.2); }
+@media (max-width: 900px) { .articleGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .featuredImage { height: 500px; } }
+@media (max-width: 760px) { .blogIntro { padding-right: 6%; padding-left: 6%; } .featured, .articleSection { padding-right: 6%; padding-left: 6%; } .featuredImage { height: 460px; border-radius: 18px; } .featuredOverlay { right: 20px; bottom: 22px; left: 20px; } .featuredOverlay p { font-size: 13px; } .articleGrid { grid-template-columns: 1fr; } }
+
+/* Category-free alignment */
+.blogIntro { min-height: 190px; padding-bottom: 0; }
+.blogIntro p { margin-bottom: 0px; }
+.blogIntro h1 { width: 100%; max-width: none; margin: 0 auto 16px; text-align: center; }
+.blogIntro p { width: min(700px, 100%); margin-right: auto; margin-left: auto; text-align: center; }
+.featured { max-width: 1440px; margin: 0 auto; }
+.articleSection { max-width: 1440px; margin: 0 auto; }
+.articleGrid { align-items: start; }
+.articleCard { height: 505px; }
+.articleBody { height: 255px; }
