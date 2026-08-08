@@ -1,0 +1,43 @@
+.marketplacePage { min-height: 100vh; background: #fffaf9; color: #2a2021; }
+.activeLink { color: #ad4141 !important; font-weight: 700 !important; }
+.marketplaceContent { max-width: 1440px; margin: 0 auto; padding: 35px 3.1% 90px; }
+.filters { padding: 28px; border: 1px solid #e8cbc7; border-radius: 28px; background: #fffafa; box-shadow: 0 3px 8px rgba(82,49,45,.03); }
+.filterHeading { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-bottom: 26px; }
+.filterHeading h1 { margin: 0 0 4px; font-size: 32px; letter-spacing: -1px; }
+.filterHeading p { margin: 0; color: #75686a; font-size: 15px; }
+.sort { display: flex; align-items: center; gap: 15px; color: #75686a; font-size: 15px; }
+.sort strong { color: #ad4141; }
+.sort > span { color: #75686a; font-size: 20px; }
+.sort button { margin-left: 11px; padding: 0; border: 0; background: transparent; color: #ad4141; font: inherit; font-size: 13px; font-weight: 700; }
+.filterFields { display: grid; grid-template-columns: 1.05fr 1.1fr 1.05fr 1.05fr; gap: 24px; }
+.filterFields label { display: block; color: #3d3132; font-size: 14px; font-weight: 700; }
+.filterFields input, .filterFields select { width: 100%; height: 43px; margin-top: 9px; padding: 0 13px; border: 1px solid #e7cbc7; border-radius: 12px; outline: 0; background: #fff; color: #75686a; font: inherit; font-size: 14px; }
+.filterFields select { appearance: auto; }
+.priceFields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.listingGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 30px; }
+.petCard { overflow: hidden; border: 1px solid #e7cbc7; border-radius: 25px; background: #fffafa; }
+.petImage { position: relative; height: 370px; overflow: hidden; background: #f2e4df; }
+.petImage img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.petImage button { position: absolute; top: 17px; right: 17px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: #fff; color: #ad4141; font-size: 29px; line-height: 1; }
+.badge { position: absolute; top: 17px; left: 17px; padding: 6px 12px; border-radius: 20px; background: #087c5b; color: #fff; font-size: 12px; font-weight: 700; }
+.popular { background: #f37c83; color: #7b282d; }
+.petDetails { padding: 22px 24px 24px; }
+.nameRow { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.nameRow h2, .nameRow strong { margin: 0; font-size: 23px; letter-spacing: -.5px; }
+.nameRow strong { color: #ad4141; }
+.petDetails > p { margin: 8px 0 17px; color: #76686a; font-size: 14px; }
+.petDetails > p span { color: #574849; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; min-height: 29px; margin-bottom: 20px; }
+.tags span { padding: 6px 12px; border-radius: 18px; background: #fff0ee; color: #8b6e6b; font-size: 11px; font-weight: 700; }
+.petDetails > a { display: grid; height: 49px; place-items: center; border: 2px solid #b64b4e; border-radius: 12px; color: #b64b4e; font-size: 15px; font-weight: 700; }
+.marketplacePage :global(.site-footer) { grid-template-columns: 2fr 1fr 1fr 1fr 1.35fr; min-height: 330px; margin: 0; padding: 66px 3.1% 28px; background: #fff0ee; border-top: 1px solid #f2ddda; }
+.marketplacePage :global(.site-footer) .footer-brand p { max-width: 290px; margin: 17px 0 28px; font-size: 14px; }
+.marketplacePage :global(.site-footer) .footer-brand small { display: block; margin-top: 74px; font-size: 11px; }
+.marketplacePage :global(.site-footer) .footer-column { gap: 17px; }
+.marketplacePage :global(.site-footer) .footer-column strong { color: #ad4141; font-size: 14px; letter-spacing: .5px; text-transform: uppercase; }
+.marketplacePage :global(.site-footer) .footer-column a, .marketplacePage :global(.site-footer) .footer-contact p { font-size: 13px; }
+.marketplacePage :global(.site-footer) .footer-email { width: 170px; }
+.socials { display: flex; gap: 12px; }
+.socials span { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: #fff; color: #6e5f60; font-size: 14px; }
+@media (max-width: 980px) { .filterFields { grid-template-columns: repeat(2, 1fr); } .listingGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .marketplacePage :global(.site-footer) { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px) { .marketplaceContent { padding-right: 6%; padding-left: 6%; } .filterHeading { align-items: flex-start; flex-direction: column; } .sort { flex-wrap: wrap; } .filterFields, .listingGrid { grid-template-columns: 1fr; } .filters { padding: 20px; } .petImage { height: 330px; } .marketplacePage :global(.site-footer) { grid-template-columns: repeat(2, 1fr); } }
