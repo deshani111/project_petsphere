@@ -1,0 +1,54 @@
+.dashboardShell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  gap: 0;
+  background: #fbf7f4;
+}
+
+.sidebar {
+  padding: 28px 18px;
+  border-right: 1px solid #eadcd4;
+  background: #fff;
+}
+
+.brand {
+  display:flex;
+  gap:10px;
+  align-items:center;
+  font-weight:800;
+  color:#a64b43;
+  margin-bottom:18px;
+}
+
+.sidebarNav { display:grid; gap:8px; margin-top:12px }
+.sidebarLink { display:flex; gap:12px; padding:10px 12px; border-radius:10px; color:#574846; font-weight:700 }
+.sidebarLink.active { background:#a64b43; color:#fff }
+
+.main { padding:28px 34px }
+.topbar { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px }
+.eyebrow { color:#a64b43; font-weight:800; font-size:12px }
+.welcome { font-size:30px; margin:6px 0 }
+.statusPill { display:inline-flex; gap:8px; padding:8px 12px; border-radius:999px; background:#e6f7ee; color:#216f48; border:1px solid rgba(47,155,99,0.18) }
+
+.statsGrid { display:grid; grid-template-columns: repeat(4,1fr); gap:16px; margin:18px 0 }
+.statCard { background:#fff; border:1px solid #f1e3de; padding:16px; border-radius:12px }
+.statCard strong { display:block; margin-top:10px; font-size:20px }
+
+.contentGrid { display:grid; grid-template-columns: 1.9fr 0.95fr; gap:16px }
+.panel { background:#fff; border-radius:12px; padding:16px; border:1px solid #f1e3de }
+
+.requestCard { border-radius:10px; padding:12px; background:#fff; border:1px solid #f4e7e4 }
+.requestTop { display:flex; gap:12px; align-items:center }
+.requestAvatar { width:44px; height:44px; border-radius:8px; background:#f4dfd8; display:grid; place-items:center; font-weight:800 }
+
+.tableWrap { overflow-x:auto; border-radius:10px; margin-top:12px }
+.tableWrap table { width:100%; border-collapse:collapse; background:#fff }
+.tableWrap table thead th { padding:12px 14px; background:#f8e9e4; text-align:left }
+.tableWrap table tbody td { padding:12px 14px; border-top:1px solid #f1e3de }
+
+@media (max-width: 900px) {
+  .dashboardShell { grid-template-columns: 1fr }
+  .statsGrid { grid-template-columns: repeat(2,1fr) }
+  .contentGrid { grid-template-columns: 1fr }
+}
