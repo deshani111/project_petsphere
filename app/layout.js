@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "PetSphere | Trusted Pet Care",
-  description: "Find a trusted pet sitter who treats your pet like family.",
+  title: "PetSphere | Sitter Dashboard",
+  description: "Sitter dashboard for managing bookings, services, earnings, and messages.",
 };
 
 export default function RootLayout({ children }) {
