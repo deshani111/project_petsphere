@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import LayoutShell from "./components/layout-shell";
 
 export const metadata: Metadata = {
-  title: "PetSphere | Owner Dashboard",
-  description: "Manage your pets and bookings with PetSphere.",
+  title: "PetSphere | Trusted Pet Care",
+  description: "Find a trusted pet sitter who treats your pet like family.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -14,7 +15,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body>{children}</body>
+      <body>
+        <LayoutShell>{children}</LayoutShell>
+      </body>
     </html>
   );
 }
