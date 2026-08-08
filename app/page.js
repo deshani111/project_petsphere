@@ -1,221 +1,230 @@
-const PawIcon = ({ size = 20 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M12 13.35c-2.25-3.1-7.2.55-5.06 4.15 1.02 1.7 4.1 1.34 5.06-.64.96 1.98 4.04 2.34 5.06.64 2.14-3.6-2.81-7.25-5.06-4.15Z" fill="currentColor" />
-    <ellipse cx="5.18" cy="8.82" rx="2.08" ry="2.76" transform="rotate(-30 5.18 8.82)" fill="currentColor" />
-    <ellipse cx="9.7" cy="5.9" rx="2.05" ry="2.75" transform="rotate(-8 9.7 5.9)" fill="currentColor" />
-    <ellipse cx="14.3" cy="5.9" rx="2.05" ry="2.75" transform="rotate(8 14.3 5.9)" fill="currentColor" />
-    <ellipse cx="18.82" cy="8.82" rx="2.08" ry="2.76" transform="rotate(30 18.82 8.82)" fill="currentColor" />
+const SearchIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="11" cy="11" r="5.8" stroke="currentColor" strokeWidth="1.8" />
+    <path d="m16 16 3 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
   </svg>
 );
 
-const BellIcon = () => <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 17H9m7-6a4 4 0 1 0-8 0c0 4-2 5-2 5h12s-2-1-2-5Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>;
-const CalendarIcon = () => <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" strokeWidth="1.8" /><path d="M8 3v4M16 3v4M4 9h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>;
-const StarIcon = () => <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 4 2.7 5.46 6.03.88-4.36 4.25 1.03 6.02L12 17.8l-5.4 2.81 1.03-6.02-4.36-4.25 6.03-.88L12 4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg>;
-const WalletIcon = () => <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H20v12.5A1.5 1.5 0 0 1 18.5 19H6.5A2.5 2.5 0 0 1 4 16.5v-9Z" stroke="currentColor" strokeWidth="1.8" /><path d="M15 11h5v4h-5a2 2 0 1 1 0-4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg>;
-const ChartIcon = () => <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19h14M7 17V9m5 8V5m5 12v-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>;
-const MessageIcon = () => <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6h14v9H9l-4 4V6Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg>;
-const SettingsIcon = () => <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm8 3.5-1.7.7a6.8 6.8 0 0 1-.4 1l.9 1.6-1.8 1.8-1.6-.9a6.8 6.8 0 0 1-1 .4L13.5 20h-3l-.7-1.7a6.8 6.8 0 0 1-1-.4l-1.6.9-1.8-1.8.9-1.6a6.8 6.8 0 0 1-.4-1L3 12l1.7-.7a6.8 6.8 0 0 1 .4-1l-.9-1.6 1.8-1.8 1.6.9a6.8 6.8 0 0 1 1-.4L10.5 4h3l.7 1.7a6.8 6.8 0 0 1 1 .4l1.6-.9 1.8 1.8-.9 1.6a6.8 6.8 0 0 1 .4 1L20 12Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg>;
-const PawBadge = () => <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 13.35c-2.25-3.1-7.2.55-5.06 4.15 1.02 1.7 4.1 1.34 5.06-.64.96 1.98 4.04 2.34 5.06.64 2.14-3.6-2.81-7.25-5.06-4.15Z" fill="currentColor" /><ellipse cx="5.18" cy="8.82" rx="2.08" ry="2.76" transform="rotate(-30 5.18 8.82)" fill="currentColor" /><ellipse cx="9.7" cy="5.9" rx="2.05" ry="2.75" transform="rotate(-8 9.7 5.9)" fill="currentColor" /><ellipse cx="14.3" cy="5.9" rx="2.05" ry="2.75" transform="rotate(8 14.3 5.9)" fill="currentColor" /><ellipse cx="18.82" cy="8.82" rx="2.08" ry="2.76" transform="rotate(30 18.82 8.82)" fill="currentColor" /></svg>;
+const CalendarIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <rect x="4" y="6.5" width="16" height="13" rx="2.6" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M8 4v4M16 4v4M4 10h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
 
-const sidebarLinks = [
-  { label: "Dashboard", active: true, icon: <WalletIcon /> },
-  { label: "My Bookings", icon: <CalendarIcon /> },
-  { label: "My Services", icon: <SettingsIcon /> },
-  { label: "Earnings", icon: <ChartIcon /> },
-  { label: "Messages", icon: <MessageIcon /> },
-  { label: "Blogs", icon: <PawIcon size={18} /> },
-  { label: "Marketplace", icon: <PawIcon size={18} /> },
-  { label: "Reviews", icon: <StarIcon /> },
-  { label: "My Profile", icon: <SettingsIcon /> },
+const SmileIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="8.2" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M9.2 14.2c.9 1 1.9 1.5 2.8 1.5s1.9-.5 2.8-1.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <circle cx="9.2" cy="10.2" r="1" fill="currentColor" />
+    <circle cx="14.8" cy="10.2" r="1" fill="currentColor" />
+  </svg>
+);
+
+const HomeIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.6v-6.1H9.6V20H5a1 1 0 0 1-1-1v-7.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+  </svg>
+);
+
+const PawIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12.2 13.5c-2.1-2.6-6.7.5-4.7 3.8.9 1.5 3.8 1.2 4.7-.5.9 1.7 3.8 2 4.7.5 2-3.3-2.6-6.4-4.7-3.8Z" fill="currentColor" />
+    <ellipse cx="5.9" cy="9.2" rx="1.9" ry="2.4" transform="rotate(-28 5.9 9.2)" fill="currentColor" />
+    <ellipse cx="9.9" cy="6.4" rx="1.7" ry="2.3" transform="rotate(-10 9.9 6.4)" fill="currentColor" />
+    <ellipse cx="14.5" cy="6.4" rx="1.7" ry="2.3" transform="rotate(10 14.5 6.4)" fill="currentColor" />
+    <ellipse cx="18.5" cy="9.2" rx="1.9" ry="2.4" transform="rotate(28 18.5 9.2)" fill="currentColor" />
+  </svg>
+);
+
+const ScissorsIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="6.5" cy="7.5" r="2.8" stroke="currentColor" strokeWidth="1.8" />
+    <circle cx="6.5" cy="16.5" r="2.8" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M9 9.5 20 4M9 14.5 20 20M9.3 9.8 16 16.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
+
+const CapIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M3 10.5 12 5l9 5.5-9 5.5-9-5.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    <path d="M7 13.4V17c0 1.6 2.2 2.8 5 2.8s5-1.2 5-2.8v-3.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
+
+const HeartIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M20.8 8.5c0 5.2-8.8 10.1-8.8 10.1S3.2 13.7 3.2 8.5A4.7 4.7 0 0 1 12 6.6a4.7 4.7 0 0 1 8.8 1.9Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const ShieldIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="m12 3 7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6l7-3Z" stroke="currentColor" strokeWidth="1.8" />
+    <path d="m9.3 12 1.7 1.7 3.8-3.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const statItems = [
+  { value: "50k+", label: "Verified Sitters", icon: <PawIcon /> },
+  { value: "Secure", label: "Payments", icon: <ShieldIcon /> },
+  { value: "24/7", label: "Support", icon: <SmileIcon /> },
+  { value: "100k+", label: "Happy Pets", icon: <HeartIcon /> },
 ];
 
-const statCards = [
-  { label: "This Month's Earnings", value: "LKR 1,240.00", meta: "+12%", icon: <WalletIcon /> },
-  { label: "Upcoming Bookings", value: "8 Confirmed", meta: "Next: Bruno (Dog Walking)", icon: <CalendarIcon /> },
-  { label: "Average Rating", value: "4.9 Stars", meta: "From 128 verified reviews", icon: <StarIcon /> },
-  { label: "Active Services", value: "3 Listed", meta: "Walking, Boarding, Sitting", icon: <SettingsIcon /> },
+const steps = [
+  { title: "Search", description: "Browse verified sitters in your neighborhood and read real owner reviews.", icon: <SearchIcon /> },
+  { title: "Book", description: "Schedule dates and pay securely through our protected platform.", icon: <CalendarIcon /> },
+  { title: "Relax", description: "Enjoy your time away with daily updates and photo check-ins.", icon: <SmileIcon /> },
 ];
 
-const requests = [
-  { name: "Bruno", pet: "Boxer", owner: "Mark Davis", service: "Dog Walking", dates: "Oct 24 - Oct 26", status: "Pending" },
-  { name: "Luna", pet: "Samoyed", owner: "Elena Rodriguez", service: "Pet Sitting", dates: "Oct 28 - Oct 30", status: "Pending" },
+const services = [
+  { title: "Boarding", description: "Your pet stays overnight in the sitter's home. They'll be treated like family.", icon: <HomeIcon /> },
+  { title: "Walking", description: "Daily walks to keep your furry friends active and happy while you're busy.", icon: <PawIcon /> },
+  { title: "Grooming", description: "In-home grooming sessions to keep your pets looking and smelling their best.", icon: <ScissorsIcon /> },
+  { title: "Training", description: "One-on-one sessions with certified trainers to master new behaviors.", icon: <CapIcon /> },
 ];
 
-const bookings = [
-  { pet: "Buddy", owner: "Alice Thompson", service: "Dog Walking", date: "Oct 25, 2023", time: "09:00 AM", status: "Confirmed" },
-  { pet: "Shadow", owner: "James Wilson", service: "Pet Boarding", date: "Oct 26, 2023", time: "Check-in 2:00 PM", status: "Confirmed" },
-  { pet: "Mittens", owner: "Sophie Lee", service: "Pet Sitting", date: "Oct 27, 2023", time: "06:30 PM", status: "Confirmed" },
-];
-
-const quickActions = [
-  { title: "Messages", detail: "3 unread chats", icon: <MessageIcon /> },
-  { title: "Manage Services", detail: "Update your offerings", icon: <SettingsIcon /> },
-  { title: "My Profile", detail: "Keep your info current", icon: <PawBadge /> },
+const testimonials = [
+  {
+    quote: "Finding a sitter used to be so stressful, but PetSphere made it effortless. Our dog Milo was so happy and we loved the daily photo updates!",
+    name: "Sarah Jenkins",
+    since: "Pet Parent Since 2022",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80",
+  },
+  {
+    quote: "The verified sitter process gave me so much confidence. I can finally travel without worrying about my cats. Highly recommend!",
+    name: "David Lawson",
+    since: "Pet Parent Since 2023",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80",
+  },
 ];
 
 export default function Home() {
   return (
-    <main className="dashboard-shell">
-      <aside className="sidebar" aria-label="Sidebar navigation">
-        <div>
-          <a className="brand brand-side" href="#dashboard" aria-label="PetSphere dashboard home">
-            <PawIcon size={22} />
-            <span>
-              PetSphere
-              <small>PET CARE PLATFORM</small>
-            </span>
-          </a>
-
-          <nav className="sidebar-nav">
-            {sidebarLinks.map((link) => (
-              <a key={link.label} className={link.active ? "sidebar-link active" : "sidebar-link"} href="#dashboard">
-                <span className="sidebar-icon">{link.icon}</span>
-                {link.label}
-              </a>
-            ))}
-          </nav>
+    <main className="landing-page">
+      <section className="hero-section">
+        <div className="hero-content">
+          <p className="hero-pill">Trusted by 50k+ pet owners</p>
+          <h1>
+            Trusted Pet Care, <span>On Your Schedule</span>
+          </h1>
+          <p className="hero-description">
+            Connecting pet owners with verified, background-checked sitters who treat your pets like family.
+            Experience total peace of mind with real-time updates.
+          </p>
+          <div className="hero-cta">
+            <a href="#services" className="btn btn-primary">Find a Sitter <span>&rsaquo;</span></a>
+            <a href="#services" className="btn btn-secondary">Become a Sitter</a>
+          </div>
+          <div className="hero-social-proof">
+            <div className="owner-avatars">
+              <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=80&q=80" alt="" />
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="" />
+              <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=80&q=80" alt="" />
+            </div>
+            <div>
+              <p className="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
+              <small>Joined by 10k+ owners this month</small>
+            </div>
+          </div>
         </div>
 
-        <a className="sidebar-logout" href="#logout">
-          <span className="sidebar-icon"><MessageIcon /></span>
-          Logout
-        </a>
-      </aside>
-
-      <section className="dashboard-main" id="dashboard">
-        <header className="dashboard-topbar">
-          <div className="dashboard-topbar-copy">
-            <p className="eyebrow-small">Sitter Dashboard</p>
-            <h1>Welcome back Sarah!</h1>
-            <div className="status-pill">
-              <span></span>
-              Verified Professional
+        <div className="hero-image-wrap">
+          <div className="hero-image-frame">
+            <img
+              src="/home-hero-pets-window.jpg"
+              alt="A cat and dog relaxing together on a bright window seat"
+              width="900"
+              height="520"
+              loading="eager"
+              fetchPriority="high"
+            />
+          </div>
+          <div className="badge-card">
+            <div className="badge-icon"><ShieldIcon /></div>
+            <div>
+              <strong>100%</strong>
+              <span>Background Checked</span>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="topbar-actions">
-            <button type="button" className="icon-button" aria-label="Notifications">
-              <BellIcon />
-            </button>
-            <div className="profile-chip">
-              <div className="avatar">SJ</div>
-              <span>Sarah Jenkins</span>
+      <section className="stats-strip" aria-label="PetSphere stats">
+        {statItems.map((item) => (
+          <article key={item.label} className="stat-item">
+            <div className="stat-icon">{item.icon}</div>
+            <div>
+              <strong>{item.value}</strong>
+              <span>{item.label}</span>
             </div>
-          </div>
-        </header>
+          </article>
+        ))}
+      </section>
 
-        <section className="stats-grid" aria-label="Dashboard metrics">
-          {statCards.map((card) => (
-            <article className="stat-card" key={card.label}>
-              <div className="stat-card-head">
-                <p>{card.label}</p>
-                <span className="stat-icon">{card.icon}</span>
-              </div>
-              <strong>{card.value}</strong>
-              <small>{card.meta}</small>
+      <section className="steps-section" id="how-it-works">
+        <h2>Simple Steps to Peace of Mind</h2>
+        <p>Getting premium care for your pet is designed to be effortless. Follow our streamlined process.</p>
+        <div className="steps-grid">
+          {steps.map((step) => (
+            <article key={step.title} className="step-item">
+              <div className="step-icon">{step.icon}</div>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
             </article>
           ))}
-        </section>
-
-        <section className="content-grid" aria-label="Booking overview">
-          <div className="panel panel-wide">
-            <div className="panel-header">
-              <div>
-                <p className="panel-kicker">Pending Requests</p>
-                <h2>2</h2>
-              </div>
-              <a href="#requests">View All</a>
-            </div>
-
-            <div className="request-grid" id="requests">
-              {requests.map((request) => (
-                <article className="request-card" key={request.name}>
-                  <div className="request-top">
-                    <div className="request-avatar">{request.name.slice(0, 1)}</div>
-                    <div>
-                      <strong>{request.name} ({request.pet})</strong>
-                      <p>Owner: {request.owner}</p>
-                    </div>
-                    <span className="request-status">{request.status.toUpperCase()}</span>
-                  </div>
-                  <div className="request-meta">
-                    <span>{request.service}</span>
-                    <span>{request.dates}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-
-          <aside className="panel quick-actions-panel" aria-label="Quick actions">
-            <div className="panel-header compact">
-              <div>
-                <p className="panel-kicker">Quick Actions</p>
-                <h2>Tools</h2>
-              </div>
-            </div>
-
-            <div className="quick-actions-list">
-              {quickActions.map((action) => (
-                <a href="#action" className="action-card" key={action.title}>
-                  <span className="action-icon">{action.icon}</span>
-                  <div>
-                    <strong>{action.title}</strong>
-                    <p>{action.detail}</p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </aside>
-        </section>
-
-        <section className="panel bookings-panel" aria-label="Upcoming confirmed bookings">
-          <div className="panel-header">
-            <div>
-              <p className="panel-kicker">Upcoming Confirmed Bookings</p>
-              <h2>Schedule</h2>
-            </div>
-            <button type="button" className="filter-button" aria-label="Filter bookings">
-              <span>☰</span>
-            </button>
-          </div>
-
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Pet & Owner</th>
-                  <th>Service</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bookings.map((booking) => (
-                  <tr key={`${booking.pet}-${booking.date}`}>
-                    <td>
-                      <div className="booking-person">
-                        <div className="booking-avatar">{booking.pet.slice(0, 1)}</div>
-                        <div>
-                          <strong>{booking.pet}</strong>
-                          <span>Owner: {booking.owner}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{booking.service}</td>
-                    <td>{booking.date}</td>
-                    <td>{booking.time}</td>
-                    <td><span className="status-badge confirmed">{booking.status}</span></td>
-                    <td><button type="button" className="more-button" aria-label={`Actions for ${booking.pet}`}>⋮</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+        </div>
       </section>
+
+      <section className="services-section" id="services">
+        <div className="section-heading">
+          <div>
+            <h2>Tailored Services</h2>
+            <p>Whatever your pet needs, we have the right expert for the job.</p>
+          </div>
+          <a href="#services">View All Services <span>&rarr;</span></a>
+        </div>
+        <div className="service-grid">
+          {services.map((service) => (
+            <article key={service.title} className="service-card">
+              <div className="service-icon">{service.icon}</div>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+              <a href="#services">Explore <span>&rarr;</span></a>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="reviews-section" id="reviews">
+        <div className="section-heading">
+          <div>
+            <h2>What Owners Say</h2>
+            <p>Real stories from our community of pet parents.</p>
+          </div>
+          <div className="review-controls" aria-hidden="true">
+            <button type="button">&larr;</button>
+            <button type="button">&rarr;</button>
+          </div>
+        </div>
+        <div className="review-grid">
+          {testimonials.map((review) => (
+            <article key={review.name} className="review-card">
+              <p className="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
+              <blockquote>{review.quote}</blockquote>
+              <div className="review-author">
+                <img src={review.avatar} alt={review.name} />
+                <div>
+                  <strong>{review.name}</strong>
+                  <span>{review.since}</span>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
     </main>
   );
 }
