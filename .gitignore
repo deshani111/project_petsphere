@@ -14,3 +14,10 @@
 
 # debugging
 npm-debug.log*
+
+/app/generated/prisma
+
+# AI coding tool files
+/.agents
+/.claude
+/.windsurf

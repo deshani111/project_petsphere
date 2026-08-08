@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">Pet sitter relaxing with a happy dog</title>
+  <desc id="desc">A warm illustrated scene of a person caring for a dog in a cozy home.</desc>
+  <rect width="900" height="520" rx="32" fill="#f6e8e4"/>
+  <rect x="48" y="38" width="804" height="444" rx="24" fill="#fffaf8"/>
+  <path d="M48 322h804v160H48z" fill="#ead4cd"/>
+  <path d="M122 321h658v12H122z" fill="#d8b9b0" opacity=".55"/>
+  <rect x="102" y="86" width="232" height="190" rx="12" fill="#d8ecea"/>
+  <path d="M218 86v190M102 180h232" stroke="#fffaf8" stroke-width="10"/>
+  <circle cx="218" cy="146" r="48" fill="#f8d8a8" opacity=".8"/>
+  <path d="M550 130c44-31 99-29 130 7 26 30 25 76 2 105-26 32-84 37-124 3-34-29-39-82-8-115Z" fill="#d98d68"/>
+  <path d="M567 141c-25 22-34 58-20 89 12 27 39 47 67 45 35-3 63-29 67-62 5-38-21-70-54-83-22-8-43-4-60 11Z" fill="#f4c29c"/>
+  <path d="M596 177c-7-32 11-60 35-74 17 15 22 38 14 59-9 22-27 34-49 36Z" fill="#b96e55"/>
+  <circle cx="614" cy="207" r="6" fill="#382c2b"/><circle cx="672" cy="207" r="6" fill="#382c2b"/>
+  <path d="M624 235c14 12 30 12 44 0" fill="none" stroke="#8d4b43" stroke-width="6" stroke-linecap="round"/>
+  <path d="M474 239c-31-65-9-119 33-137 39-17 86 3 106 43 18 36 4 84-30 105-29 18-74 16-109-11Z" fill="#bd7662"/>
+  <path d="M499 183c-3-44 20-78 57-83 37-5 69 24 71 62 2 38-22 70-57 76-35 6-68-17-71-55Z" fill="#f0b7a0"/>
+  <path d="M510 120c-12-31 3-57 27-68 17 17 22 41 11 61-8 15-21 25-38 29ZM591 114c7-31 31-48 57-44 4 23-4 45-23 58-12 8-24 10-34 9Z" fill="#9d5d55"/>
+  <circle cx="533" cy="171" r="5" fill="#382c2b"/><circle cx="591" cy="171" r="5" fill="#382c2b"/>
+  <path d="M548 198c10 9 20 9 30 0" fill="none" stroke="#8d4b43" stroke-width="5" stroke-linecap="round"/>
+  <path d="M463 279c41-30 119-30 160 4l-17 83H485Z" fill="#ad4141"/>
+  <path d="M491 352c-22 27-35 56-38 88M611 353c22 27 35 56 38 87" fill="none" stroke="#2d2929" stroke-width="18" stroke-linecap="round"/>
+  <path d="M382 366c-52-4-94 19-102 57-7 34 18 61 55 58 37-3 59-28 65-61 6-28 0-44-18-54Z" fill="#d98d68"/>
+  <path d="M300 388c-34-25-66-18-82 7-13 20-3 48 22 58 27 11 56-2 70-25" fill="#f1b995"/>
+  <path d="M290 380c-26-30-21-66 5-81 28 11 42 38 31 65-6 15-18 26-36 32ZM384 369c13-34 43-48 69-33 1 27-14 52-39 61-12 4-22 4-30 0Z" fill="#9d5d55"/>
+  <circle cx="273" cy="421" r="5" fill="#382c2b"/><circle cx="335" cy="421" r="5" fill="#382c2b"/>
+  <path d="M282 445c12 10 25 10 37 0" fill="none" stroke="#8d4b43" stroke-width="5" stroke-linecap="round"/>
+  <path d="M426 404c-27 20-42 42-45 72M406 405c-30 2-58 12-80 31" fill="none" stroke="#f1b995" stroke-width="17" stroke-linecap="round"/>
+  <circle cx="739" cy="106" r="16" fill="#f0c3b5"/><circle cx="770" cy="106" r="16" fill="#f0c3b5"/>
+</svg>
