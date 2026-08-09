@@ -1,16 +1,28 @@
-import Sidebar from './Sidebar'
-import './globals.css'
-import styles from './page.module.css'
+import Sidebar from "./Sidebar";
+import { Bell, ChevronDown } from "lucide-react";
+import styles from "./page.module.css";
 
-export const metadata = { title: 'Sitter Dashboard' }
-
-export default function SitterLayout({ children }){
+export default function SitterLayout({ children }) {
   return (
-    <div className={styles.dashboardShell}>
+    <div className={styles.shell}>
       <Sidebar />
-      <main style={{minHeight:'100vh'}}>
-        {children}
-      </main>
+
+      <div className={styles.main}>
+        <header className={styles.header}>
+          <button className={styles.notification} aria-label="Notifications">
+            <Bell size={17} strokeWidth={1.7} />
+            <span />
+          </button>
+
+          <div className={styles.user}>
+            <div className={styles.avatar}>SJ</div>
+            <span>Sarah Jenkins</span>
+            <ChevronDown size={13} />
+          </div>
+        </header>
+
+        <main>{children}</main>
+      </div>
     </div>
-  )
+  );
 }

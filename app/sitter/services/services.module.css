@@ -1,0 +1,289 @@
+.page {
+  min-height: calc(100vh - 51px);
+  background: #fff9f8;
+  color: #302929;
+}
+
+.content {
+  max-width: 1065px;
+  margin: auto;
+  padding: 18px 24px 70px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #302929;
+}
+
+.header p {
+  margin: 6px 0 0;
+  font-size: 8px;
+  color: #8a7e7a;
+  line-height: 12px;
+}
+
+.manageBtn {
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: #96363a;
+  color: white;
+  font-size: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.15s ease;
+}
+
+.manageBtn:hover {
+  background: #813034;
+}
+
+.servicesList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.serviceCard {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #eadad8;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(71, 43, 43, 0.06);
+  transition: 0.15s ease;
+}
+
+.serviceCard:hover {
+  box-shadow: 0 4px 12px rgba(71, 43, 43, 0.1);
+}
+
+.cardIcon {
+  display: flex;
+  align-items: flex-start;
+  flex: none;
+}
+
+.iconBox {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #f5ebe6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #96363a;
+}
+
+.cardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardContent .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cardContent .header h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #302929;
+}
+
+.cardContent .header p {
+  margin: 4px 0 0;
+  font-size: 8px;
+  color: #716767;
+  line-height: 12px;
+}
+
+.priceTag {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  white-space: nowrap;
+  flex: none;
+}
+
+.price {
+  font-size: 12px;
+  font-weight: 600;
+  color: #b24c54;
+}
+
+.unit {
+  font-size: 7px;
+  color: #8a7e7a;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusBadge {
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 4px;
+  font-size: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.statusBadge.active {
+  background: #dff4e9;
+  color: #24875b;
+}
+
+.statusBadge.inactive {
+  background: #f8dfe0;
+  color: #b24c54;
+}
+
+.statusBadge:hover {
+  transform: scale(1.05);
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #96363a;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.tag {
+  font-size: 7px;
+  color: #96363a;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.editBtn,
+.deleteBtn {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #96363a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.15s ease;
+}
+
+.editBtn:hover {
+  background: #f5ebe6;
+  color: #813034;
+}
+
+.deleteBtn:hover {
+  background: #f8dfe0;
+  color: #b24c54;
+}
+
+.addServiceBtn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #eadad8;
+  border-radius: 8px;
+  background: white;
+  color: #96363a;
+  font-size: 9px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.addServiceBtn:hover {
+  background: #fff5f3;
+  border-color: #d4b5b0;
+}
+
+@media (max-width: 800px) {
+  .content {
+    padding: 12px 16px 50px;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+
+  .cardContent .header {
+    flex-direction: column;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .tags {
+    width: 100%;
+    order: -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .serviceCard {
+    flex-direction: column;
+  }
+
+  .iconBox {
+    width: 100%;
+  }
+
+  .priceTag {
+    align-items: flex-start;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
