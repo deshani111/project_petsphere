@@ -1,145 +1,226 @@
-import styles from './page.module.css'
+"use client";
 
-const Icon = ({children}) => <span style={{width:20,height:20,display:'inline-grid',placeItems:'center'}}>{children}</span>
+import Link from "next/link";
+import {
+  Bell,
+  CalendarDays,
+  ClipboardList,
+  EllipsisVertical,
+  Filter,
+  MessageSquare,
+  PawPrint,
+  Star,
+  UserRound,
+  WalletCards
+} from "lucide-react";
+import styles from "./page.module.css";
 
-const StatCard = ({label, value, meta}) => (
-  <article className={styles.statCard}>
-    <div>{label}</div>
-    <strong>{value}</strong>
-    <small>{meta}</small>
-  </article>
-)
+const pending = [
+  {
+    pet: "Bruno",
+    breed: "Boxer",
+    owner: "Mark Davis",
+    service: "Dog Walking",
+    dates: "Oct 24 - Oct 26",
+    emoji: "🐶"
+  },
+  {
+    pet: "Luna",
+    breed: "Samoyed",
+    owner: "Elena Rodriguez",
+    service: "Pet Sitting",
+    dates: "Oct 28 - Oct 30",
+    emoji: "🐕"
+  }
+];
 
-export default function SitterDashboard(){
-  const statCards = [
-    {label:"This Month's Earnings", value:"LKR 1,240.00", meta:"+12%"},
-    {label:"Upcoming Bookings", value:"8 Confirmed", meta:"Next: Bruno"},
-    {label:"Average Rating", value:"4.9 Stars", meta:"From 128 reviews"},
-    {label:"Active Services", value:"3 Listed", meta:"Walking, Boarding, Sitting"},
-  ]
+const confirmed = [
+  {
+    pet: "Buddy",
+    owner: "Alice Thompson",
+    service: "Dog Walking",
+    date: "Oct 25, 2023",
+    time: "09:00 AM",
+    emoji: "🐶"
+  },
+  {
+    pet: "Shadow",
+    owner: "James Wilson",
+    service: "Pet Boarding",
+    date: "Oct 26, 2023",
+    time: "Check-in 2:00 PM",
+    emoji: "🐈"
+  },
+  {
+    pet: "Mittens",
+    owner: "Sophie Lee",
+    service: "Pet Sitting",
+    date: "Oct 27, 2023",
+    time: "06:30 PM",
+    emoji: "🐱"
+  }
+];
 
-  const requests = [
-    {name:'Bruno', pet:'Boxer', owner:'Mark Davis', service:'Dog Walking', dates:'Oct 24 - Oct 26', status:'Pending'},
-    {name:'Luna', pet:'Samoyed', owner:'Elena Rodriguez', service:'Pet Sitting', dates:'Oct 28 - Oct 30', status:'Pending'},
-  ]
-
-  const bookings = [
-    {pet:'Buddy', owner:'Alice Thompson', service:'Dog Walking', date:'Oct 25, 2023', time:'09:00 AM', status:'Confirmed'},
-    {pet:'Shadow', owner:'James Wilson', service:'Pet Boarding', date:'Oct 26, 2023', time:'Check-in 2:00 PM', status:'Confirmed'},
-  ]
-
+export default function SitterDashboard() {
   return (
-    <div className={styles.main}>
-        <header className={styles.topbar}>
-          <div>
-            <div className={styles.eyebrow}>Sitter Dashboard</div>
-            <h1 className={styles.welcome}>Welcome back Sarah!</h1>
-            <div style={{marginTop:8}} className={styles.statusPill}>Verified Professional</div>
-          </div>
-          <div>
-            <div style={{display:'flex',gap:12,alignItems:'center'}}>
-              <button style={{border:'1px solid #eadcd4',borderRadius:10,padding:8}}>🔔</button>
-              <div style={{display:'flex',alignItems:'center',gap:10}}> <div style={{width:36,height:36,borderRadius:18,background:'#c87161',color:'#fff',display:'grid',placeItems:'center'}}>SJ</div> <div>Sarah Jenkins</div></div>
-            </div>
-          </div>
-        </header>
+    <div className={styles.page}>
+      <div className={styles.content}>
+        <h1 className={styles.title}>Welcome back Sarah !</h1>
 
-        <section className={styles.statsGrid}>
-          {statCards.map(s => <StatCard key={s.label} {...s} />)}
+        <div className={styles.verified}>
+          <span>✓</span>
+          Verified Professional
+        </div>
+
+        <section className={styles.stats}>
+          <Stat icon={<WalletCards size={15} />} label="This Month's Earnings">
+            <div className={styles.earning}>
+              <strong>LKR<br />1,240.00</strong>
+              <em>↗ +12%</em>
+            </div>
+          </Stat>
+
+          <Stat icon={<CalendarDays size={15} />} label="Upcoming Bookings">
+            <strong>8 Confirmed</strong>
+            <p>Next: Bruno (Dog Walking)</p>
+          </Stat>
+
+          <Stat icon={<Star size={15} />} label="Average Rating">
+            <strong>4.9 Stars</strong>
+            <p>From 128 verified reviews</p>
+          </Stat>
+
+          <Stat icon={<ClipboardList size={15} />} label="Active Services">
+            <strong>3 Listed</strong>
+            <p>Walking, Boarding, Sitting</p>
+          </Stat>
         </section>
 
-        <section className={styles.contentGrid}>
-          <div className="">
-            <div className={styles.panel}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-                <div>
-                  <div style={{color:'#796a66',fontWeight:700}}>Pending Requests</div>
-                  <h2 style={{margin:0}}>2</h2>
-                </div>
-                <a href="#">View All</a>
-              </div>
+        <section className={styles.middle}>
+          <div className={styles.pendingBlock}>
+            <div className={styles.sectionHead}>
+              <h2>
+                Pending Requests <b>2</b>
+              </h2>
+              <Link href="/sitter/bookings">View All</Link>
+            </div>
 
-              <div style={{display:'grid',gap:12}}>
-                {requests.map(r => (
-                  <div className={styles.requestCard} key={r.name}>
-                    <div className={styles.requestTop}>
-                      <div className={styles.requestAvatar}>{r.name.slice(0,1)}</div>
-                      <div>
-                        <strong>{r.name} ({r.pet})</strong>
-                        <div style={{color:'#796a66'}}>Owner: {r.owner}</div>
+            <div className={styles.pendingGrid}>
+              {pending.map((item) => (
+                <div className={styles.pendingCard} key={item.pet}>
+                  <div className={styles.petTop}>
+                    <div className={styles.petImage}>{item.emoji}</div>
+                    <div className={styles.petInfo}>
+                      <div className={styles.petName}>
+                        <strong>{item.pet}</strong>
+                        <span>({item.breed})</span>
+                        <small>PENDING</small>
                       </div>
-                      <div style={{marginLeft:'auto',background:'#f3b24c',padding:'6px 8px',borderRadius:8,color:'#fff'}}>{r.status}</div>
-                    </div>
-                    <div style={{marginTop:10,display:'flex',justifyContent:'space-between',color:'#544543',fontWeight:700}}>
-                      <span>{r.service}</span>
-                      <span>{r.dates}</span>
+                      <p>Owner: {item.owner}</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            <div className={styles.panel} style={{marginTop:16}}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                <div>
-                  <div style={{color:'#796a66',fontWeight:700}}>Upcoming Confirmed Bookings</div>
-                  <h2 style={{margin:0}}>Schedule</h2>
+                  <div className={styles.requestInfo}>
+                    <div><PawPrint size={12} /> {item.service}</div>
+                    <div><CalendarDays size={12} /> {item.dates}</div>
+                  </div>
                 </div>
-                <button className="">☰</button>
-              </div>
-
-              <div className={styles.tableWrap}>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Pet & Owner</th>
-                      <th>Service</th>
-                      <th>Date</th>
-                      <th>Time</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bookings.map(b => (
-                      <tr key={b.pet+b.date}>
-                        <td>
-                          <div style={{display:'flex',gap:10,alignItems:'center'}}>
-                            <img src="/hero-petsphere.svg" alt="" style={{width:44,height:44,borderRadius:8}} />
-                            <div>
-                              <div style={{fontWeight:700}}>{b.pet}</div>
-                              <small style={{color:'#796a66'}}>Owner: {b.owner}</small>
-                            </div>
-                          </div>
-                        </td>
-                        <td>{b.service}</td>
-                        <td>{b.date}</td>
-                        <td>{b.time}</td>
-                        <td><span style={{background:'#e6f7ee',color:'#216f48',padding:'6px 8px',borderRadius:8,fontWeight:700}}>{b.status}</span></td>
-                        <td>⋮</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              ))}
             </div>
           </div>
 
-          <aside className={styles.panel} style={{height:'fit-content'}}>
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
-              <div>
-                <div style={{color:'#796a66',fontWeight:700}}>Quick Actions</div>
-                <h3 style={{margin:0}}>Tools</h3>
-              </div>
+          <div className={styles.quick}>
+            <h2>Quick Actions</h2>
+
+            <Quick
+              href="/sitter/messages"
+              icon={<MessageSquare size={15} />}
+              title="Messages"
+              text="3 unread chats"
+            />
+
+            <Quick
+              href="/sitter/services"
+              icon={<PawPrint size={15} />}
+              title="Manage Services"
+              text="Update your offerings"
+            />
+
+            <Quick
+              href="/sitter/profile"
+              icon={<UserRound size={15} />}
+              title="My Profile"
+              text="Keep your info current"
+            />
+          </div>
+        </section>
+
+        <section className={styles.bookings}>
+          <div className={styles.sectionHead}>
+            <h2>Upcoming Confirmed Bookings</h2>
+            <button className={styles.filter} aria-label="Filter">
+              <Filter size={13} />
+            </button>
+          </div>
+
+          <div className={styles.table}>
+            <div className={`${styles.row} ${styles.tableHead}`}>
+              <span>Pet &amp; Owner</span>
+              <span>Service</span>
+              <span>Date</span>
+              <span>Time</span>
+              <span>Status</span>
+              <span />
             </div>
 
-            <div style={{display:'grid',gap:10}}>
-              <a className={styles.requestCard} href="#">Messages<p style={{margin:0,color:'#796a66'}}>3 unread chats</p></a>
-              <a className={styles.requestCard} href="#">Manage Services<p style={{margin:0,color:'#796a66'}}>Update your offerings</p></a>
-              <a className={styles.requestCard} href="#">My Profile<p style={{margin:0,color:'#796a66'}}>Keep your info current</p></a>
-            </div>
-          </aside>
+            {confirmed.map((item) => (
+              <div className={styles.row} key={item.pet}>
+                <div className={styles.ownerPet}>
+                  <div className={styles.tablePet}>{item.emoji}</div>
+                  <div>
+                    <strong>{item.pet}</strong>
+                    <small>Owner: {item.owner}</small>
+                  </div>
+                </div>
+
+                <span>{item.service}</span>
+                <span>{item.date}</span>
+                <span>{item.time}</span>
+                <span className={styles.confirmed}>
+                  <i /> Confirmed
+                </span>
+                <button className={styles.more} aria-label="More actions">
+                  <EllipsisVertical size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
         </section>
       </div>
-  )
+    </div>
+  );
+}
+
+function Stat({ icon, label, children }) {
+  return (
+    <div className={styles.stat}>
+      <div className={styles.statHead}>
+        <span>{label}</span>
+        {icon}
+      </div>
+      <div className={styles.statBody}>{children}</div>
+    </div>
+  );
+}
+
+function Quick({ href, icon, title, text }) {
+  return (
+    <Link href={href} className={styles.quickCard}>
+      <span className={styles.quickIcon}>{icon}</span>
+      <span>
+        <strong>{title}</strong>
+        <small>{text}</small>
+      </span>
+    </Link>
+  );
 }

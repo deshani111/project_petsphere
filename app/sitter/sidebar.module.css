@@ -1,41 +1,103 @@
-.sidebarWrap {
-  width: 260px;
-  min-height: 100vh;
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 171px;
+  background: #fff;
+  border-right: 1px solid #eadad8;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 28px 18px;
-  background: #fff;
-  border-right: 1px solid #f1e3de;
+  z-index: 50;
 }
 
 .brand {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  color: #a64b43;
-  font-weight: 800;
+  margin: 28px 14px 0;
+  padding: 0 10px 17px;
+  border-bottom: 1px solid #eadad8;
+  text-decoration: none;
+  color: #96363a;
 }
-.brandSmall { font-size: 11px; color: #796a66; font-weight:700 }
 
-.nav { display: grid; gap: 10px; margin-top: 18px }
-.navLink {
+.brandRow {
   display: flex;
-  gap: 12px;
   align-items: center;
-  padding: 12px 14px;
-  border-radius: 10px;
-  color: #574846;
+  gap: 5px;
+  font-size: 17px;
+  line-height: 20px;
   font-weight: 700;
+  letter-spacing: -0.5px;
 }
-.navLink.active { background:#a64b43; color:#fff }
-.navIcon { width:18px; height:18px; display:inline-grid; place-items:center }
 
-.logout { margin-top: 18px; color: #796a66; display:flex; gap:10px; align-items:center }
+.tagline {
+  margin-left: 25px;
+  margin-top: 0;
+  color: #887b79;
+  font-size: 7px;
+  line-height: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
 
-.bottom { font-size:12px; color:#c9bcb9; border-top:1px solid #f1e3de; padding-top:18px; margin-top:18px }
+.nav {
+  padding: 8px 13px 0;
+  flex: 1;
+}
 
-@media (max-width:900px){
-  .sidebarWrap{ width:100%; border-right:0; border-bottom:1px solid #f1e3de }
+.navItem {
+  height: 31px;
+  margin-bottom: 1px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 6px;
+  color: #665d5b;
+  text-decoration: none;
+  font-size: 11px;
+  transition: 0.15s ease;
+}
+
+.navItem:hover {
+  background: #fff3f1;
+  color: #96363a;
+}
+
+.active {
+  background: #96363a;
+  color: #fff;
+}
+
+.active:hover {
+  background: #96363a;
+  color: #fff;
+}
+
+.logoutArea {
+  margin: 0 13px 16px;
+  padding-top: 15px;
+  border-top: 1px solid #eadad8;
+}
+
+.logout {
+  width: 100%;
+  height: 30px;
+  border: 0;
+  background: transparent;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #665d5b;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.logout:hover {
+  color: #96363a;
+}
+
+@media (max-width: 800px) {
+  .sidebar {
+    display: none;
+  }
 }
