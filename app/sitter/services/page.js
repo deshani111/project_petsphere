@@ -83,9 +83,9 @@ export default function MyServicesPage() {
             <h1>My Services</h1>
             <p>Manage your offerings, rates, and active status for your pet care business.</p>
           </div>
-          <button className={styles.manageBtn}>
+          <Link href="/sitter/services/availability" className={styles.manageBtn}>
             📅 Manage Availability
-          </button>
+          </Link>
         </div>
 
         <div className={styles.servicesList}>

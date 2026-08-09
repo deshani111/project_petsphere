@@ -46,7 +46,7 @@ export default function EditProfilePage() {
     <div className={styles.page}>
       <div className={styles.content}>
         <div className={styles.topbar}>
-          <Link href="/sitter/profile" className={styles.back}><ArrowLeft size={15}/></Link>
+          <Link href="/sitter/Profile" className={styles.back}><ArrowLeft size={15}/></Link>
           <p style={{fontSize: "8px", color: "#8a7e7a", margin: 0}}>Manage your professional profile. You can save your changes anytime.</p>
           <button className={styles.editButton} style={{background: "transparent", color: "#96363a", border: "1px solid #eadad8", marginLeft: "auto"}}>
             ✓ Verified Sitter
@@ -187,7 +187,7 @@ export default function EditProfilePage() {
         </div>
 
         <div style={{display: "flex", gap: "10px", marginTop: "24px", justifyContent: "flex-end"}}>
-          <Link href="/sitter/profile" className={styles.editButton} style={{background: "transparent", color: "#96363a", border: "1px solid #eadad8"}}>
+          <Link href="/sitter/Profile" className={styles.editButton} style={{background: "transparent", color: "#96363a", border: "1px solid #eadad8"}}>
             Cancel
           </Link>
           <button

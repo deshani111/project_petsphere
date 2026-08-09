@@ -25,7 +25,7 @@ const items = [
   ["Blogs", "/sitter/blogs", FileText],
   ["Marketplace", "/sitter/marketplace", Store],
   ["Reviews", "/sitter/reviews", Star],
-  ["My Profile", "/sitter/profile", UserRound],
+  ["My Profile", "/sitter/Profile", UserRound],
 ];
 
 export default function Sidebar() {

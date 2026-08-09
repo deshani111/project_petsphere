@@ -23,9 +23,9 @@ export default function SitterProfilePage() {
       <div className={styles.content}>
         <div className={styles.topbar}>
           <Link href="/sitter" className={styles.back}><ArrowLeft size={15}/></Link>
-          <button className={styles.editButton} onClick={() => setEditing(v => !v)}>
-            {editing ? <X size={13}/> : <Pencil size={13}/>} {editing ? "Cancel Edit" : "Edit Profile"}
-          </button>
+          <Link href="/sitter/Profile/edit" className={styles.editButton}>
+            <Pencil size={13}/> Edit Profile
+          </Link>
         </div>
 
         <section className={styles.profileCard}>
