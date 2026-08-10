@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { MessageSquare, Search, Send, Plus, X, ChevronLeft } from "lucide-react";
+import { MessageSquare, Search, Send, Plus, X, ChevronLeft, MoreVertical, Smile, PlusCircle } from "lucide-react";
 import styles from "./messages.module.css";
 
 const initials = (name = "") => name.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
@@ -31,6 +31,7 @@ export default function Messages() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Unable to load messages.");
       setConversations(data.conversations || []);
+      setActive((current) => current || data.conversations?.[0] || null);
       setContacts(data.contacts || []);
     } catch (err) { setError(err.message); }
     finally { setLoading(false); }
@@ -89,9 +90,9 @@ export default function Messages() {
         <span className={styles.emptyIcon}><MessageSquare size={25} /></span><h1>Select a conversation</h1><p>Choose a conversation from the list to start messaging with pet owners.</p>
         <button className={styles.newButton} onClick={() => { setNewMessageOpen(true); setSearch(""); }}><Plus size={15} /> <span>New</span> Message</button>
       </div> : <>
-        <header className={styles.chatHeader}><button className={styles.backButton} onClick={() => setActive(null)} aria-label="Back to messages"><ChevronLeft size={19} /></button><span className={styles.personAvatar}>{initials(active.name)}</span><div><strong>{active.name}</strong><small>Pet owner</small></div></header>
-        <div className={styles.messageArea}>{thread.length ? thread.map((message) => <article key={message.message_id} className={message.sender_id === active.userId ? styles.received : styles.sent}><p>{message.message_text}</p><time>{new Date(message.sent_date).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</time></article>) : <p className={styles.noMessages}>No messages yet. Say hello to {active.name.split(" ")[0]}.</p>}</div>
-        <form className={styles.composer} onSubmit={send}><input value={text} onChange={(event) => setText(event.target.value)} placeholder="Write a message..." maxLength="2000" /><button disabled={!text.trim() || sending} aria-label="Send message"><Send size={17} /></button></form>
+        <header className={styles.chatHeader}><button className={styles.backButton} onClick={() => setActive(null)} aria-label="Back to messages"><ChevronLeft size={19} /></button><span className={styles.personAvatar}>{initials(active.name)}</span><div><strong>{active.name}</strong><small><i /> Online</small></div><button className={styles.moreButton} aria-label="Conversation options"><MoreVertical size={17} /></button></header>
+        <div className={styles.messageArea}>{thread.length ? <><p className={styles.dayLabel}>Today</p>{thread.map((message) => <article key={message.message_id} className={message.sender_id === active.userId ? styles.received : styles.sent}><p>{message.message_text}</p><time>{new Date(message.sent_date).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</time></article>)}</> : <p className={styles.noMessages}>No messages yet. Say hello to {active.name.split(" ")[0]}.</p>}</div>
+        <form className={styles.composer} onSubmit={send}><button type="button" className={styles.addButton} aria-label="Add attachment"><PlusCircle size={16} /></button><input value={text} onChange={(event) => setText(event.target.value)} placeholder="Type a message..." maxLength="2000" /><button type="button" className={styles.emojiButton} aria-label="Choose emoji"><Smile size={16} /></button><button className={styles.sendButton} disabled={!text.trim() || sending} aria-label="Send message"><Send size={16} fill="currentColor" /></button></form>
       </>}
       {error && <p className={styles.error}>{error}</p>}
     </main>
