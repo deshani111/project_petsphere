@@ -1,0 +1,41 @@
+.profilePage { min-height: 100vh; background: #fffaf9; color: #2a2021; }
+.activeLink { color: #ad4141 !important; font-weight: 700 !important; }
+.profileContent { width: min(1320px, 94%); margin: 0 auto; padding: 30px 0 90px; }
+.backLink { display: inline-block; margin: 0 0 22px; color: #463839; font-size: 16px; }
+.topGrid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; align-items: start; gap: 26px; }
+.gallery { min-width: 0; }
+.mainImage { height: 510px; overflow: hidden; border-radius: 22px; background: #f1e2dc; }
+.mainImage img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.sidePanel { display: grid; gap: 15px; }
+.priceCard, .contactCard, .story { border-radius: 15px; background: #fff; box-shadow: 0 6px 16px rgba(82,49,45,.07); }
+.priceCard { padding: 28px 30px; }
+.priceCard small { display: block; color: #817375; font-size: 11px; }
+.priceCard strong { display: block; margin-top: 8px; color: #b04144; font-size: 32px; }
+.contactCard { padding: 30px; }
+.contactCard h2 { margin: 0 0 20px; font-size: 20px; }
+.owner, .contactCard > a { display: flex; align-items: center; gap: 10px; }
+.owner { padding: 14px; border-radius: 11px; background: #e9f7f1; }
+.owner > span { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 50%; background: #d88f75; color: #fff; font-size: 12px; font-weight: 700; }
+.owner strong, .owner small, .contactCard > a small, .contactCard > a strong { display: block; }
+.owner strong { font-size: 15px; }
+.owner small { margin-top: 3px; color: #168363; font-size: 11px; }
+.contactCard > a { margin-top: 12px; padding: 14px; border: 1px solid #ecd9d6; border-radius: 11px; color: #4b3c3c; }
+.contactCard > a > span { width: 20px; text-align: center; color: #8b7776; }
+.contactCard > a small { color: #958685; font-size: 10px; }
+.contactCard > a strong { margin-top: 3px; font-size: 12px; }
+.story { margin-top: 26px; padding: 28px 32px; }
+.story header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.story h1 { margin: 0; font-size: 21px; }
+.story header span { color: #827373; font-size: 12px; }
+.story p { margin: 18px 0 0; color: #766869; font-size: 14px; line-height: 1.7; }
+.facts { display: flex; justify-content: center; flex-wrap: wrap; gap: 13px; margin-top: 24px; }
+.facts div { min-width: 106px; padding: 12px 15px; border-radius: 12px; background: #fff0ee; text-align: center; }
+.facts small, .facts strong { display: block; }
+.facts small { color: #9d817e; font-size: 10px; }
+.facts strong { margin-top: 5px; color: #ad4141; font-size: 12px; }
+.life { margin-top: 40px; }
+.life h2 { margin: 0 0 18px; font-size: 20px; }
+.life > div { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.life img { width: 100%; aspect-ratio: 1; border-radius: 15px; object-fit: cover; }
+@media (max-width: 800px) { .topGrid { grid-template-columns: 1fr; } .sidePanel { grid-template-columns: 1fr 1fr; } .mainImage { height: 370px; } }
+@media (max-width: 560px) { .profileContent { width: 88%; } .sidePanel { grid-template-columns: 1fr; } .mainImage { height: 300px; } .thumbnails { gap: 6px; } .story header { align-items: flex-start; flex-direction: column; } .life > div { gap: 7px; } }

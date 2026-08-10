@@ -1,0 +1,282 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model admin {
+  admin_id BigInt @id @default(autoincrement())
+  user_id  BigInt @unique
+  users    users  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_admin_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model advertisement {
+  ad_id        BigInt    @id @default(autoincrement())
+  owner_id     BigInt
+  title        String    @db.VarChar(150)
+  description  String?
+  price        Decimal?  @db.Decimal(10, 2)
+  photo_url    String?   @db.VarChar(255)
+  status       String    @default("active") @db.VarChar(20)
+  created_date DateTime  @default(now()) @db.Timestamp(6)
+  pet_owner    pet_owner @relation(fields: [owner_id], references: [owner_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([owner_id], map: "idx_advertisement_owner_id")
+}
+
+model blog_post {
+  blog_id        BigInt   @id @default(autoincrement())
+  author_user_id BigInt
+  title          String   @db.VarChar(200)
+  content        String?
+  medical_notes  String?
+  created_date   DateTime @default(now()) @db.Timestamp(6)
+  users          users    @relation(fields: [author_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([author_user_id], map: "idx_blog_post_author")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model booking {
+  booking_id      BigInt        @id @default(autoincrement())
+  owner_id        BigInt
+  sitter_id       BigInt?
+  pet_id          BigInt
+  service_type_id BigInt?
+  start_date      DateTime?     @db.Date
+  end_date        DateTime?     @db.Date
+  status          String        @default("pending") @db.VarChar(20)
+  total_amount    Decimal?      @db.Decimal(10, 2)
+  notes           String?
+  booking_date    DateTime      @default(now()) @db.Timestamp(6)
+  created_at      DateTime      @default(now()) @db.Timestamp(6)
+  pet_owner       pet_owner     @relation(fields: [owner_id], references: [owner_id], onDelete: NoAction, onUpdate: NoAction)
+  pet             pet           @relation(fields: [pet_id], references: [pet_id], onDelete: NoAction, onUpdate: NoAction)
+  service_type    service_type? @relation(fields: [service_type_id], references: [service_type_id], onDelete: NoAction, onUpdate: NoAction)
+  pet_sitter      pet_sitter?   @relation(fields: [sitter_id], references: [sitter_id], onDelete: NoAction, onUpdate: NoAction)
+  payment         payment[]
+  review          review[]
+
+  @@index([owner_id], map: "idx_booking_owner_id")
+  @@index([pet_id], map: "idx_booking_pet_id")
+  @@index([sitter_id], map: "idx_booking_sitter_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model item {
+  item_id     BigInt       @id @default(autoincrement())
+  description String?
+  price       Decimal      @db.Decimal(10, 2)
+  stock       Int          @default(0)
+  order_item  order_item[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model message {
+  message_id                       BigInt   @id @default(autoincrement())
+  sender_id                        BigInt
+  receiver_id                      BigInt
+  message_text                     String
+  sent_date                        DateTime @default(now()) @db.Timestamp(6)
+  is_read                          Boolean  @default(false)
+  users_message_receiver_idTousers users    @relation("message_receiver_idTousers", fields: [receiver_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  users_message_sender_idTousers   users    @relation("message_sender_idTousers", fields: [sender_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([receiver_id], map: "idx_message_receiver_id")
+  @@index([sender_id], map: "idx_message_sender_id")
+}
+
+model notification {
+  notification_id BigInt   @id @default(autoincrement())
+  user_id         BigInt
+  type            String?  @db.VarChar(50)
+  message         String?
+  is_read         Boolean  @default(false)
+  created_date    DateTime @default(now()) @db.Timestamp(6)
+  users           users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_notification_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model order_item {
+  order_id   BigInt
+  item_id    BigInt
+  quantity   Int     @default(1)
+  unit_price Decimal @db.Decimal(10, 2)
+  item       item    @relation(fields: [item_id], references: [item_id], onDelete: NoAction, onUpdate: NoAction)
+  orders     orders  @relation(fields: [order_id], references: [order_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([order_id, item_id])
+  @@index([item_id], map: "idx_order_item_item_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model orders {
+  order_id   BigInt       @id @default(autoincrement())
+  owner_id   BigInt
+  status     String       @default("pending") @db.VarChar(20)
+  amount     Decimal      @default(0) @db.Decimal(10, 2)
+  order_date DateTime     @default(now()) @db.Timestamp(6)
+  order_item order_item[]
+  pet_owner  pet_owner    @relation(fields: [owner_id], references: [owner_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([owner_id], map: "idx_orders_owner_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model payment {
+  payment_id      BigInt   @id @default(autoincrement())
+  booking_id      BigInt?
+  amount          Decimal  @db.Decimal(10, 2)
+  payment_method  String?  @db.VarChar(50)
+  transaction_ref String?  @db.VarChar(100)
+  invoice_number  String?  @db.VarChar(100)
+  status          String   @default("pending") @db.VarChar(20)
+  payment_date    DateTime @default(now()) @db.Timestamp(6)
+  booking         booking? @relation(fields: [booking_id], references: [booking_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([booking_id], map: "idx_payment_booking_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model pet {
+  pet_id        BigInt    @id @default(autoincrement())
+  owner_id      BigInt
+  pet_name      String    @db.VarChar(100)
+  species       String?   @db.VarChar(50)
+  breed         String?   @db.VarChar(100)
+  gender        String?   @db.VarChar(10)
+  age           Int?
+  weight_kg     Decimal?  @db.Decimal(5, 2)
+  photo         String?   @db.VarChar(255)
+  medical_notes String?
+  created_date  DateTime  @default(now()) @db.Timestamp(6)
+  booking       booking[]
+  pet_owner     pet_owner @relation(fields: [owner_id], references: [owner_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([owner_id], map: "idx_pet_owner_id")
+}
+
+model pet_owner {
+  owner_id          BigInt          @id @default(autoincrement())
+  user_id           BigInt          @unique
+  emergency_contact String?         @db.VarChar(50)
+  address           String?         @db.VarChar(255)
+  city              String?         @db.VarChar(100)
+  advertisement     advertisement[]
+  booking           booking[]
+  orders            orders[]
+  pet               pet[]
+  users             users           @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  premium           premium[]
+  review            review[]
+
+  @@index([user_id], map: "idx_pet_owner_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model pet_sitter {
+  sitter_id          BigInt               @id @default(autoincrement())
+  user_id            BigInt               @unique
+  bio                String?
+  experience_years   Int                  @default(0)
+  service_area       String?              @db.VarChar(150)
+  is_available       Boolean              @default(true)
+  is_verified        Boolean              @default(false)
+  avg_rating         Decimal              @default(0) @db.Decimal(3, 2)
+  earning_total      Decimal              @default(0) @db.Decimal(12, 2)
+  booking            booking[]
+  users              users                @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  pet_sitter_service pet_sitter_service[]
+  review             review[]
+
+  @@index([user_id], map: "idx_pet_sitter_user_id")
+}
+
+model pet_sitter_service {
+  sitter_id       BigInt
+  service_type_id BigInt
+  service_type    service_type @relation(fields: [service_type_id], references: [service_type_id], onDelete: Cascade, onUpdate: NoAction)
+  pet_sitter      pet_sitter   @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([sitter_id, service_type_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model premium {
+  premium_id   BigInt       @id @default(autoincrement())
+  owner_id     BigInt
+  plan_id      BigInt
+  start_date   DateTime     @db.Date
+  end_date     DateTime?    @db.Date
+  pet_owner    pet_owner    @relation(fields: [owner_id], references: [owner_id], onDelete: Cascade, onUpdate: NoAction)
+  premium_plan premium_plan @relation(fields: [plan_id], references: [plan_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([owner_id], map: "idx_premium_owner_id")
+  @@index([plan_id], map: "idx_premium_plan_id")
+}
+
+model premium_plan {
+  plan_id     BigInt    @id @default(autoincrement())
+  plan_name   String    @db.VarChar(100)
+  description String?
+  price       Decimal   @db.Decimal(10, 2)
+  duration    Int
+  premium     premium[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model review {
+  review_id   BigInt      @id @default(autoincrement())
+  owner_id    BigInt?
+  sitter_id   BigInt?
+  booking_id  BigInt?
+  rating      Int
+  comment     String?
+  review_date DateTime    @default(now()) @db.Timestamp(6)
+  booking     booking?    @relation(fields: [booking_id], references: [booking_id], onUpdate: NoAction)
+  pet_owner   pet_owner?  @relation(fields: [owner_id], references: [owner_id], onUpdate: NoAction)
+  pet_sitter  pet_sitter? @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([owner_id], map: "idx_review_owner_id")
+  @@index([sitter_id], map: "idx_review_sitter_id")
+}
+
+model service_type {
+  service_type_id    BigInt               @id @default(autoincrement())
+  name               String               @db.VarChar(100)
+  description        String?
+  booking            booking[]
+  pet_sitter_service pet_sitter_service[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  user_id                            BigInt         @id @default(autoincrement())
+  first_name                         String         @db.VarChar(100)
+  last_name                          String         @db.VarChar(100)
+  full_name                          String?        @default(dbgenerated("(((first_name)::text || ' '::text) || (last_name)::text)")) @db.VarChar(200)
+  email                              String         @unique @db.VarChar(255)
+  password_hash                      String         @db.VarChar(255)
+  phone_number                       String?        @db.VarChar(20)
+  role                               String         @db.VarChar(20)
+  is_verified                        Boolean        @default(false)
+  created_at                         DateTime       @default(now()) @db.Timestamp(6)
+  updated_at                         DateTime       @default(now()) @db.Timestamp(6)
+  admin                              admin?
+  blog_post                          blog_post[]
+  message_message_receiver_idTousers message[]      @relation("message_receiver_idTousers")
+  message_message_sender_idTousers   message[]      @relation("message_sender_idTousers")
+  notification                       notification[]
+  pet_owner                          pet_owner?
+  pet_sitter                         pet_sitter?
+
+  @@index([email], map: "idx_users_email")
+}
