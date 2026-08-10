@@ -16,7 +16,7 @@ export default function SitterProfilePage() {
     bio: "Professional pet sitter with over 8 years of experience. Certified in pet first aid and CPR. I provide a safe, loving environment for animals of all sizes and temperaments. Specialized in long walks, senior pet care, and high-energy dogs."
   });
   const [profile, setProfile] = useState(null);
-  useEffect(() => { fetch("/api/sitter/profile").then((r) => r.json()).then((result) => { if (result.profile) { setProfile(result.profile); setData((current) => ({ ...current, phone: result.profile.phone, city: result.profile.serviceArea, address: result.profile.serviceArea, bio: result.profile.bio })); } }); }, []);
+  useEffect(() => { fetch("/api/sitter/profile").then((r) => r.json()).then((result) => { if (result.profile) { setProfile(result.profile); setData((current) => ({ ...current, phone: result.profile.phone, city: result.profile.serviceArea, address: result.profile.address, bio: result.profile.bio })); } }); }, []);
 
   const change = (key, value) => setData((d) => ({ ...d, [key]: value }));
 
@@ -52,7 +52,7 @@ export default function SitterProfilePage() {
               <Field label="ADDRESS" value={data.address} editing={editing} onChange={v=>change("address",v)} full/>
             </div>
             <div className={styles.bio}><label>BIO / ABOUT</label>{editing ? <textarea value={data.bio} onChange={e=>change("bio",e.target.value)}/> : <p>{data.bio}</p>}</div>
-            {editing && <button className={styles.save} onClick={async()=>{const response=await fetch("/api/sitter/profile",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({phone:data.phone,serviceArea:data.city,bio:data.bio})});if(response.ok)setEditing(false);}}><Check size={12}/> Save Changes</button>}
+            {editing && <button className={styles.save} onClick={async()=>{const response=await fetch("/api/sitter/profile",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({firstName:profile.firstName,lastName:profile.lastName,email:profile.email,phone:data.phone,address:data.address,serviceArea:data.city,bio:data.bio})});const result=await response.json();if(response.ok){setProfile(result.profile);setEditing(false);}}}><Check size={12}/> Save Changes</button>}
           </section>
 
           <section className={styles.preferences}>
