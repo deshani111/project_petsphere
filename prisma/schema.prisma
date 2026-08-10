@@ -188,6 +188,8 @@ model pet_sitter {
   bio                String?
   experience_years   Int                  @default(0)
   service_area       String?              @db.VarChar(150)
+  address            String?              @db.VarChar(255)
+  pet_preferences    String?
   is_available       Boolean              @default(true)
   is_verified        Boolean              @default(false)
   avg_rating         Decimal              @default(0) @db.Decimal(3, 2)
@@ -195,14 +197,39 @@ model pet_sitter {
   booking            booking[]
   users              users                @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
   pet_sitter_service pet_sitter_service[]
+  sitter_availability sitter_availability[]
+  sitter_unavailable_date sitter_unavailable_date[]
   review             review[]
 
   @@index([user_id], map: "idx_pet_sitter_user_id")
 }
 
+model sitter_availability {
+  availability_id BigInt @id @default(autoincrement())
+  sitter_id       BigInt
+  weekday         Int
+  start_time      String @default("09:00") @db.VarChar(5)
+  end_time        String @default("17:00") @db.VarChar(5)
+  is_available    Boolean @default(true)
+  pet_sitter      pet_sitter @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade)
+  @@unique([sitter_id, weekday])
+}
+
+model sitter_unavailable_date {
+  unavailable_date_id BigInt @id @default(autoincrement())
+  sitter_id           BigInt
+  unavailable_date    DateTime @db.Date
+  reason              String? @db.VarChar(255)
+  pet_sitter          pet_sitter @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade)
+  @@unique([sitter_id, unavailable_date])
+}
+
 model pet_sitter_service {
   sitter_id       BigInt
   service_type_id BigInt
+  price           Decimal  @default(0) @db.Decimal(10, 2)
+  pricing_unit    String   @default("session") @db.VarChar(50)
+  is_active       Boolean  @default(true)
   service_type    service_type @relation(fields: [service_type_id], references: [service_type_id], onDelete: Cascade, onUpdate: NoAction)
   pet_sitter      pet_sitter   @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade, onUpdate: NoAction)
 

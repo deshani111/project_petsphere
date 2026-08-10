@@ -73,7 +73,7 @@ export default function LoginPage() {
       }
 
       setStatus({ state: "success", message: payload.message });
-      router.push("/");
+      router.push(payload.account?.role === "pet_sitter" ? "/sitter" : "/");
     } catch {
       setStatus({
         state: "error",

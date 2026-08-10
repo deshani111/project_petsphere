@@ -1,67 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Home, Footprints, Scissors, Dumbbell, Edit, Trash2, Check } from "lucide-react";
 import styles from "./services.module.css";
 
 export default function MyServicesPage() {
-  const [services, setServices] = useState([
-    {
-      id: 1,
-      name: "Boarding",
-      description: "Safe and comfortable overnight stay in my pet-friendly home.",
-      price: "5000",
-      unit: "/night",
-      status: "ACTIVE",
-      icon: "Home",
-      checked: true,
-      tags: ["Insurance Covered", "48h Update"]
-    },
-    {
-      id: 2,
-      name: "Dog Walking",
-      description: "Energizing walks around the neighborhood or local parks.",
-      price: "2500",
-      unit: "/30 min walk",
-      status: "ACTIVE",
-      icon: "Footprints",
-      checked: true,
-      tags: ["Insurance Covered", "48h Update"]
-    },
-    {
-      id: 3,
-      name: "Grooming",
-      description: "Bath, brush, and nail trim to keep your pet looking their best.",
-      price: "4000",
-      unit: "/session",
-      status: "INACTIVE",
-      icon: "Scissors",
-      checked: false,
-      tags: []
-    },
-    {
-      id: 4,
-      name: "Training",
-      description: "Basic obedience and behavior training sessions.",
-      price: "6000",
-      unit: "/hour",
-      status: "ACTIVE",
-      icon: "Dumbbell",
-      checked: true,
-      tags: ["Insurance Covered", "48h Update"]
-    }
-  ]);
+  const [services, setServices] = useState([]);
+  const load = () => fetch("/api/sitter/services").then((r) => r.json()).then((data) => setServices((data.services || []).map((s) => ({ ...s, status: s.active ? "ACTIVE" : "INACTIVE", checked: s.active, tags: [] }))));
+  useEffect(() => { load(); }, []);
 
   const toggleService = (id) => {
-    setServices(services.map(s => 
-      s.id === id ? { ...s, checked: !s.checked, status: s.status === "ACTIVE" ? "INACTIVE" : "ACTIVE" } : s
-    ));
+    const service = services.find((item) => item.id === id);
+    fetch(`/api/sitter/services/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ active: !service.checked }) }).then((r) => r.ok && load());
   };
 
   const deleteService = (id) => {
     if (confirm("Are you sure you want to delete this service?")) {
-      setServices(services.filter(s => s.id !== id));
+      fetch(`/api/sitter/services/${id}`, { method: "DELETE" }).then((r) => r.ok && load());
     }
   };
 
@@ -75,6 +31,7 @@ export default function MyServicesPage() {
     return icons[iconName];
   };
 
+  const addService = async () => { const name = prompt("Service name:"); if (!name) return; const price = prompt("Price in LKR:", "0"); const unit = prompt("Pricing unit:", "session"); const response = await fetch("/api/sitter/services", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, price, unit }) }); if (response.ok) load(); };
   return (
     <div className={styles.page}>
       <div className={styles.content}>
@@ -147,7 +104,7 @@ export default function MyServicesPage() {
           ))}
         </div>
 
-        <button className={styles.addServiceBtn}>
+        <button className={styles.addServiceBtn} onClick={addService}>
           + Add New Service
         </button>
       </div>

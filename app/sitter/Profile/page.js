@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Camera, Check, ChevronRight, LockKeyhole, Mail, MapPin, Pencil, Phone, ShieldCheck, UserRound, X } from "lucide-react";
 import styles from "./profile.module.css";
 
@@ -15,6 +15,8 @@ export default function SitterProfilePage() {
     address: "124 Maple Street, Portland, OR 97201",
     bio: "Professional pet sitter with over 8 years of experience. Certified in pet first aid and CPR. I provide a safe, loving environment for animals of all sizes and temperaments. Specialized in long walks, senior pet care, and high-energy dogs."
   });
+  const [profile, setProfile] = useState(null);
+  useEffect(() => { fetch("/api/sitter/profile").then((r) => r.json()).then((result) => { if (result.profile) { setProfile(result.profile); setData((current) => ({ ...current, phone: result.profile.phone, city: result.profile.serviceArea, address: result.profile.serviceArea, bio: result.profile.bio })); } }); }, []);
 
   const change = (key, value) => setData((d) => ({ ...d, [key]: value }));
 
@@ -34,8 +36,8 @@ export default function SitterProfilePage() {
             <button className={styles.camera} aria-label="Change profile photo"><Camera size={11}/></button>
           </div>
           <div>
-            <h1>Sarah Jenkins</h1>
-            <a className={styles.email} href="mailto:s.jenkins.care@email.com"><Mail size={9}/> s.jenkins.care@email.com</a>
+            <h1>{profile?.fullName || "Your profile"}</h1>
+            <a className={styles.email} href={`mailto:${profile?.email || ""}`}><Mail size={9}/> {profile?.email || "Loading..."}</a>
             <div className={styles.badges}><span className={styles.verified}>● VERIFIED SITTER</span><span className={styles.pro}>PRO SITTER SINCE 2021</span></div>
             <div className={styles.services}><span>Dog Walking</span><span>Pet Sitting</span><span className={styles.aid}>● Certified First Aid</span></div>
           </div>
@@ -50,7 +52,7 @@ export default function SitterProfilePage() {
               <Field label="ADDRESS" value={data.address} editing={editing} onChange={v=>change("address",v)} full/>
             </div>
             <div className={styles.bio}><label>BIO / ABOUT</label>{editing ? <textarea value={data.bio} onChange={e=>change("bio",e.target.value)}/> : <p>{data.bio}</p>}</div>
-            {editing && <button className={styles.save} onClick={()=>setEditing(false)}><Check size={12}/> Save Changes</button>}
+            {editing && <button className={styles.save} onClick={async()=>{const response=await fetch("/api/sitter/profile",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({phone:data.phone,serviceArea:data.city,bio:data.bio})});if(response.ok)setEditing(false);}}><Check size={12}/> Save Changes</button>}
           </section>
 
           <section className={styles.preferences}>

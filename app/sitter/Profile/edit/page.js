@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Camera, Check, X, Mail, Zap, ShieldCheck, LockKeyhole } from "lucide-react";
 import styles from "../profile.module.css";
 
@@ -19,6 +19,10 @@ export default function EditProfilePage() {
   });
   const [notifications, setNotifications] = useState(true);
   const [doc, setDoc] = useState(null);
+  const [saving, setSaving] = useState(false);
+  useEffect(() => { fetch("/api/sitter/profile").then((r) => r.json()).then((result) => { if (result.profile) setData((current) => ({ ...current, fullName: result.profile.fullName, email: result.profile.email, phone: result.profile.phone, city: result.profile.serviceArea, address: result.profile.serviceArea, bio: result.profile.bio })); }); }, []);
+
+  const saveProfile = async () => { setSaving(true); const response = await fetch("/api/sitter/profile", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ phone: data.phone, serviceArea: data.city || data.address, bio: data.bio }) }); setSaving(false); if (response.ok) window.location.href = "/sitter/Profile"; };
 
   const change = (key, value) => setData((d) => ({ ...d, [key]: value }));
 
@@ -193,8 +197,10 @@ export default function EditProfilePage() {
           <button
             className={styles.editButton}
             style={{background: "#96363a"}}
+            onClick={saveProfile}
+            disabled={saving}
           >
-            <Check size={13}/> Save Changes
+            <Check size={13}/> {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>
