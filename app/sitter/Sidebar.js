@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   CalendarDays,
@@ -30,6 +30,8 @@ const items = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  async function logout() { await fetch("/api/auth/logout", { method: "POST" }); router.push("/login"); router.refresh(); }
 
   return (
     <aside className={styles.sidebar}>
@@ -62,7 +64,7 @@ export default function Sidebar() {
       </nav>
 
       <div className={styles.logoutArea}>
-        <button className={styles.logout}>
+        <button className={styles.logout} onClick={logout}>
           <LogOut size={15} strokeWidth={1.8} />
           <span>Logout</span>
         </button>

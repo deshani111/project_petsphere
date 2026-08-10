@@ -357,6 +357,7 @@
   color: #6e6260;
   cursor: pointer;
 }
+.error,.empty{color:#716767;font-size:10px}.error{margin:12px 0;color:#96363a}.empty{padding:14px;margin:0}
 
 .table {
   overflow: hidden;
@@ -445,6 +446,7 @@
   color: #96363a;
   cursor: pointer;
 }
+.actions{display:flex;gap:5px;align-items:center}.actions button,.actions a{border:1px solid #eadad8;border-radius:4px;background:#fff;color:#96363a;padding:4px 6px;font-size:8px;cursor:pointer;text-decoration:none}.status{font-size:9px;text-transform:capitalize;color:#716767}
 
 @media (max-width: 1050px) {
   .stats {
