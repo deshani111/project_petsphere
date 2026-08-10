@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import PetCard from "./pet-card";
 
 type PetItem = {
-  id: number;
+  id: string;
   name: string;
   image?: string;
   type?: string;
@@ -14,7 +14,13 @@ type PetItem = {
   age?: string | number;
 };
 
-export default function PetsGrid({ pets }: { pets: PetItem[] }) {
+export default function PetsGrid({
+  pets,
+  onDelete,
+}: {
+  pets: PetItem[];
+  onDelete: (petId: string) => Promise<void>;
+}) {
   const router = useRouter();
   const [visiblePets, setVisiblePets] = useState(pets);
   const [deleteTarget, setDeleteTarget] = useState<PetItem | null>(null);
@@ -23,22 +29,36 @@ export default function PetsGrid({ pets }: { pets: PetItem[] }) {
     setVisiblePets(pets);
   }, [pets]);
 
-  const handleEdit = (petId: number) => {
+  const [deleteError, setDeleteError] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleEdit = (petId: string) => {
     const pet = visiblePets.find((item) => item.id === petId);
     if (pet) {
       router.push(`/owner/pets/${pet.id}/edit`);
     }
   };
 
-  const openDeleteDialog = (petId: number) => {
+  const openDeleteDialog = (petId: string) => {
     const pet = visiblePets.find((item) => item.id === petId) || null;
+    setDeleteError("");
     setDeleteTarget(pet);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!deleteTarget) return;
-    setVisiblePets((current) => current.filter((item) => item.id !== deleteTarget.id));
-    setDeleteTarget(null);
+
+    setIsDeleting(true);
+    setDeleteError("");
+
+    try {
+      await onDelete(deleteTarget.id);
+      setDeleteTarget(null);
+    } catch (error) {
+      setDeleteError(error instanceof Error ? error.message : "Could not delete pet. Please try again.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -74,13 +94,15 @@ export default function PetsGrid({ pets }: { pets: PetItem[] }) {
           <div className="w-full max-w-md rounded-2xl border border-[#f0e3e3] bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
             <h3 className="text-[18px] font-semibold text-[#30272a]">Delete pet?</h3>
             <p className="mt-2 text-[13px] leading-6 text-[#6f5f5f]">
-              Are you sure you want to delete <span className="font-semibold text-[#b54a50]">{deleteTarget.name}</span>? This action will remove the pet from your list for now.
+              Are you sure you want to delete <span className="font-semibold text-[#b54a50]">{deleteTarget.name}</span>?
             </p>
+            {deleteError ? <p className="mt-2 text-[11px] text-[#c24a50]">{deleteError}</p> : null}
 
             <div className="mt-6 flex items-center justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setDeleteTarget(null)}
+                disabled={isDeleting}
                 className="inline-flex h-10 items-center justify-center rounded-md border border-[#eedddd] bg-white px-4 text-[13px] font-medium text-[#7a6768] hover:bg-[#fff8f8]"
               >
                 Cancel
@@ -88,9 +110,10 @@ export default function PetsGrid({ pets }: { pets: PetItem[] }) {
               <button
                 type="button"
                 onClick={confirmDelete}
+                disabled={isDeleting}
                 className="inline-flex h-10 items-center justify-center rounded-md bg-[#b54a50] px-4 text-[13px] font-medium text-white hover:bg-[#a94046]"
               >
-                Delete
+                {isDeleting ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>

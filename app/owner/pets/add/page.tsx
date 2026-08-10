@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { combinePetNotes } from "../../../../lib/pet-notes";
 import { DashboardHeader } from "../../../../components/owner-dashboard/dashboard-header";
 import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
 
@@ -14,11 +16,11 @@ type AddPetForm = {
   weight_kg: string;
   photo: string;
   medical_report: string;
-  medical_notes: string;
+  about: string;
   sterilized: string;
   last_dental_check: string;
   medications: string;
-  special_instructions: string;
+  care_instructions: string;
 };
 
 const initialForm: AddPetForm = {
@@ -30,11 +32,11 @@ const initialForm: AddPetForm = {
   weight_kg: "",
   photo: "",
   medical_report: "",
-  medical_notes: "",
+  about: "",
   sterilized: "",
   last_dental_check: "",
   medications: "",
-  special_instructions: "",
+  care_instructions: "",
 };
 
 type FormErrors = Partial<Record<keyof AddPetForm, string>>;
@@ -69,11 +71,14 @@ function CalendarIcon() {
 }
 
 export default function AddPetPage() {
+  const router = useRouter();
   const [form, setForm] = useState<AddPetForm>(initialForm);
   const [errors, setErrors] = useState<FormErrors>({});
   const [photoPreview, setPhotoPreview] = useState("");
   const [medicalReportPreview, setMedicalReportPreview] = useState("");
   const [saveMessage, setSaveMessage] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const todayDateValue = getTodayDateValue();
 
   useEffect(() => {
@@ -90,15 +95,6 @@ export default function AddPetPage() {
   const validationMessages = useMemo(
     () => ({
       pet_name: "Pet name is required.",
-      species: "Species is required.",
-      breed: "Breed is required.",
-      gender: "Gender is required.",
-      age: "Age is required.",
-      weight_kg: "Weight is required.",
-      photo: "Pet photo is required.",
-      medical_report: "Medical report is required.",
-      sterilized: "Please select the sterilization status.",
-      special_instructions: "Special instructions are required.",
     }),
     [],
   );
@@ -107,6 +103,7 @@ export default function AddPetPage() {
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
     setSaveMessage("");
+    setSubmitError("");
   };
 
   const setFileValue = (key: "photo" | "medical_report", file: File, setPreview: (value: string) => void) => {
@@ -144,12 +141,49 @@ export default function AddPetPage() {
     return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateForm()) return;
 
-    // Temporary frontend-only verification.
-    console.log("Add pet form data:", form);
-    setSaveMessage("Form saved locally. Check the console for the collected data.");
+    const payload: Record<string, unknown> = {
+      pet_name: form.pet_name,
+    };
+
+    if (form.species.trim()) payload.species = form.species.trim();
+    if (form.breed.trim()) payload.breed = form.breed.trim();
+    if (form.gender) payload.gender = form.gender.toLowerCase();
+    if (form.age.trim()) payload.age = Number(form.age);
+    if (form.weight_kg.trim()) payload.weight_kg = Number(form.weight_kg);
+    if (form.photo.trim()) payload.photo = form.photo.trim();
+    const medicalNotes = combinePetNotes(form.about, form.care_instructions);
+    if (medicalNotes) payload.medical_notes = medicalNotes;
+
+    setIsSaving(true);
+    setSubmitError("");
+
+    try {
+      const response = await fetch("/api/pets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => null);
+
+      if (response.status === 400) {
+        setSubmitError(result?.message || "Please check the pet details and try again.");
+        return;
+      }
+
+      if (response.status !== 201) {
+        setSubmitError(result?.message || "Could not create pet. Please try again.");
+        return;
+      }
+
+      router.push("/owner/pets");
+    } catch {
+      setSubmitError("Could not create pet. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -253,12 +287,6 @@ export default function AddPetPage() {
                     <input value={form.weight_kg} onChange={(event) => setValue("weight_kg", event.target.value)} inputMode="decimal" className="h-10 w-full rounded-md border border-[#eedddd] bg-white px-3 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="e.g. 15.4" />
                   </FieldGroup>
 
-                  <div className="sm:col-span-2">
-                    <FieldGroup error={errors.medical_notes}>
-                      <FieldLabel>Color / Markings</FieldLabel>
-                      <input value={form.medical_notes} onChange={(event) => setValue("medical_notes", event.target.value)} className="h-10 w-full rounded-md border border-[#eedddd] bg-white px-3 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="e.g. White coat with black spots" />
-                    </FieldGroup>
-                  </div>
                 </div>
               </div>
 
@@ -326,10 +354,14 @@ export default function AddPetPage() {
                     {errors.medical_report ? <p className="mt-1 text-[11px] text-[#c24a50]">{errors.medical_report}</p> : null}
                   </div>
 
-                  <div className="sm:col-span-2">
-                    <FieldGroup error={errors.special_instructions}>
-                      <FieldLabel>Special Instructions *</FieldLabel>
-                      <textarea value={form.special_instructions} onChange={(event) => setValue("special_instructions", event.target.value)} rows={4} className="mt-2 w-full rounded-md border border-[#eedddd] bg-white px-3 py-2 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="Any important notes" />
+                  <div className="sm:col-span-2 space-y-4">
+                    <FieldGroup error={errors.about}>
+                      <FieldLabel>About Pet</FieldLabel>
+                      <textarea value={form.about} onChange={(event) => setValue("about", event.target.value)} rows={4} className="mt-2 w-full rounded-md border border-[#eedddd] bg-white px-3 py-2 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="Tell us about your pet" />
+                    </FieldGroup>
+                    <FieldGroup error={errors.care_instructions}>
+                      <FieldLabel>Care Instructions</FieldLabel>
+                      <textarea value={form.care_instructions} onChange={(event) => setValue("care_instructions", event.target.value)} rows={4} className="mt-2 w-full rounded-md border border-[#eedddd] bg-white px-3 py-2 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="Share any care instructions" />
                     </FieldGroup>
                   </div>
                 </div>
@@ -339,10 +371,11 @@ export default function AddPetPage() {
                 <Link href="/owner/pets" className="inline-flex h-10 items-center justify-center rounded-md border border-[#eedddd] bg-white px-5 text-[13px] font-medium text-[#7a6768] transition hover:bg-[#fff8f8]">
                   Cancel
                 </Link>
-                <button type="submit" className="inline-flex h-10 items-center justify-center rounded-md bg-[#b54a50] px-5 text-[13px] font-medium text-white transition hover:bg-[#a94046]">
-                  Add My Pet
+                <button type="submit" disabled={isSaving} className="inline-flex h-10 items-center justify-center rounded-md bg-[#b54a50] px-5 text-[13px] font-medium text-white transition hover:bg-[#a94046]">
+                  {isSaving ? "Saving..." : "Add My Pet"}
                 </button>
               </div>
+              {submitError ? <p className="pt-1 text-right text-[11px] font-medium text-[#c24a50]">{submitError}</p> : null}
               {saveMessage ? <p className="pt-1 text-right text-[11px] font-medium text-[#3caa88]">{saveMessage}</p> : null}
             </div>
             </form>
