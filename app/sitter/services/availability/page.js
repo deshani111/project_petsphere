@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Home, Footprints, Scissors, Dumbbell, X, Plus, Minus, Calendar, AlertCircle } from "lucide-react";
 import styles from "./availability.module.css";
 
@@ -24,6 +24,10 @@ export default function ManageAvailabilityPage() {
   ]);
   const [newBlockedDate, setNewBlockedDate] = useState("");
   const [newBlockedReason, setNewBlockedReason] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  useEffect(() => { fetch("/api/sitter/availability").then((r) => r.json()).then((data) => { if (data.days) { const keys = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; const next = {}; keys.forEach((key, weekday) => { next[key] = data.days.find((day) => day.weekday === weekday)?.is_available ?? true; }); setAvailableDays(next); } }); }, []);
+  const saveAvailability = async () => { setSaving(true); const keys = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; const response = await fetch("/api/sitter/availability", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ days: keys.map((key, weekday) => ({ weekday, isAvailable: availableDays[key], startTime: "09:00", endTime: "17:00" })) }) }); const data = await response.json(); setMessage(data.message); setSaving(false); };
 
   const services = [
     { name: "Boarding", icon: <Home size={18} /> },
@@ -189,7 +193,7 @@ export default function ManageAvailabilityPage() {
             <AlertCircle size={13} />
             <span>Changes you make will reflect on your service page immediately.</span>
           </div>
-          <button className={styles.saveBtn}>
+          <button className={styles.saveBtn} onClick={saveAvailability} disabled={saving}>
             💾 Save Availability
           </button>
         </div>
