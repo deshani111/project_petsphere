@@ -1,13 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { dashboardStats, pets, recentBookings } from "../../lib/owner-dashboard-data";
+import { type ApiPet, getApiMessage } from "../../lib/pet-api";
 import { CalendarIcon, ClockIcon, FilterIcon, MailIcon, SearchIcon } from "./dashboard-icons";
 import Link from "next/link";
 import PetCard from "../pet-card";
 
 const statIcons = { calendar: CalendarIcon, mail: MailIcon, clock: ClockIcon };
+
+const dashboardStats = [
+  { label: "Active bookings", value: "04", icon: "calendar" as const, tone: "rose" as const },
+  { label: "Messages", value: "12", icon: "mail" as const, tone: "mint" as const },
+  { label: "Next appointment", value: "July 14, 10:00 AM", icon: "clock" as const, tone: "coral" as const },
+];
+
+const recentBookings = [
+  { id: 1, sitter: "Shannon Perera", sitterImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&q=80", pet: "Cooper", service: "Dog Walking", date: "July 14, 2026", status: "Confirmed", amount: "Rs. 5,000.00" },
+  { id: 2, sitter: "Mark Fernando", sitterImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=96&q=80", pet: "Luna", service: "Pet Sitting", date: "May 22, 2026", status: "Completed", amount: "Rs. 8,000.00" },
+  { id: 3, sitter: "Nivya Perera", sitterImage: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=96&q=80", pet: "Misty", service: "Grooming", date: "May 20, 2026", status: "Completed", amount: "Rs. 6,000.00" },
+];
 
 const statClasses = {
   rose: "bg-[#fff0ef] text-[#da7777]",
@@ -15,27 +27,49 @@ const statClasses = {
   coral: "bg-[#fda4a4] text-[#b4343b]",
 };
 
-const dashboardPets = [
-  ...pets,
-  {
-    id: 4,
-    name: "Shenu",
-    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=700&q=85",
-    details: "Samoyed â€¢ 4 Years Old",
-  },
-];
-
-function getPetCardDetails(details: string) {
-  const [breed = "Unknown"] = details.split(" \u00e2\u20ac\u00a2 ");
-  const catKeywords = ["siamese", "shorthair", "persian", "maine", "ragdoll", "sphynx", "tabby", "balinese", "burmese", "oriental", "cat", "domestic"];
-  const type = catKeywords.some((keyword) => breed.toLowerCase().includes(keyword)) ? "Cat" : "Dog";
-
-  return { breed, type };
-}
-
 export function DashboardOverview() {
   const router = useRouter();
-  const [visiblePets, setVisiblePets] = useState(dashboardPets);
+  const [visiblePets, setVisiblePets] = useState<ApiPet[]>([]);
+  const [isLoadingPets, setIsLoadingPets] = useState(true);
+  const [petsError, setPetsError] = useState("");
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadPets() {
+      try {
+        setPetsError("");
+        const response = await fetch("/api/pets");
+        if (!response.ok) throw new Error(await getApiMessage(response));
+        const pets: ApiPet[] = await response.json();
+        if (isActive) setVisiblePets(pets);
+      } catch (error) {
+        console.error("Could not load dashboard pets:", error);
+        if (isActive) {
+          setPetsError(error instanceof Error ? error.message : "Could not load your pets.");
+        }
+      } finally {
+        if (isActive) setIsLoadingPets(false);
+      }
+    }
+
+    void loadPets();
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  const handleDelete = async (petId: string) => {
+    try {
+      const response = await fetch(`/api/pets/${encodeURIComponent(petId)}`, { method: "DELETE" });
+      if (!response.ok) throw new Error(await getApiMessage(response));
+      setVisiblePets((currentPets) => currentPets.filter((pet) => pet.pet_id !== petId));
+    } catch (error) {
+      console.error("Could not delete dashboard pet:", error);
+    }
+  };
+
+  const previewPets = visiblePets.slice(0, 4);
 
   return (
     <div className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-6">
@@ -64,27 +98,28 @@ export function DashboardOverview() {
 
       <section id="my-pets" className="mt-7 scroll-mt-6">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="section-title text-[#3b3133]">My Pet Family</h2>
-          <Link href="/owner/pets" className="text-[10px] font-semibold text-[#ab3d42] hover:underline">View all →</Link>
+          <h2 className="section-title text-[#3b3133]">My Pet Family ({visiblePets.length})</h2>
+          <Link href="/owner/pets" className="text-[10px] font-semibold text-[#ab3d42] hover:underline">View all &rarr;</Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {visiblePets.map((pet) => {
-            const { breed, type } = getPetCardDetails(pet.details);
-
-            return (
-              <PetCard
-                key={pet.id}
-                image={pet.image}
-                name={pet.name}
-                type={type}
-                breed={breed}
-                href={`/owner/pets/${pet.id}`}
-                onCardClick={() => router.push(`/owner/pets/${pet.id}`)}
-                onEdit={() => router.push(`/owner/pets/${pet.id}/edit`)}
-                onDelete={() => setVisiblePets((currentPets) => currentPets.filter((currentPet) => currentPet.id !== pet.id))}
-              />
-            );
-          })}
+          {isLoadingPets && <p className="text-sm text-[#887c7d]">Loading your pets...</p>}
+          {!isLoadingPets && petsError && <p className="text-sm text-[#b34b4b]">{petsError}</p>}
+          {!isLoadingPets && !petsError && visiblePets.length === 0 && (
+            <p className="text-sm text-[#887c7d]">No pets added yet.</p>
+          )}
+          {previewPets.map((pet) => (
+            <PetCard
+              key={pet.pet_id}
+              image={pet.photo || undefined}
+              name={pet.pet_name}
+              type={pet.species || "Pet"}
+              breed={pet.breed || "Unknown"}
+              href={`/owner/pets/${pet.pet_id}`}
+              onCardClick={() => router.push(`/owner/pets/${pet.pet_id}`)}
+              onEdit={() => router.push(`/owner/pets/${pet.pet_id}/edit`)}
+              onDelete={() => void handleDelete(pet.pet_id)}
+            />
+          ))}
         </div>
       </section>
 
@@ -114,7 +149,7 @@ export function DashboardOverview() {
             </tbody>
           </table>
         </div>
-        <a href="#view-bookings" className="mt-3 block text-right text-[10px] font-semibold text-[#ab3d42] hover:underline">View all →</a>
+        <a href="#view-bookings" className="mt-3 block text-right text-[10px] font-semibold text-[#ab3d42] hover:underline">View all &rarr;</a>
       </section>
     </div>
   );

@@ -1,84 +1,61 @@
-import React from "react";
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
 import PetsGrid from "../../../components/pets-grid";
-import { pets as samplePets } from "../../../lib/owner-dashboard-data";
 import { DashboardHeader } from "../../../components/owner-dashboard/dashboard-header";
 import { OwnerSidebar } from "../../../components/owner-dashboard/owner-sidebar";
+import { type ApiPet, getApiMessage } from "../../../lib/pet-api";
 
-function determinePetType(breed?: string, name?: string) {
-  const b = (breed || "").toLowerCase();
-  const catKeywords = ["siamese", "shorthair", "persian", "maine", "ragdoll", "sphynx", "tabby", "balinese", "burmese", "oriental", "cat", "domestic"];
-  const dogKeywords = ["retriever", "bulldog", "terrier", "poodle", "beagle", "labrador", "golden", "shepherd", "husky", "samoyed", "spaniel", "dog"];
-
-  if (catKeywords.some((k) => b.includes(k))) return "Cat";
-  if (dogKeywords.some((k) => b.includes(k))) return "Dog";
-  // fallback: try name hints
-  const n = (name || "").toLowerCase();
-  if (n.includes("cat") || n.includes("kitty") || n.includes("kitten")) return "Cat";
-  if (n.includes("dog") || n.includes("puppy")) return "Dog";
-  return "Pet";
-}
-
-function parseDetails(details?: string, name?: string) {
-  if (!details) return { type: "Pet", breed: "Unknown", age: "" };
-  const parts = details.split(" • ");
-  const breed = parts[0] || "Unknown";
-  const age = (parts[1] || "").replace(" Years Old", "").replace(" Year Old", "").replace(" yrs", "");
-  const type = determinePetType(breed, name);
-  return { type, breed, age };
+function toPetCardItem(pet: ApiPet) {
+  return {
+    id: pet.pet_id,
+    name: pet.pet_name,
+    image: pet.photo || undefined,
+    type: pet.species || "Pet",
+    breed: pet.breed || "Unknown",
+    age: pet.age ?? undefined,
+  };
 }
 
 export default function PetFamilyPage() {
-  const handleEdit = (name: string) => {
-    // placeholder - no backend
-    // eslint-disable-next-line no-alert
-    alert(`Edit ${name}`);
+  const [pets, setPets] = useState<ApiPet[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const loadPets = useCallback(async () => {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/pets");
+
+      if (!response.ok) {
+        throw new Error(await getApiMessage(response));
+      }
+
+      setPets(await response.json());
+    } catch (loadError) {
+      setError(loadError instanceof Error ? loadError.message : "Could not load pets. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadPets();
+  }, [loadPets]);
+
+  const handleDelete = async (petId: string) => {
+    const response = await fetch(`/api/pets/${encodeURIComponent(petId)}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(await getApiMessage(response));
+    }
+
+    await loadPets();
   };
-
-  const handleDelete = (name: string) => {
-    // placeholder - no backend
-    // eslint-disable-next-line no-alert
-    alert(`Delete ${name}`);
-  };
-
-  const extraPets = [
-    {
-      id: 4,
-      name: "Shenu",
-      image:
-        "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=700&q=85",
-      type: "Dog",
-      breed: "Samoyed",
-      age: "4",
-    },
-    {
-      id: 5,
-      name: "Brownie",
-      image:
-        "https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?auto=format&fit=crop&w=700&q=85",
-      type: "Dog",
-      breed: "French Bulldog",
-      age: "2",
-    },
-    {
-      id: 6,
-      name: "Sheba",
-      image:
-        "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=700&q=85",
-      type: "Cat",
-      breed: "Siamese",
-      age: "3",
-    },
-  ];
-
-  const pets = [
-    ...samplePets.map((p) => ({
-      id: p.id,
-      name: p.name,
-      image: p.image,
-      ...parseDetails(p.details, p.name),
-    })),
-    ...extraPets,
-  ];
 
   return (
     <div className="min-h-screen flex bg-[#fff8f7]">
@@ -93,7 +70,9 @@ export default function PetFamilyPage() {
           </header>
 
           <main>
-            <PetsGrid pets={pets} />
+            {isLoading ? <p className="page-subtitle text-[#887c7d]">Loading pets...</p> : null}
+            {error ? <p className="page-subtitle text-[#c24a50]">{error}</p> : null}
+            {!isLoading && !error ? <PetsGrid pets={pets.map(toPetCardItem)} onDelete={handleDelete} /> : null}
           </main>
         </div>
       </div>
