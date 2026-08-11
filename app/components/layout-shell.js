@@ -5,7 +5,10 @@ import { SiteFooter, SiteHeader } from "./site-chrome";
 
 export default function LayoutShell({ children }) {
   const pathname = usePathname();
-  const hideChrome = pathname === "/register" || pathname === "/login";
+  const hideChrome =
+    pathname === "/register" ||
+    pathname === "/login" ||
+    pathname.startsWith("/owner");
 
   if (hideChrome) {
     return children;
