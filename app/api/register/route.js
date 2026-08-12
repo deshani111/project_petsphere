@@ -3,10 +3,17 @@ import {
   registerAccount,
   RegistrationConflictError,
 } from "../../../modules/auth/auth.service";
+import {
+  buildVerificationLink,
+  sendVerificationEmail,
+} from "../../../modules/auth/email.service";
+import { issueEmailVerificationToken } from "../../../modules/auth/verification.service";
 
 const roleMap = {
   owner: "pet_owner",
   sitter: "pet_sitter",
+  pet_owner: "pet_owner",
+  pet_sitter: "pet_sitter",
 };
 
 function isValidEmail(email) {
@@ -20,23 +27,6 @@ function isValidPhoneNumber(phoneNumber) {
 function normalizeRole(role) {
   const normalizedRole = role.toLowerCase();
   return roleMap[normalizedRole] || "";
-}
-
-function getCity(bodyCity, address) {
-  if (typeof bodyCity === "string" && bodyCity.trim()) {
-    return bodyCity.trim();
-  }
-
-  const addressParts = address
-    .split(",")
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  if (addressParts.length >= 2) {
-    return addressParts[addressParts.length - 2];
-  }
-
-  return null;
 }
 
 export async function POST(request) {
@@ -72,11 +62,9 @@ export async function POST(request) {
       : "";
 
   const address =
-    role === "pet_owner" && typeof body.address === "string"
+    typeof body.address === "string"
       ? body.address.trim()
       : "";
-
-  const city = role === "pet_owner" ? getCity(body.city, address) : null;
 
   const password =
     typeof body.password === "string"
@@ -109,7 +97,7 @@ export async function POST(request) {
     );
   }
 
-  if (role === "pet_owner" && (!address || !city)) {
+  if (!address) {
     return NextResponse.json(
       { message: "Please fill in all required fields." },
       { status: 400 }
@@ -152,18 +140,35 @@ export async function POST(request) {
       phoneNumber,
       email,
       address,
-      city,
       password,
     });
 
+    let verificationEmailSent = true;
+
+    try {
+      const { token } = await issueEmailVerificationToken(account.id);
+      const verificationLink = buildVerificationLink(token);
+
+      await sendVerificationEmail({
+        to: account.email,
+        recipientName: account.fullName,
+        verificationUrl: verificationLink,
+      });
+    } catch (error) {
+      verificationEmailSent = false;
+      console.error("Failed to send verification email:", error);
+    }
 
     return NextResponse.json(
       {
-        message: "Account created successfully. You can now log in.",
+        message: verificationEmailSent
+          ? "Account created successfully. Please check your email to verify your account."
+          : "Account created successfully, but the verification email could not be sent. Please resend it from the login page.",
+        verificationEmailSent,
         account,
       },
       {
-        status: 201,
+        status: verificationEmailSent ? 201 : 202,
       }
     );
 

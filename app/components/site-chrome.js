@@ -32,11 +32,13 @@ function isActive(pathname, href) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SiteHeader() {
+export function SiteHeader({ isAuthenticated }) {
   const pathname = usePathname();
+  const showDashboardAction = pathname === "/" && isAuthenticated;
+  const isHomePage = pathname === "/";
 
   return (
-    <header className="site-header" id="top">
+    <header className={`site-header${isHomePage ? " site-header-home" : ""}`} id="top">
       <Link className="brand" href="/" aria-label="PetSphere home">
         <span className="brand-mark">
           <PawIcon />
@@ -57,12 +59,20 @@ export function SiteHeader() {
         })}
       </nav>
       <div className="header-actions">
-        <Link className="login-link" href="/login">
-          Login
-        </Link>
-        <Link className="header-cta" href="/register">
-          Register
-        </Link>
+        {showDashboardAction ? (
+          <Link className="header-cta" href="/dashboard">
+            Dashboard
+          </Link>
+        ) : (
+          <>
+            <Link className="login-link" href="/login">
+              Login
+            </Link>
+            <Link className="header-cta" href="/register">
+              Register
+            </Link>
+          </>
+        )}
       </div>
       <Link className="mobile-menu" href="/#services" aria-label="Open menu">
         &#9776;

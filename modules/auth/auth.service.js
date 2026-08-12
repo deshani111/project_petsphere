@@ -110,7 +110,6 @@ export async function registerAccount({
   phoneNumber,
   email,
   address,
-  city,
   password,
 }) {
   const { firstName, lastName } = splitFullName(fullName);
@@ -140,12 +139,15 @@ export async function registerAccount({
         password_hash: passwordHash,
         phone_number: phoneNumber,
         role,
+        emailVerified: false,
+        is_verified: false,
       },
       select: {
         user_id: true,
         role: true,
         email: true,
         phone_number: true,
+        emailVerified: true,
         created_at: true,
       },
     });
@@ -155,7 +157,6 @@ export async function registerAccount({
         data: {
           user_id: createdUser.user_id,
           address,
-          city,
         },
       });
     }
@@ -164,6 +165,7 @@ export async function registerAccount({
       await tx.pet_sitter.create({
         data: {
           user_id: createdUser.user_id,
+          address,
         },
       });
     }
@@ -177,6 +179,7 @@ export async function registerAccount({
     fullName,
     phoneNumber: newUser.phone_number,
     email: newUser.email,
+    emailVerified: newUser.emailVerified,
     address,
     createdAt: newUser.created_at.toISOString(),
   };
@@ -194,7 +197,7 @@ export async function loginAccount({ email, password }) {
       email: true,
       password_hash: true,
       role: true,
-      is_verified: true,
+      emailVerified: true,
     },
   });
 
@@ -215,7 +218,7 @@ export async function loginAccount({ email, password }) {
     fullName: `${user.first_name} ${user.last_name}`.trim(),
     email: user.email,
     role: user.role,
-    isVerified: user.is_verified,
+    isVerified: user.emailVerified,
   };
 
   return {

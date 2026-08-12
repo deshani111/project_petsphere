@@ -1,5 +1,5 @@
 /* Blog reference layout */
-.activeLink { color: #ad4141 !important; font-weight: 700 !important; }
+.activeLink { color: #A13D3F !important; font-weight: 700 !important; }
 .blogPage { background: #fffaf9; }
 .blogIntro { min-height: 300px; display: block; padding: 43px 4% 28px; text-align: center; background: #fffaf9; }
 .blogIntro h1 { margin: 0 0 15px; color: #211819; font-size: clamp(42px, 4.8vw, 64px); letter-spacing: -2.7px; }
@@ -33,7 +33,7 @@
 .avatarSmall { width: 34px; height: 34px; font-size: 9px; }
 .pagination { display: flex; justify-content: center; gap: 9px; margin-top: 48px; }
 .pagination button { width: 48px; height: 48px; border: 1px solid #eadedc; border-radius: 12px; background: transparent; color: #75686a; font: inherit; font-size: 16px; }
-.pagination .current { border-color: #ad4141; background: #ad4141; color: #fff; box-shadow: 0 5px 12px rgba(173,65,65,.2); }
+.pagination .current { border-color: #A13D3F; background: #A13D3F; color: #fff; box-shadow: 0 5px 12px rgba(161,61,63,.2); }
 @media (max-width: 900px) { .articleGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .featuredImage { height: 500px; } }
 @media (max-width: 760px) { .blogIntro { padding-right: 6%; padding-left: 6%; } .featured, .articleSection { padding-right: 6%; padding-left: 6%; } .featuredImage { height: 460px; border-radius: 18px; } .featuredOverlay { right: 20px; bottom: 22px; left: 20px; } .featuredOverlay p { font-size: 13px; } .articleGrid { grid-template-columns: 1fr; } }
 

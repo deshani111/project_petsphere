@@ -43,7 +43,7 @@
 .infoPanel .logo {
   font-size: 1.45rem;
   font-weight: 700;
-  color: #ad4141;
+  color: #A13D3F;
   letter-spacing: -0.8px;
 }
 
@@ -56,7 +56,7 @@
 }
 
 .infoPanel h1 span {
-  color: #ad4141;
+  color: #A13D3F;
   font-family: "Playfair Display", Georgia, serif;
   font-style: italic;
 }
@@ -136,7 +136,7 @@
 }
 
 .activeRole {
-  border-color: #ad4141 !important;
+  border-color: #A13D3F !important;
   background: #fff3f2 !important;
   box-shadow: inset 0 0 0 1px rgba(173, 65, 65, 0.08);
 }
@@ -170,7 +170,7 @@
 }
 
 .registerForm input:focus {
-  border-color: #ad4141;
+  border-color: #A13D3F;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(173, 65, 65, 0.12);
 }
@@ -185,7 +185,7 @@
   height: 48px;
   border: 0;
   border-radius: 11px;
-  background: #ad4141;
+  background: #A13D3F;
   color: #fff;
   font-size: 1rem;
   font-weight: 700;
@@ -195,7 +195,7 @@
 }
 
 .submitBtn:not(:disabled):hover {
-  background: #9e3638;
+  background: #8F3335;
   transform: translateY(-1px);
   box-shadow: 0 16px 26px rgba(173, 65, 65, 0.22);
 }
@@ -228,7 +228,7 @@
 }
 
 .signInText a {
-  color: #ad4141;
+  color: #A13D3F;
   font-weight: 700;
 }
 

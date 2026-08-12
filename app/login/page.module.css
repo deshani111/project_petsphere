@@ -130,7 +130,7 @@
 
 .field input:focus,
 .passwordField input:focus {
-  border-color: #ad4141;
+  border-color: #A13D3F;
   box-shadow: 0 0 0 3px rgba(173, 65, 65, 0.12);
 }
 
@@ -143,7 +143,7 @@
 
 .labelRow a,
 .signUpText a {
-  color: #ad4141;
+  color: #A13D3F;
   font-weight: 800;
   text-decoration: none;
 }
@@ -166,7 +166,7 @@
   border: 0;
   border-radius: 8px;
   background: #fff3f2;
-  color: #ad4141;
+  color: #A13D3F;
   font-weight: 800;
   cursor: pointer;
 }
@@ -182,7 +182,7 @@
 .rememberRow input {
   width: 18px;
   height: 18px;
-  accent-color: #ad4141;
+  accent-color: #A13D3F;
 }
 
 .statusMessage,
@@ -200,11 +200,40 @@
   color: #b33b3e;
 }
 
+.resendWrap {
+  display: grid;
+  gap: 10px;
+  margin: -6px 0 0;
+}
+
+.resendBtn {
+  height: 46px;
+  border: 1px solid #e8d5d3;
+  border-radius: 11px;
+  background: #fff3f2;
+  color: #A13D3F;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+
+.resendBtn:not(:disabled):hover {
+  background: #ffe7e5;
+  border-color: #d6b4b1;
+  transform: translateY(-1px);
+}
+
+.resendBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
 .submitBtn {
   height: 52px;
   border: 0;
   border-radius: 11px;
-  background: #ad4141;
+  background: #A13D3F;
   color: #fff;
   font-size: 1rem;
   font-weight: 800;
@@ -214,7 +243,7 @@
 }
 
 .submitBtn:not(:disabled):hover {
-  background: #9e3638;
+  background: #8F3335;
   transform: translateY(-1px);
   box-shadow: 0 16px 26px rgba(173, 65, 65, 0.22);
 }

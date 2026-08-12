@@ -10,7 +10,6 @@ const initialFormState = {
   phoneNumber: "",
   email: "",
   address: "",
-  city: "",
   password: "",
   confirmPassword: "",
 };
@@ -25,7 +24,7 @@ export default function RegisterPage() {
   }
 
   function validateForm() {
-    if (formData.role === "owner" && (!formData.address || !formData.city)) {
+    if (!formData.address) {
       return "Please fill in all required fields.";
     }
 
@@ -56,14 +55,10 @@ export default function RegisterPage() {
       fullName: formData.fullName,
       phoneNumber: formData.phoneNumber,
       email: formData.email,
+      address: formData.address,
       password: formData.password,
       confirmPassword: formData.confirmPassword,
     };
-
-    if (formData.role === "owner") {
-      registrationPayload.address = formData.address;
-      registrationPayload.city = formData.city;
-    }
 
     try {
       const response = await fetch("/api/register", {
@@ -166,36 +161,20 @@ export default function RegisterPage() {
                 required
               />
             </div>
-            {formData.role === "owner" ? (
-              <>
-                <div className={styles.fullWidth}>
-                  <label htmlFor="address">Residential Address</label>
-                  <input
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    placeholder="No. 12, Park Road"
-                    autoComplete="street-address"
-                    required
-                  />
-                </div>
-                <div className={styles.fullWidth}>
-                  <label htmlFor="city">City</label>
-                  <input
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    placeholder="Colombo"
-                    autoComplete="address-level2"
-                    required
-                  />
-                </div>
-              </>
-            ) : null}
-            <div>
-              <label htmlFor="password">Password</label>
+          <div className={styles.fullWidth}>
+            <label htmlFor="address">Residential Address</label>
+            <input
+              id="address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              placeholder="No. 12, Park Road"
+              autoComplete="street-address"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password</label>
               <input
                 id="password"
                 name="password"

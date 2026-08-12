@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./page.module.css";
 
@@ -16,7 +15,6 @@ function isValidEmail(email) {
 }
 
 export default function LoginPage() {
-  const router = useRouter();
   const [formData, setFormData] = useState(initialFormState);
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState({ state: "idle", message: "" });
@@ -73,7 +71,7 @@ export default function LoginPage() {
       }
 
       setStatus({ state: "success", message: payload.message });
-      router.push("/");
+      window.location.replace("/");
     } catch {
       setStatus({
         state: "error",

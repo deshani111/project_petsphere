@@ -3,9 +3,10 @@
 import { usePathname } from "next/navigation";
 import { SiteFooter, SiteHeader } from "./site-chrome";
 
-export default function LayoutShell({ children }) {
+export default function LayoutShell({ children, isAuthenticated }) {
   const pathname = usePathname();
-  const hideChrome = pathname === "/register" || pathname === "/login";
+  const hideChrome =
+    pathname === "/register" || pathname === "/login" || pathname === "/verify-email";
 
   if (hideChrome) {
     return children;
@@ -13,7 +14,7 @@ export default function LayoutShell({ children }) {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader isAuthenticated={isAuthenticated} />
       {children}
       <SiteFooter />
     </>
