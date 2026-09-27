@@ -9,6 +9,7 @@ import {
 export const metadata = {
   title: "PetSphere | Trusted Pet Care",
   description: "Find a trusted pet sitter who treats your pet like family.",
+  icons: { icon: "/petsphere-mark.svg" },
 };
 
 export default async function RootLayout({ children }) {

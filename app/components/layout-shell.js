@@ -5,11 +5,16 @@ import { SiteFooter, SiteHeader } from "./site-chrome";
 
 export default function LayoutShell({ children, isAuthenticated }) {
   const pathname = usePathname();
-  const hideChrome =
+  const isAuthPage =
     pathname === "/register" || pathname === "/login" || pathname === "/verify-email";
 
-  if (hideChrome) {
-    return children;
+  if (isAuthPage) {
+    return (
+      <div className={`auth-layout${pathname === "/register" ? " auth-layout-scroll" : ""}`}>
+        <SiteHeader isAuthenticated={isAuthenticated} />
+        {children}
+      </div>
+    );
   }
 
   return (
