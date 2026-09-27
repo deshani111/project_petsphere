@@ -105,9 +105,6 @@ export async function verifyEmailVerificationToken(rawToken) {
 
   const tokenHash = hashVerificationToken(token);
 
-  console.log("RAW TOKEN:", token);
-  console.log("TOKEN HASH:", tokenHash);
-
   const tokenRecord = await prisma.emailVerificationToken.findUnique({
     where: {
       tokenHash,
@@ -122,8 +119,6 @@ export async function verifyEmailVerificationToken(rawToken) {
       },
     },
   });
-
-  console.log("TOKEN RECORD:", tokenRecord);
 
   if (!tokenRecord) {
     throw new EmailVerificationError(

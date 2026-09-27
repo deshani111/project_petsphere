@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ReviewGallery from "./components/review-gallery";
 
 const ShieldIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -38,21 +39,29 @@ const routine = [
 const services = [
   {
     title: "Boarding",
+    image: "/home-hero-pet-care.jpg",
+    imageAlt: "A dog resting beside their caregiver at home",
     description:
       "Your pet stays overnight in a vetted sitter's home, with the same routine they'd get from you.",
   },
   {
     title: "Walking",
+    image: "/marketplace-cooper.jpg",
+    imageAlt: "A golden puppy sitting in the grass",
     description:
       "On-demand or recurring walks, matched to your dog's energy and your street's rhythm.",
   },
   {
     title: "Grooming",
+    image: "/blog-cat-behavior.jpg",
+    imageAlt: "An orange cat relaxing indoors",
     description:
       "In-home grooming sessions, from a quick trim to a full wash and brush-out.",
   },
   {
     title: "Training",
+    image: "/home-hero-petsphere.jpg",
+    imageAlt: "A happy dog sitting outside",
     description:
       "One-on-one sessions with certified trainers, built around behaviors you actually want to fix.",
   },
@@ -97,12 +106,10 @@ export default function Home() {
         <div className="hero-overlay" aria-hidden="true" />
 
         <div className="hero-content">
-          <p className="hero-pill">
-            Premium pet care, wherever life takes you
-          </p>
+          <p className="hero-pill">Premium pet care, wherever life takes you</p>
 
           <h1>
-            Peace of mind for <span>every pet</span>
+            The right care for <span>every pet.</span>
           </h1>
 
           <p className="hero-description">
@@ -161,7 +168,7 @@ export default function Home() {
             <p className="eyebrow">Getting started</p>
 
             <h2>
-              Simple steps to <em>peace of mind</em>
+              Simple steps to <span>peace of mind</span>
             </h2>
           </div>
 
@@ -193,44 +200,40 @@ export default function Home() {
             <p className="eyebrow">The index</p>
             <h2>Services, by the job</h2>
           </div>
-
-          <Link href="#services">
-            View all services <span>&rarr;</span>
-          </Link>
         </div>
 
         <div className="service-index">
           {services.map((service, i) => (
             <article key={service.title} className="service-row">
-              <span className="service-index-num">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-
-              <div>
+              <div className="service-image">
+                <img
+                  src={service.image}
+                  alt={service.imageAlt}
+                  loading="lazy"
+                />
+              </div>
+              <div className="service-body">
+                <span className="service-index-num">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
+                <Link href="#services">Explore</Link>
               </div>
-
-              <Link href="#services">Explore</Link>
             </article>
           ))}
         </div>
       </section>
 
       <section className="reviews-section" id="reviews">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Notes from Users</p>
-            <h2>What Users say</h2>
-          </div>
-
-          <div className="review-controls" aria-hidden="true">
-            <button type="button">&larr;</button>
-            <button type="button">&rarr;</button>
-          </div>
-        </div>
-
-        <div className="review-grid">
+        <ReviewGallery
+          heading={
+            <div>
+              <p className="eyebrow">Notes from Users</p>
+              <h2>What Users say</h2>
+            </div>
+          }
+        >
           {testimonials.map((review) => (
             <article key={review.name} className="review-card">
               <p className="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
@@ -247,7 +250,7 @@ export default function Home() {
               </div>
             </article>
           ))}
-        </div>
+        </ReviewGallery>
       </section>
     </main>
   );

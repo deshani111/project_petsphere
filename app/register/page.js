@@ -86,57 +86,91 @@ export default function RegisterPage() {
 
   return (
     <main className={styles.registerPage}>
+      <div className={styles.glowOne} aria-hidden="true" />
+      <div className={styles.glowTwo} aria-hidden="true" />
       <section className={styles.panelWrap}>
         <aside className={styles.infoPanel}>
-          <div className={styles.logo}>PetSphere</div>
+          <div className={styles.infoCopy}>
+            <p className={styles.eyebrow}>Welcome to PetSphere</p>
           <h1>
-            Join Sri Lanka&apos;s <span>Trusted</span> Pet Care Community
+              Better care starts with the <span>right connection.</span>
           </h1>
           <p>
-            Connect with verified, passionate pet sitters who provide personalized care for your
-            furry friends. Peace of mind is just a click away.
+              Join a trusted community built to make finding—or providing—
+              thoughtful pet care feel simple and safe.
           </p>
-          <img src="/register-pet-care.jpg" alt="Pet sitter sharing a calm moment with a cat at home" />
+          </div>
+
+          <div className={styles.imageFrame}>
+            <img
+              src="/register-pet-care.jpg"
+              alt="Pet sitter sharing a calm moment with a cat at home"
+            />
+            <div className={styles.trustCard}>
+              <span className={styles.checkIcon} aria-hidden="true">✓</span>
+              <span><strong>Trusted community</strong>Safe care, lasting connections</span>
+            </div>
+          </div>
+
+          <div className={styles.benefits} aria-label="PetSphere benefits">
+            <span>Verified profiles</span>
+            <span>Secure experience</span>
+            <span>Local pet lovers</span>
+          </div>
         </aside>
 
         <section className={styles.formPanel}>
-          <h2>Create Your Account</h2>
-          <p>Join our community and start your pet care journey today.</p>
+          <div className={styles.formHeading}>
+            <span className={styles.step}>Get started</span>
+            <h2>Create your account</h2>
+            <p>Choose how you&apos;ll use PetSphere, then tell us about yourself.</p>
+          </div>
 
+          <p className={styles.sectionLabel}>I&apos;m joining as a</p>
           <div className={styles.roleGrid}>
             <button
               type="button"
               className={formData.role === "owner" ? styles.activeRole : ""}
               onClick={() => setFormData((prev) => ({ ...prev, role: "owner" }))}
+              aria-pressed={formData.role === "owner"}
             >
-              <strong>Pet Owner</strong>
-              <span>I want to find the best care for my pets.</span>
+              <span className={styles.roleIcon} aria-hidden="true">♡</span>
+              <span className={styles.roleCopy}>
+                <strong>Pet owner</strong>
+                <small>Find loving, reliable care</small>
+              </span>
+              <span className={styles.roleCheck} aria-hidden="true">✓</span>
             </button>
             <button
               type="button"
               className={formData.role === "sitter" ? styles.activeRole : ""}
               onClick={() => setFormData((prev) => ({ ...prev, role: "sitter" }))}
+              aria-pressed={formData.role === "sitter"}
             >
-              <strong>Pet Sitter</strong>
-              <span>I want to offer my services to pet owners.</span>
+              <span className={styles.roleIcon} aria-hidden="true">⌂</span>
+              <span className={styles.roleCopy}>
+                <strong>Pet sitter</strong>
+                <small>Offer care to local owners</small>
+              </span>
+              <span className={styles.roleCheck} aria-hidden="true">✓</span>
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.registerForm}>
             <div>
-              <label htmlFor="fullName">Full Name</label>
+              <label htmlFor="fullName">Full name</label>
               <input
                 id="fullName"
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
-                placeholder="John Doe"
+                placeholder="Your full name"
                 autoComplete="name"
                 required
               />
             </div>
             <div>
-              <label htmlFor="phoneNumber">Phone Number</label>
+              <label htmlFor="phoneNumber">Phone number</label>
               <input
                 id="phoneNumber"
                 name="phoneNumber"
@@ -148,27 +182,27 @@ export default function RegisterPage() {
                 required
               />
             </div>
-            <div className={styles.fullWidth}>
-              <label htmlFor="email">Email Address</label>
+            <div>
+              <label htmlFor="email">Email address</label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="example@petsphere.lk"
+                placeholder="you@example.com"
                 autoComplete="email"
                 required
               />
             </div>
-          <div className={styles.fullWidth}>
-            <label htmlFor="address">Residential Address</label>
+          <div>
+            <label htmlFor="address">Residential address</label>
             <input
               id="address"
               name="address"
               value={formData.address}
               onChange={handleChange}
-              placeholder="No. 12, Park Road"
+              placeholder="Your home address"
               autoComplete="street-address"
               required
             />
@@ -195,7 +229,7 @@ export default function RegisterPage() {
                 type="password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="********"
+                placeholder="Repeat your password"
                 autoComplete="new-password"
                 minLength={8}
                 required
@@ -203,7 +237,7 @@ export default function RegisterPage() {
             </div>
 
             <button type="submit" disabled={status.state === "loading"} className={styles.submitBtn}>
-              {status.state === "loading" ? "Creating..." : "Create Account"}
+              {status.state === "loading" ? "Creating your account…" : "Create my account"}
             </button>
           </form>
 
@@ -220,7 +254,10 @@ export default function RegisterPage() {
           ) : null}
 
           <p className={styles.signInText}>
-            Already have an account? <Link href="/login">Log In</Link>
+            Already have an account? <Link href="/login">Log in</Link>
+          </p>
+          <p className={styles.termsText}>
+            By creating an account, you agree to PetSphere&apos;s Terms of Service and Privacy Policy.
           </p>
         </section>
       </section>

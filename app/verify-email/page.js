@@ -45,9 +45,7 @@ export default async function VerifyEmailPage({ searchParams }) {
   return (
     <main className={styles.page}>
       <section className={styles.card}>
-        <div className={styles.brand}>
-          <div className={styles.logo}>PS</div>
-          <span className={styles.brandName}>PetSphere</span>
+        <div className={styles.statusHeader}>
           <div className={`${styles.statusBadge} ${styles[copy.tone]}`}>
             {copy.eyebrow}
           </div>

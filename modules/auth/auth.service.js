@@ -4,6 +4,9 @@ import { prisma } from "../../lib/prisma";
 
 const SESSION_COOKIE_NAME = "petsphere_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
+const SESSION_TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24;
+const DUMMY_PASSWORD_HASH =
+  "$2b$12$vaknvapn8DjnoHvc49bLy.NsN7HISd2pzroMp87d3JRdS7vgl5qW2";
 
 export { SESSION_COOKIE_NAME, SESSION_MAX_AGE_SECONDS };
 
@@ -18,6 +21,13 @@ export class AuthenticationError extends Error {
   constructor(message = "Invalid email or password.") {
     super(message);
     this.name = "AuthenticationError";
+  }
+}
+
+export class EmailVerificationRequiredError extends Error {
+  constructor(message = "Please verify your email address before logging in.") {
+    super(message);
+    this.name = "EmailVerificationRequiredError";
   }
 }
 
@@ -47,11 +57,11 @@ function signSessionPayload(encodedPayload) {
     .digest("base64url");
 }
 
-function createSessionToken(user) {
+function createSessionToken(user, maxAgeSeconds) {
   const payload = {
     sub: user.id,
     role: user.role,
-    exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE_SECONDS,
+    exp: Math.floor(Date.now() / 1000) + maxAgeSeconds,
   };
 
   const encodedPayload = toBase64Url(JSON.stringify(payload));
@@ -185,7 +195,7 @@ export async function registerAccount({
   };
 }
 
-export async function loginAccount({ email, password }) {
+export async function loginAccount({ email, password, rememberMe = false }) {
   const user = await prisma.users.findUnique({
     where: {
       email,
@@ -202,6 +212,7 @@ export async function loginAccount({ email, password }) {
   });
 
   if (!user) {
+    await bcrypt.compare(password, DUMMY_PASSWORD_HASH);
     throw new AuthenticationError();
   }
 
@@ -209,6 +220,10 @@ export async function loginAccount({ email, password }) {
 
   if (!isPasswordValid) {
     throw new AuthenticationError();
+  }
+
+  if (!user.emailVerified) {
+    throw new EmailVerificationRequiredError();
   }
 
   const account = {
@@ -223,6 +238,9 @@ export async function loginAccount({ email, password }) {
 
   return {
     account,
-    sessionToken: createSessionToken(account),
+    sessionToken: createSessionToken(
+      account,
+      rememberMe ? SESSION_MAX_AGE_SECONDS : SESSION_TOKEN_MAX_AGE_SECONDS
+    ),
   };
 }

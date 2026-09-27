@@ -71,6 +71,13 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error("Failed to resend verification email:", error);
+    return NextResponse.json(
+      {
+        message:
+          "Unable to send the verification email right now. Please try again later.",
+      },
+      { status: 502 }
+    );
   }
 
   return genericResponse();
