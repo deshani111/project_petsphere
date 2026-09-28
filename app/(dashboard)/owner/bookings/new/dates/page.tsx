@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import BookingSummary from "../components/booking-summary";
+import { updateBookingDraft } from "../../../../../../lib/booking-draft";
 
 const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -16,9 +17,10 @@ function displayDate(date: Date) {
 }
 
 export default function BookingDatesPage() {
-  const [month, setMonth] = useState(new Date(2024, 8, 1));
-  const [startDate, setStartDate] = useState<Date | null>(new Date(2024, 8, 11));
-  const [endDate, setEndDate] = useState<Date | null>(new Date(2024, 8, 15));
+  const today = new Date();
+  const [month, setMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [dropOff, setDropOff] = useState("09:00 AM");
   const [pickUp, setPickUp] = useState("05:00 PM");
 
@@ -62,7 +64,7 @@ export default function BookingDatesPage() {
           })}</div>
           <div className="mt-3 grid gap-3 border-t border-[#efdcda] pt-4 sm:grid-cols-2"><label className="text-[8px] text-[#776b6c]">Estimated Drop-off<select value={dropOff} onChange={(event) => setDropOff(event.target.value)} className="mt-1 block h-[27px] w-full rounded-[7px] border border-[#e6cfcd] bg-[#fff4f2] px-2 text-[8px] text-[#493d3e] outline-none"><option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option></select></label><label className="text-[8px] text-[#776b6c]">Estimated Pick-up<select value={pickUp} onChange={(event) => setPickUp(event.target.value)} className="mt-1 block h-[27px] w-full rounded-[7px] border border-[#e6cfcd] bg-[#fff4f2] px-2 text-[8px] text-[#493d3e] outline-none"><option>04:00 PM</option><option>05:00 PM</option><option>06:00 PM</option></select></label></div>
         </div>
-        <div className="mt-6 flex items-center justify-between px-[12px]"><Link href="/owner/bookings" className="text-[9px] text-[#A13D3F]">Cancel</Link><div className="flex gap-3"><Link href="/owner/bookings/new/pet" className="rounded-[8px] border border-[#DCC0BF] px-3 py-[8px] text-[9px] text-[#A13D3F]">← Previous</Link><Link href="/owner/bookings/new/instructions" className="rounded-[8px] bg-[#A13D3F] px-4 py-[9px] text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]">Next →</Link></div></div>
+        <div className="mt-6 flex items-center justify-between px-[12px]"><Link href="/owner/bookings" className="text-[9px] text-[#A13D3F]">Cancel</Link><div className="flex gap-3"><Link href="/owner/bookings/new/pet" className="rounded-[8px] border border-[#DCC0BF] px-3 py-[8px] text-[9px] text-[#A13D3F]">← Previous</Link>{startDate ? <Link href="/owner/bookings/new/instructions" onClick={() => updateBookingDraft({ startDate: startDate.toISOString(), endDate: (endDate || startDate).toISOString() })} className="rounded-[8px] bg-[#A13D3F] px-4 py-[9px] text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]">Next →</Link> : <span className="rounded-[8px] bg-[#e8c9c6] px-4 py-[9px] text-[9px] text-white">Select a date</span>}</div></div>
       </section>
       <BookingSummary service="Boarding" price="8,500.00" unit="/ night" dateLabel={selectedLabel} nightsLabel={nightCount ? `${nightCount} Night${nightCount === 1 ? "" : "s"} Total` : "Choose an end date"} />
     </div>

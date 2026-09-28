@@ -61,7 +61,7 @@ export default function LoginPage() {
         return;
       }
       setStatus({ state: "success", message: payload.message });
-      window.location.replace("/");
+      window.location.replace(payload.redirectTo || "/");
     } catch {
       setStatus({ state: "error", message: "Could not reach the login service. Please try again." });
     }

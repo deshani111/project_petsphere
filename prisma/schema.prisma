@@ -156,6 +156,7 @@ model pet {
   age           Int?
   weight_kg     Decimal?  @db.Decimal(5, 2)
   photo         String?   @db.VarChar(255)
+  medical_report String?  @db.VarChar(255)
   medical_notes String?
   created_date  DateTime  @default(now()) @db.Timestamp(6)
   booking       booking[]
