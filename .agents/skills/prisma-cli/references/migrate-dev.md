@@ -31,7 +31,11 @@ prisma migrate dev [options]
 - Run `prisma generate` explicitly when you need refreshed client output
 - Run `prisma db seed` explicitly when you need seed data
 
+<<<<<<< HEAD
 Run `prisma generate` as an explicit follow-up when you need refreshed generated artifacts. Do not rely on historical CLI help that described generators as part of `migrate dev`.
+=======
+Note: Prisma CLI help for `7.6.0` still says `migrate dev` "trigger[s] generators", but local verification in a temp Prisma 7.6.0 project did not emit generated client files. Treat `prisma generate` as an explicit follow-up step when you need generated artifacts on disk.
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 
 ## Examples
 

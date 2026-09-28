@@ -34,9 +34,12 @@ bunx --bun prisma init
 | `--output` | Define Prisma Client generator output path to use | - |
 | `--preview-feature` | Define a preview feature to use | - |
 | `--with-model` | Add example model to created schema file | - |
+<<<<<<< HEAD
 | `--no-skills` | Skip the best-effort installation of Prisma agent skills | - |
 
 `prisma init` attempts to install `prisma/skills` for detected agents. This is best-effort and does not make project initialization fail. Use `--no-skills` in minimal or controlled environments.
+=======
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 
 ## Examples
 

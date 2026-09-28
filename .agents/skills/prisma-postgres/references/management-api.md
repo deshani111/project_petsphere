@@ -46,6 +46,7 @@ Authorization: Bearer $TOKEN
 
 Workspace -> Project -> Branch -> Database. Branches are a first-class resource: databases attach to a Branch, and branch-scoped env/databases are how preview isolation works.
 
+<<<<<<< HEAD
 ## Current resource inventory
 
 The 1.55 OpenAPI surface includes:
@@ -71,6 +72,23 @@ Database create supports explicit project, region, branch, and source context. A
 
 - Management API mutation responses may include direct connection credentials; treat the entire response as secret until redacted.
 - Prefer an API-provided connection string over manually assembling one from fields.
+=======
+## Common endpoints
+
+- `GET /workspaces`
+- `GET /projects`
+- `POST /projects`
+- `GET`/`POST /projects/:projectId/branches`
+- `GET`/`PATCH`/`DELETE /branches/:branchId`
+- Databases at both `/databases` (flat) and `/projects/:projectId/databases`
+- Connection responses return structured `endpoints.direct` and `endpoints.pooled` objects; the flat top-level `connectionString` is deprecated in favor of `endpoints.direct.connectionString`/`endpoints.pooled.connectionString`
+- Connection secrets are one-time view: revealed at creation, never re-readable from later GETs
+
+## Notes
+
+- Management API responses may include direct connection credentials for databases.
+- Build PostgreSQL `DATABASE_URL` from direct connection values when needed.
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 
 ## References
 

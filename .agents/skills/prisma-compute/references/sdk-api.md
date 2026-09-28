@@ -54,7 +54,11 @@ const result = await compute.deploy({
   }),
   projectId: "proj_abc",
   appName: "my-app",
+<<<<<<< HEAD
   // region: "us-east-1", // optional: explicit placement for a new app
+=======
+  region: "us-east-1",
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
   envVars: { DATABASE_URL: databaseUrl },
   portMapping: { http: 3000 },
 })
@@ -97,6 +101,7 @@ ap-southeast-1
 
 Use `--region` in `@prisma/cli app deploy` or `region` in SDK deploy input only when creating a new Compute app. Existing apps keep their current region.
 
+<<<<<<< HEAD
 `region` is optional on `deploy` and `createApp`. Omit it to use the Project/platform default when creating an app; do not hard-code a region unless placement is an application requirement.
 
 ## Repository-snapshot detection
@@ -121,6 +126,8 @@ The result contains `framework`, `frameworkName`, `buildType`, `httpPort`, `entr
 
 The helper detects one app root. A monorepo consumer must enumerate workspaces and call it once per candidate. Detection reads `dependencies` and `devDependencies` (not peer dependencies), recognizes config files and framework packages, and can infer Bun-backed servers from valid `start`/`serve` script entrypoints.
 
+=======
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 ## Management API Concepts
 
 Compute resources map roughly to:

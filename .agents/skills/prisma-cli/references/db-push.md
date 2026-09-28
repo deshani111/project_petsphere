@@ -25,8 +25,11 @@ prisma db push [options]
 | `--config` | Custom path to your Prisma config file |
 | `--url` | Override the datasource URL from the Prisma config file |
 
+<<<<<<< HEAD
 When Prisma detects an AI agent, `--force-reset` and `--accept-data-loss` require explicit user consent. Follow `agent-safety.md`; never infer or fabricate the consent text.
 
+=======
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 ### Follow-up Command
 
 - Run `prisma generate` explicitly when you need refreshed client output
