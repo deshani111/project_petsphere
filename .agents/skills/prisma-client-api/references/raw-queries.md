@@ -192,7 +192,10 @@ const users = await prisma.$queryRaw<Result[]>`
 `
 // createdAt is already a Date object
 ```
+<<<<<<< HEAD
 
 Invalid JavaScript `Date` values passed to raw queries fail validation instead of being silently serialized as `null`. Validate date input at the application boundary; do not rely on `new Date(badValue)` reaching the database.
 
 When a driver adapter returns an unmapped database-specific error, Prisma surfaces `P2039` with the adapter's preserved original code/message. If those details are missing, fix the adapter mapping rather than parsing rendered error text.
+=======
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5

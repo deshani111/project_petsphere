@@ -17,8 +17,11 @@ prisma migrate reset [options]
 
 **Warning: All data will be lost.**
 
+<<<<<<< HEAD
 When Prisma detects an AI agent, this command is blocked until the user gives explicit consent. Follow `agent-safety.md`; `--force` skips the ordinary prompt but does not constitute user consent for an agent.
 
+=======
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 ## Options
 
 | Option | Description |

@@ -127,6 +127,7 @@ const prisma = new PrismaClient({
 })
 ```
 
+<<<<<<< HEAD
 ### queryPlanCacheMaxSize
 
 Use `queryPlanCacheMaxSize` to limit the in-memory query-plan cache:
@@ -140,6 +141,8 @@ const prisma = new PrismaClient({
 
 The value must be a non-negative integer. Set it to `0` to disable query-plan caching; omit it to use Prisma's default. Treat this as a process-local memory/performance control, not a database prepared-statement setting.
 
+=======
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 ## Singleton Pattern
 
 Prevent multiple client instances in development:

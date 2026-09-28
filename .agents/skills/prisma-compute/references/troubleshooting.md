@@ -66,7 +66,11 @@ Fix:
 - remove unknown top-level keys
 - pass a target for multi-app build/run commands, such as `app build web`
 - pass an existing `apps` key for multi-app deploys, such as `app deploy api`
+<<<<<<< HEAD
 - for `nuxt`, `astro`, and `nestjs`, prefer strategy defaults unless a custom `build` override is intentional; current configs allow the override
+=======
+- remove config `build` blocks from `nuxt`, `astro`, and `nestjs` targets
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 - for `framework: "custom"`, set both `build.outputDirectory` and `build.entrypoint`
 - when `build.outputDirectory` is set for a configurable framework, also set `build.entrypoint` if the framework needs a configured runtime entrypoint
 
@@ -252,12 +256,15 @@ Fix:
 - run migrations, seed, or schema push yourself after database setup; Compute never applies schema changes for you
 - for multi-app deploy-all with app-specific database isolation, create and assign those database env vars explicitly before deploy
 
+<<<<<<< HEAD
 ## Workspace plan limit reached
 
 When the installed CLI returns `PLAN_LIMIT_REACHED`, treat it as a workspace plan restriction rather than a Compute or database outage.
 
 For agent/CI handling, run the relevant database command with `--json` and branch on `error.code === "PLAN_LIMIT_REACHED"`. Read `error.meta.upgradeUrl`, `planName`, `workspaceId`, and `usageBlocked`; optional values may be `null`. This is a workspace plan restriction rather than a Compute/database outage. Use the canonical upgrade URL when returned or direct the user to Prisma Console. Do not retry as an outage or infer a plan limit from status codes or message text.
 
+=======
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 ## Next.js Standalone Missing
 
 Error shape:
@@ -278,6 +285,7 @@ export default nextConfig
 
 Then reinstall/build if needed and deploy again.
 
+<<<<<<< HEAD
 ## Next.js dependency missing after a successful build
 
 Symptoms in pnpm/Bun isolated workspaces can include a deployment that builds successfully but exits before useful runtime logs, often with `Cannot find module` for `styled-jsx` or another traced dependency.
@@ -291,6 +299,8 @@ Fix:
 3. Confirm `output: "standalone"`, redeploy, and inspect the new deployment logs.
 4. If it persists, report the package manager, workspace layout, first missing module, and SDK/CLI versions through `@prisma/cli feedback` without secrets.
 
+=======
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 ## Nitro Entry Missing
 
 Nuxt or TanStack Start error shape:

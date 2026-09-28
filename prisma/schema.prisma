@@ -158,6 +158,7 @@ model pet {
   photo         String?   @db.VarChar(255)
   medical_notes String?
   created_date  DateTime  @default(now()) @db.Timestamp(6)
+  medical_report String?   @db.VarChar(255)
   booking       booking[]
   pet_owner     pet_owner @relation(fields: [owner_id], references: [owner_id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -185,6 +186,7 @@ model pet_owner {
 model pet_sitter {
   sitter_id          BigInt               @id @default(autoincrement())
   user_id            BigInt               @unique
+  address            String?              @db.VarChar(255)
   bio                String?
   experience_years   Int                  @default(0)
   service_area       String?              @db.VarChar(150)
@@ -303,6 +305,7 @@ model service_type {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model users {
+<<<<<<< HEAD
   user_id                            BigInt         @id @default(autoincrement())
   first_name                         String         @db.VarChar(100)
   last_name                          String         @db.VarChar(100)
@@ -316,10 +319,25 @@ model users {
   updated_at                         DateTime       @default(now()) @db.Timestamp(6)
   emailVerified                      Boolean        @default(false)
   EmailVerificationToken             EmailVerificationToken[]
+=======
+  user_id                            BigInt                   @id @default(autoincrement())
+  first_name                         String                   @db.VarChar(100)
+  last_name                          String                   @db.VarChar(100)
+  full_name                          String?                  @default(dbgenerated("(((first_name)::text || ' '::text) || (last_name)::text)")) @db.VarChar(200)
+  email                              String                   @unique @db.VarChar(255)
+  password_hash                      String                   @db.VarChar(255)
+  phone_number                       String?                  @db.VarChar(20)
+  role                               String                   @db.VarChar(20)
+  is_verified                        Boolean                  @default(false)
+  created_at                         DateTime                 @default(now()) @db.Timestamp(6)
+  updated_at                         DateTime                 @default(now()) @db.Timestamp(6)
+  emailVerified                      Boolean                  @default(false)
+  emailVerificationTokens            EmailVerificationToken[]
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
   admin                              admin?
   blog_post                          blog_post[]
-  message_message_receiver_idTousers message[]      @relation("message_receiver_idTousers")
-  message_message_sender_idTousers   message[]      @relation("message_sender_idTousers")
+  message_message_receiver_idTousers message[]                @relation("message_receiver_idTousers")
+  message_message_sender_idTousers   message[]                @relation("message_sender_idTousers")
   notification                       notification[]
   pet_owner                          pet_owner?
   pet_sitter                         pet_sitter?
@@ -333,7 +351,13 @@ model EmailVerificationToken {
   tokenHash String   @unique @db.VarChar(128)
   expiresAt DateTime @db.Timestamp(6)
   createdAt DateTime @default(now()) @db.Timestamp(6)
+<<<<<<< HEAD
   users     users    @relation(fields: [userId], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([userId])
+=======
+  user      users    @relation(fields: [userId], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId], map: "idx_email_verification_token_user_id")
+>>>>>>> 38fb4ef96d837b33d50e1a03c52f8941e5a023e5
 }
