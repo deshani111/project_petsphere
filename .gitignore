@@ -23,3 +23,5 @@ npm-debug.log*
 /.windsurf
 
 .next-clean/
+
+tsconfig.tsbuildinfo

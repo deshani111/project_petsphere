@@ -25,6 +25,7 @@ type PetRecord = {
   age: number | null;
   weight_kg: { toString(): string } | null;
   photo: string | null;
+  medical_report: string | null;
   medical_notes: string | null;
   created_date: Date;
 };
@@ -40,6 +41,7 @@ export function serializePet(pet: PetRecord) {
     age: pet.age,
     weight_kg: pet.weight_kg?.toString() ?? null,
     photo: pet.photo,
+    medical_report: pet.medical_report,
     medical_notes: pet.medical_notes,
     created_date: pet.created_date.toISOString(),
   };

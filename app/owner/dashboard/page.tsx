@@ -6,12 +6,12 @@ import { OwnerSidebar } from "../../../components/owner-dashboard/owner-sidebar"
 export default async function OwnerDashboardPage() {
 
   return (
-    <main className="min-h-screen bg-[#fff9f8] lg:grid lg:grid-cols-[224px_minmax(0,1fr)]">
+    <div className="flex min-h-screen bg-[#FFF8F7]">
       <OwnerSidebar />
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <DashboardHeader />
         <DashboardOverview />
       </div>
-    </main>
+    </div>
   );
 }
