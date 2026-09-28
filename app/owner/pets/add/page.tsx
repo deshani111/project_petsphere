@@ -439,7 +439,9 @@ if (medicalReportUrl) payload.medical_report = medicalReportUrl;
 const medicalNotes = combinePetNotes(
   form.about,
   form.care_instructions,
-  form.medications
+  form.medications,
+  form.sterilized,
+  form.last_dental_check,
 );
 
 if (medicalNotes) {

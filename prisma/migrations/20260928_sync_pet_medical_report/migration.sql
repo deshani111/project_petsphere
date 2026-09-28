@@ -1,0 +1,2 @@
+ALTER TABLE "pet"
+ADD COLUMN IF NOT EXISTS "medical_report" VARCHAR(255);

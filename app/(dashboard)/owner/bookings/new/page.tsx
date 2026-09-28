@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import BookingSummary from "./components/booking-summary";
+import { updateBookingDraft } from "../../../../../lib/booking-draft";
 
 type ServiceId = "boarding" | "walking" | "grooming" | "training";
 
@@ -31,7 +32,7 @@ export default function NewBookingPage() {
             </button>;
           })}
         </div>
-        <div className="mt-[15px] flex items-center justify-between px-[18px]"><Link href="/owner/bookings" className="text-[9px] text-[#675c5d]">Cancel</Link><Link href="/owner/bookings/new/pet" className="rounded-[8px] bg-[#A13D3F] px-4 py-[9px] text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]">Next <span className="ml-[5px] text-[13px]">→</span></Link></div>
+        <div className="mt-[15px] flex items-center justify-between px-[18px]"><Link href="/owner/bookings" className="text-[9px] text-[#675c5d]">Cancel</Link><Link href="/owner/bookings/new/pet" onClick={() => updateBookingDraft({ service: selectedService })} className="rounded-[8px] bg-[#A13D3F] px-4 py-[9px] text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]">Next <span className="ml-[5px] text-[13px]">→</span></Link></div>
       </section>
       <BookingSummary service={selected.name} price={selected.price} unit={selected.unit} />
     </div>

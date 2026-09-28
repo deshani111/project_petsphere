@@ -7,11 +7,11 @@ import { CalendarIcon, FileIcon, GridIcon, LogOutIcon, MailIcon, PawIcon, Search
 const navigation = [
   { label: "Dashboard", icon: GridIcon, href: "/owner/dashboard" },
   { label: "My Pets", icon: PawIcon, href: "/owner/pets" },
-  { label: "Find a Sitter", icon: SearchIcon, href: "#find-a-sitter" },
-  { label: "My Bookings", icon: CalendarIcon, href: "#bookings" },
+  { label: "Find a Sitter", icon: SearchIcon, href: "/owner/bookings/new" },
+  { label: "My Bookings", icon: CalendarIcon, href: "/owner/bookings" },
   { label: "Messages", icon: MailIcon, href: "#messages" },
-  { label: "Marketplace", icon: StoreIcon, href: "#marketplace" },
-  { label: "Blog", icon: FileIcon, href: "#blog" },
+  { label: "Marketplace", icon: StoreIcon, href: "/marketplace" },
+  { label: "Blog", icon: FileIcon, href: "/blog" },
   { label: "My Profile", icon: UserIcon, href: "#profile" },
 ];
 
@@ -44,10 +44,12 @@ export function OwnerSidebar() {
           })}
         </nav>
         <div className="mt-auto border-t border-[#f1e6e4] pt-5">
-          <a href="#logout" className="flex h-9 items-center gap-3 rounded-md px-3 text-[12px] font-medium text-[#665a5b] hover:bg-[#fff2f2] hover:text-[#ab3d42]">
-            <LogOutIcon className="size-4" />
-            Logout
-          </a>
+          <form action="/api/auth/logout" method="post">
+            <button type="submit" className="flex h-9 w-full items-center gap-3 rounded-md px-3 text-[12px] font-medium text-[#665a5b] hover:bg-[#fff2f2] hover:text-[#ab3d42]">
+              <LogOutIcon className="size-4" />
+              Logout
+            </button>
+          </form>
         </div>
       </div>
     </aside>
