@@ -17,6 +17,10 @@ export default function LayoutShell({ children, isAuthenticated }) {
     );
   }
 
+  if (pathname.startsWith("/owner")) {
+    return children;
+  }
+
   return (
     <>
       <SiteHeader isAuthenticated={isAuthenticated} />
