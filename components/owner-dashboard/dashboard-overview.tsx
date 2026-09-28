@@ -9,17 +9,23 @@ import PetCard from "../pet-card";
 
 const statIcons = { calendar: CalendarIcon, mail: MailIcon, clock: ClockIcon };
 
-const dashboardStats = [
-  { label: "Active bookings", value: "04", icon: "calendar" as const, tone: "rose" as const },
-  { label: "Messages", value: "12", icon: "mail" as const, tone: "mint" as const },
-  { label: "Next appointment", value: "July 14, 10:00 AM", icon: "clock" as const, tone: "coral" as const },
-];
+type DashboardBooking = {
+  id: string;
+  sitter: string;
+  pet: string;
+  service: string;
+  date: string;
+  status: string;
+  amount: string;
+};
 
-const recentBookings = [
-  { id: 1, sitter: "Shannon Perera", sitterImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&q=80", pet: "Cooper", service: "Dog Walking", date: "July 14, 2026", status: "Confirmed", amount: "Rs. 5,000.00" },
-  { id: 2, sitter: "Mark Fernando", sitterImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=96&q=80", pet: "Luna", service: "Pet Sitting", date: "May 22, 2026", status: "Completed", amount: "Rs. 8,000.00" },
-  { id: 3, sitter: "Nivya Perera", sitterImage: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=96&q=80", pet: "Misty", service: "Grooming", date: "May 20, 2026", status: "Completed", amount: "Rs. 6,000.00" },
-];
+type DashboardOverviewProps = {
+  userName: string;
+  activeBookings: number;
+  unreadMessages: number;
+  nextAppointment: string;
+  recentBookings: DashboardBooking[];
+};
 
 const statClasses = {
   rose: "bg-[#fff0ef] text-[#da7777]",
@@ -27,7 +33,13 @@ const statClasses = {
   coral: "bg-[#fda4a4] text-[#b4343b]",
 };
 
-export function DashboardOverview() {
+export function DashboardOverview({
+  userName,
+  activeBookings,
+  unreadMessages,
+  nextAppointment,
+  recentBookings,
+}: DashboardOverviewProps) {
   const router = useRouter();
   const [visiblePets, setVisiblePets] = useState<ApiPet[]>([]);
   const [isLoadingPets, setIsLoadingPets] = useState(true);
@@ -70,17 +82,22 @@ export function DashboardOverview() {
   };
 
   const previewPets = visiblePets.slice(0, 4);
+  const dashboardStats = [
+    { label: "Active bookings", value: String(activeBookings), icon: "calendar" as const, tone: "rose" as const },
+    { label: "Unread messages", value: String(unreadMessages), icon: "mail" as const, tone: "mint" as const },
+    { label: "Next appointment", value: nextAppointment, icon: "clock" as const, tone: "coral" as const },
+  ];
 
   return (
     <div className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-6">
       <section className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
         <div>
-          <h1 className="page-title text-[#30272a]">Welcome back, John!</h1>
+          <h1 className="page-title text-[#30272a]">Welcome back, {userName}!</h1>
           <p className="page-subtitle mt-1 text-[#887c7d]">Everything looks great with your companions today.</p>
         </div>
-        <a href="#find-a-sitter" className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-[#ab3d42] px-5 text-[14px] font-semibold !text-white shadow-[0_7px_15px_rgba(171,61,66,0.15)] transition hover:bg-[#963438] [&_svg]:!text-white">
+        <Link href="/owner/bookings/new" className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-[#ab3d42] px-5 text-[14px] font-semibold !text-white shadow-[0_7px_15px_rgba(171,61,66,0.15)] transition hover:bg-[#963438] [&_svg]:!text-white">
           <SearchIcon className="size-3.5 !text-white" /> Find a Sitter
-        </a>
+        </Link>
       </section>
 
       <section aria-label="Dashboard summary" className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -107,6 +124,9 @@ export function DashboardOverview() {
           {!isLoadingPets && !petsError && visiblePets.length === 0 && (
             <p className="text-sm text-[#887c7d]">No pets added yet.</p>
           )}
+          {!isLoadingPets && !petsError && visiblePets.length === 0 ? (
+            <Link href="/owner/pets/add" className="inline-flex rounded-lg bg-[#ab3d42] px-4 py-2 text-sm font-semibold text-white">Add your first pet</Link>
+          ) : null}
           {previewPets.map((pet) => (
             <PetCard
               key={pet.pet_id}
@@ -140,16 +160,19 @@ export function DashboardOverview() {
             <tbody className="divide-y divide-[#f3e9e7]">
               {recentBookings.map((booking) => (
                 <tr key={booking.id} className="text-[14px] text-[#5b4e50]">
-                  <td className="px-4 py-3"><div className="flex items-center gap-2"><img className="size-6 rounded-full object-cover" src={booking.sitterImage} alt="" /><span className="font-medium text-[#433739]">{booking.sitter}</span></div></td>
+                  <td className="px-4 py-3"><span className="font-medium text-[#433739]">{booking.sitter}</span></td>
                   <td className="px-3 py-3">{booking.pet}</td><td className="px-3 py-3 text-[#b7565a]">{booking.service}</td><td className="px-3 py-3">{booking.date}</td>
                   <td className="px-3 py-3"><span className={`rounded-full px-2 py-1 text-[7px] font-bold uppercase tracking-wide ${booking.status === "Confirmed" ? "bg-[#ddf5ec] text-[#329879]" : "bg-[#f6e8e7] text-[#a27676]"}`}>{booking.status}</span></td>
                   <td className="px-4 py-3 text-right font-semibold text-[#403436]">{booking.amount}</td>
                 </tr>
               ))}
+              {recentBookings.length === 0 ? (
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-[#887c7d]">No bookings yet.</td></tr>
+              ) : null}
             </tbody>
           </table>
         </div>
-        <a href="#view-bookings" className="mt-3 block text-right text-[14px] font-semibold text-[#ab3d42] hover:underline">View all &rarr;</a>
+        <Link href="/owner/bookings" className="mt-3 block text-right text-[14px] font-semibold text-[#ab3d42] hover:underline">View all &rarr;</Link>
       </section>
     </div>
   );

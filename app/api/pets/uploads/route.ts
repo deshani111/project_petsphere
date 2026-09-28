@@ -1,9 +1,18 @@
+import { randomUUID } from "crypto";
+import { mkdir, writeFile } from "fs/promises";
+import path from "path";
 import { NextResponse } from "next/server";
-import { put } from "@vercel/blob";
 import { getCurrentOwnerId } from "../../../../lib/session";
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
-const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+export const runtime = "nodejs";
+
+const ALLOWED_TYPES = new Map([
+  ["image/jpeg", ".jpg"],
+  ["image/png", ".png"],
+  ["image/webp", ".webp"],
+  ["application/pdf", ".pdf"],
+]);
+const MAX_SIZE_BYTES = 5 * 1024 * 1024;
 
 export async function POST(request: Request) {
   const ownerId = await getCurrentOwnerId();
@@ -16,33 +25,36 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get("file");
 
-    if (!file || !(file instanceof File)) {
-      return NextResponse.json({ message: "Please select an image file." }, { status: 400 });
+    if (!(file instanceof File)) {
+      return NextResponse.json({ message: "Please select a file." }, { status: 400 });
     }
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    const extension = ALLOWED_TYPES.get(file.type);
+    if (!extension) {
       return NextResponse.json(
         { message: "Only JPEG, PNG, WEBP, or PDF files are allowed." },
         { status: 400 }
       );
     }
 
-    if (file.size > MAX_SIZE_BYTES) {
+    if (file.size === 0 || file.size > MAX_SIZE_BYTES) {
       return NextResponse.json(
-        { message: "Image must be smaller than 5MB." },
+        { message: "The file must be smaller than 5MB." },
         { status: 400 }
       );
     }
 
-    const blob = await put(`pets/${ownerId}-${Date.now()}-${file.name}`, file, {
-      access: "public",
-    });
+    const uploadDirectory = path.join(process.cwd(), "public", "uploads", "pets");
+    await mkdir(uploadDirectory, { recursive: true });
 
-    return NextResponse.json({ url: blob.url }, { status: 201 });
+    const fileName = `${ownerId}-${randomUUID()}${extension}`;
+    await writeFile(path.join(uploadDirectory, fileName), Buffer.from(await file.arrayBuffer()));
+
+    return NextResponse.json({ url: `/uploads/pets/${fileName}` }, { status: 201 });
   } catch (error) {
-    console.error("Pet photo upload failed:", error);
+    console.error("Pet file upload failed:", error);
     return NextResponse.json(
-      { message: "Could not upload image. Please try again." },
+      { message: "Could not upload the file. Please try again." },
       { status: 500 }
     );
   }
