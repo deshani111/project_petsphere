@@ -1,0 +1,62 @@
+.admin-shell {
+  --admin-font-family: "Inter", Arial, sans-serif;
+  --admin-page-title-size: 30px;
+  --admin-section-title-size: 16px;
+  --admin-card-title-size: 14px;
+  --admin-body-size: 14px;
+  --admin-meta-size: 11px;
+  --admin-label-size: 11px;
+  --admin-line-height: 1.5;
+}
+
+.admin-shell .admin-page-content {
+  font-family: var(--admin-font-family);
+  color: #2e2020;
+  font-size: var(--admin-body-size);
+  line-height: var(--admin-line-height);
+}
+
+.admin-shell .admin-page-content :where(h1, h2, h3, h4, h5, h6, p, small, label, th, td, button, input, select, textarea) {
+  font-family: inherit;
+}
+
+.admin-shell .admin-page-content :where(h1) {
+  font-size: var(--admin-page-title-size) !important;
+  font-weight: 800 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.admin-shell .admin-page-content :where(h2) {
+  font-size: var(--admin-section-title-size) !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.admin-shell .admin-page-content :where(h3) {
+  font-size: var(--admin-card-title-size) !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+}
+
+.admin-shell .admin-page-content :where(p, td, input, select, textarea) {
+  font-size: var(--admin-body-size) !important;
+  line-height: 1.5 !important;
+}
+
+.admin-shell .admin-page-content :where(small, label, th) {
+  font-size: var(--admin-label-size) !important;
+  line-height: 1.35 !important;
+}
+
+.admin-shell .admin-page-content :where(label, th) {
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase;
+}
+
+.admin-shell .admin-page-content :where(button) {
+  font-size: var(--admin-body-size) !important;
+  font-weight: 700 !important;
+}

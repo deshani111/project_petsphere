@@ -1,0 +1,11 @@
+.previewLabel {
+  max-width: 1180px;
+  margin: 0 auto 16px;
+  padding: 10px 14px;
+  border: 1px solid #e8c4bf;
+  border-radius: 9px;
+  background: #fff0ee;
+  color: #943b3b;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
