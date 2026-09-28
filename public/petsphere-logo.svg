@@ -1,0 +1,14 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 70" role="img" aria-labelledby="title desc">
+  <title id="title">PetSphere</title>
+  <desc id="desc">PetSphere wordmark with the original paw symbol.</desc>
+  <g fill="#a13d3f" transform="translate(5 5) scale(2.55)">
+    <path d="M12.2 13.5c-2.1-2.6-6.7.5-4.7 3.8.9 1.5 3.8 1.2 4.7-.5.9 1.7 3.8 2 4.7.5 2-3.3-2.6-6.4-4.7-3.8Z"/>
+    <ellipse cx="5.9" cy="9.2" rx="1.9" ry="2.4" transform="rotate(-28 5.9 9.2)"/>
+    <ellipse cx="9.9" cy="6.4" rx="1.7" ry="2.3" transform="rotate(-10 9.9 6.4)"/>
+    <ellipse cx="14.5" cy="6.4" rx="1.7" ry="2.3" transform="rotate(10 14.5 6.4)"/>
+    <ellipse cx="18.5" cy="9.2" rx="1.9" ry="2.4" transform="rotate(28 18.5 9.2)"/>
+  </g>
+  <text x="70" y="50" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="-2" fill="#302524">Pet<tspan fill="#a13d3f">Sphere</tspan></text>
+</svg>
+
+
