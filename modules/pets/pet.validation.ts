@@ -6,6 +6,7 @@ export type PetCreateInput = {
   age?: number;
   weight_kg?: number;
   photo?: string;
+  medical_report?: string;
   medical_notes?: string;
 };
 
@@ -115,6 +116,7 @@ function validatePetFields(input: InputRecord, requirePetName: boolean): PetUpda
   const age = optionalAge(input);
   const weight = optionalWeight(input);
   const photo = optionalString(input, "photo");
+  const medicalReport = optionalString(input, "medical_report");
   const medicalNotes = optionalString(input, "medical_notes");
 
   if (species !== undefined) pet.species = species;
@@ -123,6 +125,7 @@ function validatePetFields(input: InputRecord, requirePetName: boolean): PetUpda
   if (age !== undefined) pet.age = age;
   if (weight !== undefined) pet.weight_kg = weight;
   if (photo !== undefined) pet.photo = photo;
+  if (medicalReport !== undefined) pet.medical_report = medicalReport;
   if (medicalNotes !== undefined) pet.medical_notes = medicalNotes;
 
   return pet;

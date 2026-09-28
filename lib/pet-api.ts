@@ -8,6 +8,7 @@ export type ApiPet = {
   age: number | null;
   weight_kg: string | null;
   photo: string | null;
+  medical_report: string | null;
   medical_notes: string | null;
   created_date: string;
 };
