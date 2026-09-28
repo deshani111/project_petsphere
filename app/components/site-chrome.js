@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/register", label: "Become a Sitter", showActive: false },
   { href: "/blog", label: "Blog" },
   { href: "/marketplace", label: "Marketplace" },
+  { href: "/owner/dashboard", label: "Dashboard" },
 ];
 
 function isActive(pathname, href) {
@@ -127,6 +128,7 @@ export function SiteFooter() {
         <Link href="/register">Become a Sitter</Link>
         <Link href="/blog">Blog</Link>
         <Link href="/marketplace">Marketplace</Link>
+        <Link href="/owner/dashboard">Dashboard</Link>
       </div>
       <small className="footer-copyright">
         &copy; 2024 PetSphere. All rights reserved.

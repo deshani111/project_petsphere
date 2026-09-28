@@ -9,8 +9,10 @@ const navigation = [
   { label: "My Pets", icon: PawIcon, href: "/owner/pets" },
   { label: "Find a Sitter", icon: SearchIcon, href: "/owner/bookings/new" },
   { label: "My Bookings", icon: CalendarIcon, href: "/owner/bookings" },
+  { label: "Messages", icon: MailIcon, href: "#messages" },
   { label: "Marketplace", icon: StoreIcon, href: "/marketplace" },
   { label: "Blog", icon: FileIcon, href: "/blog" },
+  { label: "My Profile", icon: UserIcon, href: "#profile" },
 ];
 
 export function OwnerSidebar() {
