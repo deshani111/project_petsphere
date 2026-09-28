@@ -194,14 +194,31 @@ model pet_sitter {
   is_verified        Boolean              @default(false)
   avg_rating         Decimal              @default(0) @db.Decimal(3, 2)
   earning_total      Decimal              @default(0) @db.Decimal(12, 2)
+  professional_title String?              @db.VarChar(150)
+  profile_image      String?              @db.VarChar(500)
+  notifications_enabled Boolean           @default(true)
   booking            booking[]
   users              users                @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
   pet_sitter_service pet_sitter_service[]
   sitter_availability sitter_availability[]
   sitter_unavailable_date sitter_unavailable_date[]
   review             review[]
+  verification_documents sitter_verification_document[]
 
   @@index([user_id], map: "idx_pet_sitter_user_id")
+}
+
+model sitter_verification_document {
+  document_id  BigInt   @id @default(autoincrement())
+  sitter_id    BigInt
+  document_type String  @db.VarChar(20)
+  file_url     String   @db.VarChar(500)
+  submitted_at DateTime @default(now()) @db.Timestamp(6)
+  reviewed_at  DateTime? @db.Timestamp(6)
+  pet_sitter   pet_sitter @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade)
+
+  @@unique([sitter_id, document_type])
+  @@index([sitter_id])
 }
 
 model sitter_availability {
@@ -297,6 +314,8 @@ model users {
   is_verified                        Boolean        @default(false)
   created_at                         DateTime       @default(now()) @db.Timestamp(6)
   updated_at                         DateTime       @default(now()) @db.Timestamp(6)
+  emailVerified                      Boolean        @default(false)
+  EmailVerificationToken             EmailVerificationToken[]
   admin                              admin?
   blog_post                          blog_post[]
   message_message_receiver_idTousers message[]      @relation("message_receiver_idTousers")
@@ -306,4 +325,15 @@ model users {
   pet_sitter                         pet_sitter?
 
   @@index([email], map: "idx_users_email")
+}
+
+model EmailVerificationToken {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt
+  tokenHash String   @unique @db.VarChar(128)
+  expiresAt DateTime @db.Timestamp(6)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  users     users    @relation(fields: [userId], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
 }
