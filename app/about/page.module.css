@@ -1,8 +1,8 @@
 .aboutPage { background: #fff; color: #2a2021; }
-.activeLink { color: #ad4141 !important; font-weight: 700 !important; }
+.activeLink { color: #A13D3F !important; font-weight: 700 !important; }
 .aboutHero { min-height: 440px; display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 58px; padding: 42px 4% 48px; background: #fff8f7; }
 .heroCopy { max-width: 520px; }
-.eyebrow { display: inline-block; padding: 6px 10px; border-radius: 999px; background: #fdeeed; color: #ad4141; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
+.eyebrow { display: inline-block; padding: 6px 10px; border-radius: 999px; background: #fdeeed; color: #A13D3F; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
 .heroCopy h1 { margin: 18px 0 16px; max-width: 510px; color: #ad4141; font-size: clamp(38px, 4vw, 58px); line-height: .99; letter-spacing: -2.6px; }
 .heroCopy p, .storyCopy p { color: #75686a; font-size: 14px; line-height: 1.65; }
 .heroActions { display: flex; gap: 12px; margin-top: 26px; }
