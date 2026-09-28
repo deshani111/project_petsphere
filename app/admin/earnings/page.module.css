@@ -1,0 +1,407 @@
+.page {
+  display: grid;
+  gap: 16px;
+  color: #2e2020;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.titleGroup h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.titleGroup p {
+  margin: 4px 0 0;
+  color: #7b6766;
+  font-size: 14px;
+}
+
+.controlRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.periodSelect,
+.exportButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e8cfcf;
+  border-radius: 14px;
+  background: #fff;
+  color: #7f6665;
+  box-shadow: 0 6px 16px rgba(134, 76, 76, 0.06);
+}
+
+.periodSelect {
+  padding: 10px 14px;
+}
+
+.periodSelect select {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.exportButton {
+  padding: 10px 16px;
+  font-weight: 600;
+}
+
+.exportButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.summaryCard,
+.chartCard,
+.tableCard {
+  border: 1px solid #f1dede;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(132, 82, 82, 0.06);
+}
+
+.summaryCard {
+  position: relative;
+  min-height: 132px;
+  padding: 18px;
+}
+
+.cardIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: #fbefef;
+  color: #b14848;
+  font-size: 15px;
+}
+
+.cardTrend {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #edf9ef;
+  color: #2ca65a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.summaryCard small {
+  display: block;
+  margin-top: 16px;
+  color: #ae9090;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.summaryCard strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.chartCard,
+.tableCard {
+  padding: 18px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #8d7472;
+  font-size: 12px;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend span i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.legendGross {
+  background: #ef7a7a;
+}
+
+.legendNet {
+  background: #b54747;
+}
+
+.chartArea {
+  position: relative;
+  height: 300px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255, 247, 247, 0.9), rgba(255, 255, 255, 0.95));
+}
+
+.gridLines {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.gridLines span {
+  border-top: 1px solid #f1dede;
+}
+
+.chartBars {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: flex-end;
+  padding: 30px 26px 28px;
+}
+
+.chartGroup {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  height: 100%;
+}
+
+.barPair {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 220px;
+  width: 100%;
+  justify-content: center;
+}
+
+.grossBar,
+.netBar {
+  width: 26px;
+  border-radius: 999px 999px 0 0;
+  min-height: 18px;
+  align-self: end;
+}
+
+.grossBar {
+  background: #ef7a7a;
+}
+
+.netBar {
+  background: #b54747;
+}
+
+.chartGroup small {
+  color: #987f7d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.historyLink {
+  color: #b14848;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.tableWrap {
+  position: relative;
+  overflow-x: auto;
+}
+
+.tableWrap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableWrap thead th {
+  padding: 10px 8px 14px;
+  border-bottom: 1px solid #f1dede;
+  color: #a48a8a;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tableWrap tbody td {
+  padding: 14px 8px;
+  border-bottom: 1px solid #f6e7e7;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #b14848, #ef7a7a);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.userCell strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.userCell small {
+  display: block;
+  margin-top: 2px;
+  color: #8c7575;
+  font-size: 11px;
+}
+
+.amount {
+  font-weight: 800;
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #f7ecec;
+  color: #8f6b6b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.statusPill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.statusPill.paid {
+  background: #edf9ef;
+  color: #2ca65a;
+}
+
+.statusPill.pending {
+  background: #fff5e6;
+  color: #d39a23;
+}
+
+.statusPill.refunded {
+  background: #fbefef;
+  color: #c45a5a;
+}
+
+.emptyState {
+  padding: 30px 0 10px;
+  text-align: center;
+  color: #8a7070;
+}
+
+.emptyState strong {
+  display: block;
+  color: #2e2020;
+}
+
+.loadingState,
+.errorState {
+  padding: 18px;
+  border: 1px solid #f1dede;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(132, 82, 82, 0.06);
+}
+
+.errorState {
+  color: #b14848;
+}
+
+@media (max-width: 1100px) {
+  .pageHeader,
+  .sectionHeader {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .controlRow {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .periodSelect,
+  .exportButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .chartArea {
+    height: 260px;
+  }
+
+  .chartBars {
+    padding-inline: 14px;
+  }
+}

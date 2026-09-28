@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 
 const SESSION_COOKIE_NAME = "petsphere_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
+const ADMIN_ROLE = "admin";
 
 export { SESSION_COOKIE_NAME, SESSION_MAX_AGE_SECONDS };
 
@@ -104,6 +105,54 @@ export function verifySessionToken(token) {
   }
 }
 
+export function isAdminRole(role) {
+  return typeof role === "string" && role.toLowerCase() === ADMIN_ROLE;
+}
+
+export async function getSessionAccount(sessionToken) {
+  const session = verifySessionToken(sessionToken);
+
+  if (!session || typeof session.sub !== "string") {
+    return null;
+  }
+
+  let userId;
+
+  try {
+    userId = BigInt(session.sub);
+  } catch {
+    return null;
+  }
+
+  const user = await prisma.users.findUnique({
+    where: { user_id: userId },
+    select: {
+      user_id: true,
+      first_name: true,
+      last_name: true,
+      email: true,
+      role: true,
+      is_verified: true,
+      admin: { select: { admin_id: true } },
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  return {
+    id: user.user_id.toString(),
+    firstName: user.first_name,
+    lastName: user.last_name,
+    fullName: `${user.first_name} ${user.last_name}`.trim(),
+    email: user.email,
+    role: user.role,
+    isVerified: user.is_verified,
+    hasAdminProfile: Boolean(user.admin),
+  };
+}
+
 export async function registerAccount({
   role,
   fullName,
@@ -195,17 +244,53 @@ export async function loginAccount({ email, password }) {
       password_hash: true,
       role: true,
       is_verified: true,
+      admin: { select: { admin_id: true } },
     },
   });
 
   if (!user) {
+    if (process.env.NODE_ENV !== "production") {
+      console.info("Login diagnostic:", { accountFound: false });
+    }
     throw new AuthenticationError();
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
   if (!isPasswordValid) {
+    if (process.env.NODE_ENV !== "production") {
+      console.info("Login diagnostic:", {
+        accountFound: true,
+        passwordMatches: false,
+      });
+    }
     throw new AuthenticationError();
+  }
+
+  const roleMatches = isAdminRole(user.role);
+  const adminRelationExists = Boolean(user.admin);
+
+  if (roleMatches && (!adminRelationExists || !user.is_verified)) {
+    if (process.env.NODE_ENV !== "production") {
+      console.info("Login diagnostic:", {
+        accountFound: true,
+        passwordMatches: true,
+        roleMatches,
+        adminRelationExists,
+        isVerified: user.is_verified,
+      });
+    }
+    throw new AuthenticationError();
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    console.info("Login diagnostic:", {
+      accountFound: true,
+      passwordMatches: true,
+      roleMatches,
+      adminRelationExists,
+      isVerified: user.is_verified,
+    });
   }
 
   const account = {

@@ -55,9 +55,10 @@ export default function LoginPage() {
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: formData.email,
+          email: formData.email.trim().toLowerCase(),
           password: formData.password,
         }),
       });
@@ -73,6 +74,11 @@ export default function LoginPage() {
       }
 
       setStatus({ state: "success", message: payload.message });
+      if (String(payload.account?.role || "").toLowerCase() === "admin") {
+        router.push("/admin/dashboard");
+        return;
+      }
+
       router.push("/");
     } catch {
       setStatus({

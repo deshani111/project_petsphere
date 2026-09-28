@@ -1,0 +1,271 @@
+.shell {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 174px minmax(0, 1fr);
+  background: #fff8f7;
+  color: #302627;
+  font-family: var(--admin-font-family, "Inter", Arial, sans-serif);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sidebar {
+  z-index: 3;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px 15px;
+  border-right: 1px solid #eddbd9;
+  background: #fff;
+}
+
+.brand {
+  display: block;
+  padding-left: 9px;
+  color: #ad3f42;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand > span {
+  margin-right: 4px;
+  font-size: 18px;
+}
+
+.brand small {
+  display: block;
+  margin: 3px 0 31px 24px;
+  color: #7d7070;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .015em;
+  text-transform: uppercase;
+}
+
+.navigation {
+  display: grid;
+  gap: 3px;
+}
+
+.navigation a,
+.disabledLink,
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #594d4d;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+}
+
+.navigation a > span,
+.disabledLink > span,
+.logoutButton > span {
+  display: grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+  color: #6a5a59;
+  text-align: center;
+}
+
+.iconSvg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.navigation a:hover,
+.activeLink {
+  background: #ad3f42 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 9px rgba(173,63,66,.18);
+}
+
+.navigation a:focus-visible,
+.logoutButton:focus-visible,
+.notificationButton:focus-visible,
+.menuButton:focus-visible,
+.backdrop:focus-visible {
+  outline: 2px solid #ad3f42;
+  outline-offset: 2px;
+}
+
+.activeLink > span {
+  color: #fff !important;
+}
+
+.disabledLink {
+  opacity: .95;
+  cursor: default;
+}
+
+.logoutButton {
+  width: 100%;
+  min-height: 38px;
+  margin-top: auto;
+  padding-top: 13px;
+  border-top: 1px solid #eddbd9;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.logoutButton:hover {
+  color: #ad3f42;
+}
+
+.notificationButton {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #5e4d4c;
+  cursor: pointer;
+}
+
+.notificationButton:hover {
+  background: #f8ecea;
+  color: #ad3f42;
+}
+
+.mainContent {
+  min-width: 0;
+}
+
+.topBar {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 20px;
+  border-bottom: 1px solid #eddbd9;
+  background: #fff;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.bell {
+  font-size: 14px;
+}
+
+.headerActions i {
+  height: 23px;
+  border-left: 1px solid #ebdfdd;
+}
+
+.adminIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.identityText {
+  display: grid;
+  justify-items: end;
+  line-height: 1.05;
+}
+
+.identityText strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d2323;
+}
+
+.identityText span {
+  color: #8a7775;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.identityAvatar {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #d8b299, #8b5f54);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 4px 10px rgba(109,72,65,.18);
+}
+
+.pageContent {
+  padding: 22px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.menuButton,
+.backdrop {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 230px;
+    transform: translateX(-105%);
+    transition: transform 180ms ease;
+    box-shadow: 12px 0 30px rgba(61,37,36,.12);
+  }
+
+  .menuOpen {
+    transform: translateX(0);
+  }
+
+  .backdrop {
+    position: fixed;
+    z-index: 2;
+    inset: 0;
+    display: block;
+    width: 100%;
+    border: 0;
+    background: rgba(40,28,28,.25);
+  }
+
+  .topBar {
+    justify-content: space-between;
+    padding: 0 15px;
+  }
+
+  .menuButton {
+    display: block;
+    border: 0;
+    background: transparent;
+    color: #5e4d4c;
+    font-size: 1rem;
+  }
+
+  .pageContent {
+    padding: 15px;
+  }
+}

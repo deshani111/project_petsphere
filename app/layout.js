@@ -1,5 +1,4 @@
 import "./globals.css";
-import LayoutShell from "./components/layout-shell";
 
 export const metadata = {
   title: "PetSphere | Trusted Pet Care",
@@ -9,9 +8,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <LayoutShell>{children}</LayoutShell>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

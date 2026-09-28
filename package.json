@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:seed-admin": "node --env-file=.env prisma/seed-admin.js",
+    "db:seed-earnings": "node --env-file=.env prisma/seed-earnings.js",
+    "db:seed-reviews": "node --env-file=.env prisma/seed-reviews.js",
+    "db:seed-blogs": "node --env-file=.env prisma/seed-blog-posts.js",
+    "db:verify-admin": "node --env-file=.env prisma/verify-admin.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
