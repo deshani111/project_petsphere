@@ -31,6 +31,13 @@ export class EmailVerificationRequiredError extends Error {
   }
 }
 
+export class DatabaseConnectionError extends Error {
+  constructor(message = "The database connection is currently unavailable.") {
+    super(message);
+    this.name = "DatabaseConnectionError";
+  }
+}
+
 function getSessionSecret() {
   if (process.env.AUTH_SECRET) {
     return process.env.AUTH_SECRET;
@@ -125,14 +132,29 @@ export async function registerAccount({
   const { firstName, lastName } = splitFullName(fullName);
   const passwordHash = await bcrypt.hash(password, 12);
 
-  const duplicateAccount = await prisma.users.findUnique({
-    where: {
-      email,
-    },
-    select: {
-      user_id: true,
-    },
-  });
+  let duplicateAccount;
+
+  try {
+    duplicateAccount = await prisma.users.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        user_id: true,
+      },
+    });
+  } catch (error) {
+    if (
+      error?.code === "P1017" ||
+      error?.message?.includes("Server has closed the connection") ||
+      error?.message?.includes("Connection terminated") ||
+      error?.message?.includes("ECONNRESET")
+    ) {
+      throw new DatabaseConnectionError();
+    }
+
+    throw error;
+  }
 
   if (duplicateAccount) {
     throw new RegistrationConflictError(
