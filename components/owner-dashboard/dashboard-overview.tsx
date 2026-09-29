@@ -121,13 +121,8 @@ export function DashboardOverview({
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {isLoadingPets && <p className="text-sm text-[#887c7d]">Loading your pets...</p>}
           {!isLoadingPets && petsError && <p className="text-sm text-[#b34b4b]">{petsError}</p>}
-          {!isLoadingPets && !petsError && visiblePets.length === 0 && (
-            <p className="text-sm text-[#887c7d]">No pets added yet.</p>
-          )}
-          {!isLoadingPets && !petsError && visiblePets.length === 0 ? (
-            <Link href="/owner/pets/add" className="inline-flex rounded-lg bg-[#ab3d42] px-4 py-2 text-sm font-semibold text-white">Add your first pet</Link>
-          ) : null}
-          {previewPets.map((pet) => (
+
+          {!isLoadingPets && !petsError && previewPets.map((pet) => (
             <PetCard
               key={pet.pet_id}
               image={pet.photo || undefined}
@@ -140,6 +135,41 @@ export function DashboardOverview({
               onDelete={() => void handleDelete(pet.pet_id)}
             />
           ))}
+
+          {!isLoadingPets && !petsError ? (
+            <Link
+              href="/owner/pets/add"
+              className="group block h-full"
+              aria-label="Add another pet"
+            >
+              <article className="flex h-full min-h-[392px] flex-col overflow-hidden rounded-[20px] border-2 border-dashed border-[#e6c7c7] bg-[#fffaf9] p-4 shadow-[0_10px_30px_rgba(91,52,51,0.06)] transition hover:border-[#d99a9d] hover:bg-[#fff6f5]">
+                <div className="relative mb-4 h-[220px] w-full overflow-hidden rounded-[18px] bg-[#fffaf9]">
+                  <div className="absolute inset-0 rounded-[18px] border border-dashed border-[#e8c7c7]" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full border-[2px] border-[#d69a9e] text-[42px] font-light leading-none text-[#ab3d42]">
+                      +
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-4 flex-1 px-1 text-center">
+                  <h3 className="text-[18px] font-bold text-[#403537]">Add another pet</h3>
+                  <p className="mt-2 text-[14px] leading-5 text-[#7f7072]">
+                    Grow your pet family in just a few steps.
+                  </p>
+                </div>
+
+                <div className="mt-auto flex items-center gap-3 px-1 opacity-0">
+                  <span className="flex w-1/2 items-center justify-center rounded-lg bg-[#fff2f2] px-3 py-2 text-[13px] font-semibold text-[#ab3d42]">
+                    Edit
+                  </span>
+                  <span className="flex w-1/2 items-center justify-center rounded-lg bg-[#ffecec] px-3 py-2 text-[13px] font-semibold text-[#b34b4b]">
+                    Delete
+                  </span>
+                </div>
+              </article>
+            </Link>
+          ) : null}
         </div>
       </section>
 
