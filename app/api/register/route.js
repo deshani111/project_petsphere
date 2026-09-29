@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import {
+  DatabaseConnectionError,
   registerAccount,
   RegistrationConflictError,
 } from "../../../modules/auth/auth.service";
@@ -174,6 +175,17 @@ export async function POST(request) {
 
 
   } catch (error) {
+
+    if (error instanceof DatabaseConnectionError) {
+      return NextResponse.json(
+        {
+          message: "The database is temporarily unavailable. Please try again in a few moments.",
+        },
+        {
+          status: 503,
+        }
+      );
+    }
 
     if (error instanceof RegistrationConflictError || error?.code === "P2002") {
       return NextResponse.json(

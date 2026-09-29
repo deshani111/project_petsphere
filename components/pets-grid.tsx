@@ -78,15 +78,25 @@ export default function PetsGrid({
           />
         ))}
 
-        <Link href="/owner/pets/add" className="flex items-center justify-center rounded-lg border-2 border-dashed border-[#e8cfcf] bg-white p-6 text-center text-[#8c7b7b] transition hover:border-[#d9b1b1] hover:bg-[#fffafa]">
-          <div>
-            <span className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-[#f0deda] text-[#ab3d42]">
-              +
-            </span>
-            <p className="text-sm font-semibold">Add another pet</p>
-            <p className="mt-1 text-xs text-[#9b8b8b]">Grow your pet family in just a few steps.</p>
-          </div>
-        </Link>
+       <Link href="/owner/pets/add" className="group block h-full" aria-label="Add another pet">
+  <article className="flex h-full min-h-[392px] flex-col overflow-hidden rounded-[20px] border-2 border-dashed border-[#e6c7c7] bg-[#fffaf9] p-4 shadow-[0_10px_30px_rgba(91,52,51,0.06)] transition hover:border-[#d99a9d] hover:bg-[#fff6f5]">
+    <div className="relative mb-4 h-[220px] w-full overflow-hidden rounded-[18px] bg-[#fffaf9]">
+      <div className="absolute inset-0 rounded-[18px] border border-dashed border-[#e8c7c7]" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full border-[2px] border-[#d69a9e] text-[42px] font-light leading-none text-[#ab3d42]">
+          +
+        </div>
+      </div>
+    </div>
+
+    <div className="mb-4 flex-1 px-1 text-center">
+      <h3 className="text-[18px] font-bold text-[#403537]">Add another pet</h3>
+      <p className="mt-2 text-[14px] leading-5 text-[#7f7072]">
+        Grow your pet family in just a few steps.
+      </p>
+    </div>
+  </article>
+</Link>
       </div>
 
       {deleteTarget ? (
