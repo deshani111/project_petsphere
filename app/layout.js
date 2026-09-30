@@ -1,10 +1,51 @@
 import "./globals.css";
 import { cookies } from "next/headers";
+import { createHmac, timingSafeEqual } from "crypto";
 import LayoutShell from "./components/layout-shell";
-import {
-  SESSION_COOKIE_NAME,
-  verifySessionToken,
-} from "../modules/auth/auth.service";
+
+const SESSION_COOKIE_NAME = "petsphere_session";
+
+function getSessionSecret() {
+  return process.env.AUTH_SECRET || "petsphere-dev-session-secret";
+}
+
+function signSessionPayload(encodedPayload) {
+  return createHmac("sha256", getSessionSecret())
+    .update(encodedPayload)
+    .digest("base64url");
+}
+
+function verifySessionToken(token) {
+  if (typeof token !== "string" || !token.includes(".")) {
+    return null;
+  }
+
+  const [encodedPayload, signature] = token.split(".");
+  const expectedSignature = signSessionPayload(encodedPayload);
+  const signatureBuffer = Buffer.from(signature);
+  const expectedSignatureBuffer = Buffer.from(expectedSignature);
+
+  if (
+    signatureBuffer.length !== expectedSignatureBuffer.length ||
+    !timingSafeEqual(signatureBuffer, expectedSignatureBuffer)
+  ) {
+    return null;
+  }
+
+  try {
+    const payload = JSON.parse(
+      Buffer.from(encodedPayload, "base64url").toString("utf8")
+    );
+
+    if (!payload.exp || payload.exp < Math.floor(Date.now() / 1000)) {
+      return null;
+    }
+
+    return payload;
+  } catch {
+    return null;
+  }
+}
 
 export const metadata = {
   title: "PetSphere | Trusted Pet Care",
