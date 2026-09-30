@@ -1,15 +1,31 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../lib/prisma";
-import { getCurrentSitter, serialize } from "../../../../modules/sitter/sitter.service";
-import {
-  VERIFICATION_DOCUMENT_TYPES,
-  getVerificationStatus,
-  saveVerificationFile,
-} from "../../../../modules/sitter/verification-documents";
-const clean=(v,n)=>typeof v==="string"?v.trim().slice(0,n):"";
-function dto(s){return serialize({id:s.sitter_id,firstName:s.users.first_name,lastName:s.users.last_name,fullName:`${s.users.first_name} ${s.users.last_name}`.trim(),email:s.users.email,phone:s.users.phone_number??"",address:s.address??"",serviceArea:s.service_area??"",bio:s.bio??"",professionalTitle:s.professional_title??"Pet Sitter",profileImage:s.profile_image??null,notificationsEnabled:s.notifications_enabled,isVerified:s.is_verified,verificationStatus:getVerificationStatus(s),services:(s.pet_sitter_service??[]).filter(x=>x.is_active).map(x=>x.service_type.name),documents:(s.verification_documents??[]).map(x=>({type:x.document_type,url:x.file_url,submittedAt:x.submitted_at}))})}
-async function current(){const sitter=await getCurrentSitter();if(!sitter)return null;return prisma.pet_sitter.findUnique({where:{sitter_id:sitter.sitter_id},include:{users:true,pet_sitter_service:{include:{service_type:true}},verification_documents:true}})}
-async function profileBody(req){const contentType=req.headers.get("content-type")??"";if(contentType.includes("multipart/form-data")){const form=await req.formData();const body=Object.fromEntries(["firstName","lastName","email","phone","address","serviceArea","bio","professionalTitle"].map(key=>[key,form.get(key)]));const files=VERIFICATION_DOCUMENT_TYPES.map(type=>[type,form.get(type)]).filter(([,file])=>file&&typeof file==="object"&&file.size>0);return {body,files}}const body=await req.json().catch(()=>null);return {body,files:[]}}
-export async function GET(){const s=await current();if(!s)return NextResponse.json({success:false,error:"Sitter access is required."},{status:401});const data=dto(s);return NextResponse.json({success:true,data,profile:data})}
-export async function PATCH(req){const s=await current();if(!s)return NextResponse.json({success:false,error:"Sitter access is required."},{status:401});const {body:b,files}=await profileBody(req);if(!b)return NextResponse.json({success:false,error:"Invalid profile data."},{status:400});const firstName=clean(b.firstName,100),lastName=clean(b.lastName,100),email=clean(b.email,255).toLowerCase(),phone=clean(b.phone,20),address=clean(b.address,255),serviceArea=clean(b.serviceArea,150),bio=clean(b.bio,2000),professionalTitle=clean(b.professionalTitle??s.professional_title??"Pet Sitter",150);if(!firstName||!lastName||!serviceArea||!professionalTitle)return NextResponse.json({success:false,error:"Name, professional title, and city are required."},{status:400});if(!/^\S+@\S+\.\S+$/.test(email))return NextResponse.json({success:false,error:"Please provide a valid email address."},{status:400});if(phone&&!/^[+0-9()\-\s]{8,20}$/.test(phone))return NextResponse.json({success:false,error:"Please provide a valid phone number."},{status:400});try{const storedDocuments=[];for(const [type,file] of files){storedDocuments.push({type,url:await saveVerificationFile({sitterId:s.sitter_id,type,file})})}const updated=await prisma.$transaction(async tx=>{await tx.users.update({where:{user_id:s.user_id},data:{first_name:firstName,last_name:lastName,email,phone_number:phone||null}});for(const document of storedDocuments){await tx.sitter_verification_document.upsert({where:{sitter_id_document_type:{sitter_id:s.sitter_id,document_type:document.type}},update:{file_url:document.url,submitted_at:new Date(),reviewed_at:null},create:{sitter_id:s.sitter_id,document_type:document.type,file_url:document.url}})}return tx.pet_sitter.update({where:{sitter_id:s.sitter_id},data:{address:address||null,service_area:serviceArea,bio:bio||null,professional_title:professionalTitle},include:{users:true,pet_sitter_service:{include:{service_type:true}},verification_documents:true}})});const data=dto(updated);return NextResponse.json({success:true,data,profile:data})}catch(e){return NextResponse.json({success:false,error:e?.code==="P2002"?"That email address is already in use.":e?.message||"Unable to save your profile."},{status:e?.code==="P2002"?409:500})}}
-export const PUT=PATCH;
+import { getCurrentSitterProfile, updateCurrentSitterProfile } from "../../../../modules/sitter/profile/profile.service";
+import { parseProfileRequest } from "../../../../modules/sitter/profile/profile.validation";
+
+export async function GET() {
+  const profile = await getCurrentSitterProfile();
+
+  if (!profile) {
+    return NextResponse.json({ success: false, error: "Sitter access is required." }, { status: 401 });
+  }
+
+  return NextResponse.json({ success: true, data: profile, profile });
+}
+
+export async function PATCH(request) {
+  const { body, files } = await parseProfileRequest(request);
+
+  if (!body) {
+    return NextResponse.json({ success: false, error: "Invalid profile data." }, { status: 400 });
+  }
+
+  const result = await updateCurrentSitterProfile(body, files);
+
+  if (result.error) {
+    return NextResponse.json({ success: false, error: result.error }, { status: result.status ?? 500 });
+  }
+
+  return NextResponse.json({ success: true, data: result.profile, profile: result.profile });
+}
+
+export const PUT = PATCH;
