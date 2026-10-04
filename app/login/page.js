@@ -61,7 +61,7 @@ export default function LoginPage() {
         return;
       }
       setStatus({ state: "success", message: payload.message });
-      window.location.replace("/");
+      window.location.replace(payload.account?.role === "pet_sitter" ? "/sitter" : "/owner/dashboard");
     } catch {
       setStatus({ state: "error", message: "Could not reach the login service. Please try again." });
     }
