@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint app/sitter/Profile app/sitter/reviews app/api/sitter/profile app/api/sitter/reviews modules/sitter/profile modules/sitter/reviews"
   },
   "dependencies": {
     "@getbrevo/brevo": "^6.0.2",

@@ -56,7 +56,9 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  const isAuthenticated = Boolean(verifySessionToken(sessionToken));
+  const sessionPayload = verifySessionToken(sessionToken);
+  const isAuthenticated = Boolean(sessionPayload);
+  const userRole = sessionPayload?.role ?? null;
 
   return (
     <html lang="en">
@@ -69,7 +71,7 @@ export default async function RootLayout({ children }) {
         />
       </head>
       <body>
-        <LayoutShell isAuthenticated={isAuthenticated}>
+        <LayoutShell isAuthenticated={isAuthenticated} userRole={userRole}>
           {children}
         </LayoutShell>
       </body>

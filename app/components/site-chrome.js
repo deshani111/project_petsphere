@@ -4,15 +4,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 
-const navLinks = [
+function getDashboardHref(userRole) {
+  return userRole === "pet_sitter" ? "/sitter" : "/owner/dashboard";
+}
+
+function getNavLinks(userRole) {
+  return [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/register", label: "Find a Sitter", showActive: false },
   { href: "/register", label: "Become a Sitter", showActive: false },
   { href: "/blog", label: "Blog" },
   { href: "/marketplace", label: "Marketplace" },
-  { href: "/owner/dashboard", label: "Dashboard" },
-];
+    { href: getDashboardHref(userRole), label: "Dashboard" },
+  ];
+}
 
 function isActive(pathname, href) {
   if (href === "/") {
@@ -22,10 +28,11 @@ function isActive(pathname, href) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SiteHeader({ isAuthenticated }) {
+export function SiteHeader({ isAuthenticated, userRole }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef(null);
+  const navLinks = getNavLinks(userRole);
 
   return (
     <header
@@ -106,7 +113,9 @@ export function SiteHeader({ isAuthenticated }) {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ userRole }) {
+  const dashboardHref = getDashboardHref(userRole);
+
   return (
     <footer className="site-footer">
       <div className="footer-brand">
@@ -128,7 +137,7 @@ export function SiteFooter() {
         <Link href="/register">Become a Sitter</Link>
         <Link href="/blog">Blog</Link>
         <Link href="/marketplace">Marketplace</Link>
-        <Link href="/owner/dashboard">Dashboard</Link>
+        <Link href={dashboardHref}>Dashboard</Link>
       </div>
       <small className="footer-copyright">
         &copy; 2024 PetSphere. All rights reserved.
