@@ -21,3 +21,7 @@ npm-debug.log*
 /.agents
 /.claude
 /.windsurf
+
+.next-clean/
+
+tsconfig.tsbuildinfo
