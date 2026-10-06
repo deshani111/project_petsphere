@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   AuthenticationError,
+  EmailVerificationRequiredError,
   loginAccount,
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_SECONDS,
@@ -26,6 +27,7 @@ export async function POST(request) {
     typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
 
   const password = typeof body.password === "string" ? body.password : "";
+  const rememberMe = body.rememberMe === true;
 
   if (!email || !password) {
     return NextResponse.json(
@@ -42,28 +44,45 @@ export async function POST(request) {
   }
 
   try {
-    const { account, sessionToken } = await loginAccount({ email, password });
+    const { account, sessionToken } = await loginAccount({
+      email,
+      password,
+      rememberMe,
+    });
 
     const response = NextResponse.json(
       {
         message: "Logged in successfully.",
         account,
+        redirectTo: account.role === "pet_owner" ? "/owner/dashboard" : "/",
       },
       { status: 200 }
     );
 
-    response.cookies.set({
+    const sessionCookie = {
       name: SESSION_COOKIE_NAME,
       value: sessionToken,
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       path: "/",
-      maxAge: SESSION_MAX_AGE_SECONDS,
-    });
+    };
+
+    if (rememberMe) {
+      sessionCookie.maxAge = SESSION_MAX_AGE_SECONDS;
+    }
+
+    response.cookies.set(sessionCookie);
 
     return response;
   } catch (error) {
+    if (error instanceof EmailVerificationRequiredError) {
+      return NextResponse.json(
+        { message: error.message },
+        { status: 403 }
+      );
+    }
+
     if (error instanceof AuthenticationError) {
       return NextResponse.json(
         { message: "Invalid email or password." },
