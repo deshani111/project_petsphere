@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint app/sitter/Profile app/sitter/reviews app/api/sitter/profile app/api/sitter/reviews modules/sitter/profile modules/sitter/reviews"
   },
   "dependencies": {
     "@getbrevo/brevo": "^6.0.2",
@@ -14,7 +14,8 @@
     "@prisma/client": "^7.9.1",
     "@vercel/blob": "^2.8.0",
     "bcrypt": "^6.0.0",
-    "next": "15.5.26",
+    "lucide-react": "^1.30.0",
+    "next": "15.5.4",
     "pg": "^8.22.0",
     "prisma": "^7.9.1",
     "react": "19.1.1",
@@ -22,7 +23,10 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "26.1.2",
     "dotenv": "^17.4.2",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.8",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   }
