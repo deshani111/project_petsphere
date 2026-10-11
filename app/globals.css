@@ -868,3 +868,177 @@ body { color: var(--ink-dark); }
     min-height: 74px;
   }
 }
+
+/* Compact desktop measurements for the Book a Sitter flow. */
+@media (min-width: 768px) {
+  .booking-flow-shell .booking-flow-sidebar {
+    width: 123px !important;
+    padding: 14px 8px 14px !important;
+  }
+
+  .booking-flow-sidebar > a:first-child {
+    padding: 0 6px 18px !important;
+    gap: 3px !important;
+    font-size: 12px !important;
+  }
+
+  .booking-flow-sidebar > a:first-child small {
+    margin-top: 4px !important;
+    font-size: 4px !important;
+  }
+
+  .booking-flow-sidebar nav {
+    gap: 3px !important;
+  }
+
+  .booking-flow-sidebar nav a {
+    height: 20px !important;
+    gap: 6px !important;
+    padding: 0 6px !important;
+    border-radius: 4px !important;
+    font-size: 7px !important;
+  }
+
+  .booking-flow-sidebar > a:last-child {
+    gap: 6px !important;
+    padding: 11px 6px 0 !important;
+    font-size: 7px !important;
+  }
+
+  .booking-flow-shell > section > header {
+    height: 38px !important;
+    padding: 0 18px !important;
+  }
+
+  .booking-flow-shell > section > header > div {
+    gap: 7px !important;
+    font-size: 6px !important;
+  }
+
+  .booking-flow-shell > section > div[aria-label="Booking progress"] {
+    height: 56px !important;
+    padding-top: 8px !important;
+    padding-left: 43px !important;
+    justify-content: flex-start !important;
+  }
+
+  .booking-flow-shell > section > div[aria-label="Booking progress"] > div {
+    width: 96px !important;
+  }
+
+  .booking-flow-shell > section > div[aria-label="Booking progress"] > div > span {
+    width: 19px !important;
+    height: 19px !important;
+    font-size: 7px !important;
+  }
+
+  .booking-flow-shell > section > div[aria-label="Booking progress"] small {
+    margin-top: 2px !important;
+    font-size: 4px !important;
+  }
+
+  .booking-flow-shell > section > div[aria-label="Booking progress"] i {
+    left: 61px !important;
+    top: 9px !important;
+    width: 35px !important;
+  }
+
+  .booking-service-page {
+    max-width: 456px !important;
+    grid-template-columns: minmax(0, 300px) 144px !important;
+    gap: 12px !important;
+    margin-left: 19px !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .booking-service-page button[aria-pressed] {
+    min-height: 138px !important;
+  }
+
+  .booking-summary {
+    width: 144px !important;
+    padding: 11px !important;
+  }
+
+  .booking-service-page {
+    margin-top: 13px !important;
+  }
+
+  .booking-service-page h1 {
+    font-size: 17px !important;
+  }
+
+  .booking-service-page > section > p {
+    margin-bottom: 14px !important;
+    font-size: 7px !important;
+  }
+
+  .booking-service-page > section > div:nth-of-type(1) {
+    gap: 10px !important;
+  }
+
+  .booking-service-page button[aria-pressed] {
+    padding: 11px !important;
+  }
+
+  .booking-service-page button[aria-pressed] > span:first-child,
+  .booking-service-page button[aria-pressed] > span:nth-child(3) {
+    top: 11px !important;
+    left: 11px !important;
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .booking-service-page button[aria-pressed] > span:nth-child(2),
+  .booking-service-page button[aria-pressed] > span:nth-child(4) {
+    top: 8px !important;
+    right: 8px !important;
+    width: 12px !important;
+    height: 12px !important;
+    font-size: 7px !important;
+  }
+
+  .booking-service-page button[aria-pressed] > strong {
+    margin-top: 9px !important;
+    font-size: 9px !important;
+  }
+
+  .booking-service-page button[aria-pressed] > p {
+    margin: 5px 0 !important;
+    font-size: 6px !important;
+  }
+
+  .booking-service-page button[aria-pressed] > b {
+    bottom: 10px !important;
+    font-size: 8px !important;
+  }
+
+  .booking-service-page button[aria-pressed] > b em {
+    font-size: 6px !important;
+  }
+
+  .booking-summary h2 {
+    margin-bottom: 12px !important;
+    font-size: 9px !important;
+  }
+
+  .booking-summary .grid.h-\[27px\] {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .booking-summary .mb-3 {
+    margin-bottom: 10px !important;
+  }
+
+  .booking-service-page > section > div:last-child {
+    margin-top: 12px !important;
+    padding: 0 14px !important;
+  }
+
+  .booking-service-page > section > div:last-child a {
+    font-size: 7px !important;
+  }
+}
