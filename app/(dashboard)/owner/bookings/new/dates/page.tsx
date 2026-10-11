@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import BookingSummary from "../components/booking-summary";
+import { useBooking } from "../components/booking-context";
 
 const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -16,11 +17,12 @@ function displayDate(date: Date) {
 }
 
 export default function BookingDatesPage() {
+  const { draft, setDraft } = useBooking();
   const [month, setMonth] = useState(new Date(2024, 8, 1));
-  const [startDate, setStartDate] = useState<Date | null>(new Date(2024, 8, 11));
-  const [endDate, setEndDate] = useState<Date | null>(new Date(2024, 8, 15));
-  const [dropOff, setDropOff] = useState("09:00 AM");
-  const [pickUp, setPickUp] = useState("05:00 PM");
+  const startDate = draft.startDate;
+  const endDate = draft.endDate;
+  const dropOff = draft.dropOff;
+  const pickUp = draft.pickUp;
 
   const firstWeekday = (month.getDay() + 6) % 7;
   const totalDays = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
@@ -30,15 +32,14 @@ export default function BookingDatesPage() {
 
   function selectDate(date: Date) {
     if (!startDate || endDate) {
-      setStartDate(date);
-      setEndDate(null);
+      setDraft({ startDate: date, endDate: null });
       return;
     }
     if (date.getTime() < startDate.getTime()) {
-      setStartDate(date);
+      setDraft({ startDate: date });
       return;
     }
-    setEndDate(date);
+    setDraft({ endDate: date });
   }
 
   function inRange(date: Date) {
@@ -60,7 +61,7 @@ export default function BookingDatesPage() {
             const selected = isStart || isEnd;
             return <button key={key} type="button" onClick={() => selectDate(date)} className={`relative h-[37px] text-[9px] ${inRange(date) ? "bg-[#fce4e1]" : ""} ${isStart ? "rounded-l-full" : ""} ${isEnd ? "rounded-r-full" : ""}`}><span className={`relative z-10 inline-grid h-[25px] w-[25px] place-items-center rounded-full ${selected ? "bg-[#A13D3F] font-bold text-white shadow-[0_3px_6px_rgba(161,61,63,.2)]" : "hover:bg-[#fff0ef]"}`}>{date.getDate()}</span></button>;
           })}</div>
-          <div className="mt-3 grid gap-3 border-t border-[#efdcda] pt-4 sm:grid-cols-2"><label className="text-[8px] text-[#776b6c]">Estimated Drop-off<select value={dropOff} onChange={(event) => setDropOff(event.target.value)} className="mt-1 block h-[27px] w-full rounded-[7px] border border-[#e6cfcd] bg-[#fff4f2] px-2 text-[8px] text-[#493d3e] outline-none"><option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option></select></label><label className="text-[8px] text-[#776b6c]">Estimated Pick-up<select value={pickUp} onChange={(event) => setPickUp(event.target.value)} className="mt-1 block h-[27px] w-full rounded-[7px] border border-[#e6cfcd] bg-[#fff4f2] px-2 text-[8px] text-[#493d3e] outline-none"><option>04:00 PM</option><option>05:00 PM</option><option>06:00 PM</option></select></label></div>
+          <div className="mt-3 grid gap-3 border-t border-[#efdcda] pt-4 sm:grid-cols-2"><label className="text-[8px] text-[#776b6c]">Estimated Drop-off<select value={dropOff} onChange={(event) => setDraft({ dropOff: event.target.value })} className="mt-1 block h-[27px] w-full rounded-[7px] border border-[#e6cfcd] bg-[#fff4f2] px-2 text-[8px] text-[#493d3e] outline-none"><option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option></select></label><label className="text-[8px] text-[#776b6c]">Estimated Pick-up<select value={pickUp} onChange={(event) => setDraft({ pickUp: event.target.value })} className="mt-1 block h-[27px] w-full rounded-[7px] border border-[#e6cfcd] bg-[#fff4f2] px-2 text-[8px] text-[#493d3e] outline-none"><option>04:00 PM</option><option>05:00 PM</option><option>06:00 PM</option></select></label></div>
         </div>
         <div className="mt-6 flex items-center justify-between px-[12px]"><Link href="/owner/bookings" className="text-[9px] text-[#A13D3F]">Cancel</Link><div className="flex gap-3"><Link href="/owner/bookings/new/pet" className="rounded-[8px] border border-[#DCC0BF] px-3 py-[8px] text-[9px] text-[#A13D3F]">← Previous</Link><Link href="/owner/bookings/new/instructions" className="rounded-[8px] bg-[#A13D3F] px-4 py-[9px] text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]">Next →</Link></div></div>
       </section>

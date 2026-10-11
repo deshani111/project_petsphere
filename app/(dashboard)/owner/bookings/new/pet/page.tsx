@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import BookingSummary from "../components/booking-summary";
+import { useBooking } from "../components/booking-context";
 
 const pets = [
   { id: "charlie", name: "Cooper", details: "Beagle • 4 Years", image: "/marketplace-cooper.jpg" },
@@ -11,8 +11,9 @@ const pets = [
 ];
 
 export default function SelectPetPage() {
-  const [selectedPets, setSelectedPets] = useState<string[]>(["charlie"]);
-  const togglePet = (id: string) => setSelectedPets((current) => current.includes(id) ? current.filter((pet) => pet !== id) : [...current, id]);
+  const { draft, setDraft } = useBooking();
+  const selectedPets = draft.pet ? [draft.pet] : [];
+  const togglePet = (id: string) => setDraft({ pet: selectedPets.includes(id) ? null : id });
 
   return (
     <div className="mx-auto mt-2.5 grid max-w-[747px] grid-cols-1 gap-[15px] px-[14px] pb-6 sm:px-[18px] md:grid-cols-[minmax(420px,1fr)_170px]">
@@ -31,7 +32,7 @@ export default function SelectPetPage() {
           })}
           <button type="button" className="min-h-[139px] rounded-[13px] border border-dashed border-[#e7b4ad] bg-white p-3 text-center"><span className="mx-auto grid h-7 w-7 place-items-center rounded-full bg-[#fae6e3] text-[18px] text-[#A13D3F]">+</span><strong className="mt-3 block text-[9px]">Add another pet</strong><span className="mt-1 block text-[7px] text-[#8d8182]">Register a new companion</span></button>
         </div>
-        <div className="mt-6 border-t border-[#efdcda] pt-4"><div className="flex items-center justify-between px-[12px]"><Link href="/owner/bookings" className="text-[9px] text-[#A13D3F]">Cancel</Link><div className="flex gap-3"><Link href="/owner/bookings/new" className="rounded-[8px] border border-[#DCC0BF] px-3 py-[8px] text-[9px] text-[#A13D3F]">← Previous</Link><Link href="/owner/bookings/new/dates" className="rounded-[8px] bg-[#A13D3F] px-4 py-[9px] text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]">Next →</Link></div></div></div>
+        <div className="mt-6 border-t border-[#efdcda] pt-4"><div className="flex items-center justify-between px-[12px]"><Link href="/owner/bookings" className="text-[9px] text-[#A13D3F]">Cancel</Link><div className="flex gap-3"><Link href="/owner/bookings/new" className="rounded-[8px] border border-[#DCC0BF] px-3 py-[8px] text-[9px] text-[#A13D3F]">← Previous</Link><Link href={draft.pet ? "/owner/bookings/new/dates" : "#"} className={`rounded-[8px] px-4 py-[9px] text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)] ${draft.pet ? "bg-[#A13D3F]" : "pointer-events-none bg-[#f8d8d1]"}`}>Next →</Link></div></div></div>
       </section>
       <BookingSummary service="Boarding" price="8,500.00" unit="/ night" />
     </div>

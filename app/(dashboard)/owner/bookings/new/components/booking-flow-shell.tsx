@@ -13,7 +13,7 @@ function PawMark() {
 
 export default function BookingFlowShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const currentStep = pathname.endsWith("/pet") ? 1 : pathname.endsWith("/dates") ? 2 : pathname.endsWith("/review") ? 3 : 0;
+  const currentStep = pathname.endsWith("/pet") ? 1 : pathname.endsWith("/dates") ? 2 : pathname.endsWith("/instructions") ? 3 : 0;
 
   return (
     <main className="min-h-screen bg-[#fffafa] font-[Inter,Arial,sans-serif] text-[#2d2526] md:flex">

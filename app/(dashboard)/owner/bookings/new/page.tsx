@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import BookingSummary from "./components/booking-summary";
-
-type ServiceId = "boarding" | "walking" | "grooming" | "training";
+import { useBooking, type ServiceId } from "./components/booking-context";
 
 const services: Array<{ id: ServiceId; name: string; description: string; price: string; unit: string; icon: string }> = [
   { id: "boarding", name: "Boarding", description: "Overnight stay in a cozy home environment with daily updates and personalized care.", price: "8,500.00", unit: "/ night", icon: "⌂" },
@@ -14,7 +12,8 @@ const services: Array<{ id: ServiceId; name: string; description: string; price:
 ];
 
 export default function NewBookingPage() {
-  const [selectedService, setSelectedService] = useState<ServiceId>("boarding");
+  const { draft, setDraft } = useBooking();
+  const selectedService = draft.service ?? "boarding";
   const selected = services.find((service) => service.id === selectedService) ?? services[0];
 
   return (
@@ -25,7 +24,7 @@ export default function NewBookingPage() {
         <div className="grid grid-cols-1 gap-[13px] sm:grid-cols-2">
           {services.map((service) => {
             const isSelected = service.id === selectedService;
-            return <button type="button" key={service.id} onClick={() => setSelectedService(service.id)} className={`relative min-h-[145px] overflow-hidden rounded-[13px] border bg-white p-[14px] text-left text-[#292323] transition hover:border-[#A13D3F] sm:min-h-[163px] ${isSelected ? "border-[#A13D3F] shadow-[inset_0_0_0_1px_#A13D3F]" : "border-[#e9cfcd]"}`} aria-pressed={isSelected}>
+            return <button type="button" key={service.id} onClick={() => setDraft({ service: service.id })} className={`relative min-h-[145px] overflow-hidden rounded-[13px] border bg-white p-[14px] text-left text-[#292323] transition hover:border-[#A13D3F] sm:min-h-[163px] ${isSelected ? "border-[#A13D3F] shadow-[inset_0_0_0_1px_#A13D3F]" : "border-[#e9cfcd]"}`} aria-pressed={isSelected}>
               <span className="grid h-[27px] w-[27px] place-items-center rounded-[9px] bg-[#fae6e3] text-[17px] text-[#A13D3F]">{service.icon}</span><span className={`absolute right-2.5 top-2.5 grid h-[15px] w-[15px] place-items-center rounded-full border text-[9px] text-white ${isSelected ? "border-[#A13D3F] bg-[#A13D3F]" : "border-[#DCC0BF]"}`}>{isSelected && "✓"}</span>
               <strong className="mt-3 block text-[11px]">{service.name}</strong><p className="my-[7px] text-[8px] leading-[1.45] text-[#675c5d]">{service.description}</p><b className={`absolute bottom-[13px] text-[10px] ${isSelected ? "text-[#A13D3F]" : ""}`}>Rs.{service.price}<em className="ml-[3px] text-[7px] font-normal not-italic text-[#6d6263]">{service.unit}</em></b>
             </button>;
