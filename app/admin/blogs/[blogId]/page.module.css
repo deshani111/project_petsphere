@@ -1,0 +1,23 @@
+.page { width: 100%; margin: 0 auto; }
+.topLine { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 1px 0 8px; }
+.metaRow { display: flex; align-items: center; gap: 8px; color: #a38f8d; font-size: .52rem; letter-spacing: .25px; text-transform: uppercase; }
+.status { display: inline-flex; align-items: center; min-height: 16px; padding: 0 6px; border-radius: 999px; background: #d7f2e5; color: #2e8c5f; font-weight: 700; }
+.editButton { display: inline-flex; align-items: center; gap: 7px; min-width: 101px; height: 28px; padding: 0 11px; border-radius: 8px; background: #ff8d92; color: #fff; box-shadow: 0 4px 10px rgba(255,141,146,.18); font-size: .62rem; font-weight: 700; text-decoration: none; }
+.header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+.backButton { display: grid; place-items: center; width: 28px; height: 28px; margin-top: 4px; border: 1px solid #ead8d5; border-radius: 8px; background: #fff; color: #6b5a59; text-decoration: none; }
+.header h1 { margin: 0 0 10px; color: #1f1717; font-size: clamp(1.62rem, 3vw, 2.08rem); line-height: 1.05; letter-spacing: -.045em; }
+.authorRow { display: flex; align-items: center; gap: 10px; }
+.authorAvatar { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #cda792, #694b49); color: #fff; font-size: .58rem; font-weight: 800; }
+.authorRow strong { display: block; color: #2e2425; font-size: .7rem; }
+.authorRow small { display: block; color: #8d7d7b; font-size: .52rem; }
+.heroCard, .contentCard { overflow: hidden; border: 1px solid #ecd9d7; border-radius: 13px; background: #fff; box-shadow: 0 6px 14px rgba(102,68,66,.05); }
+.heroCard img { width: 100%; height: 415px; display: block; object-fit: cover; }
+.contentCard { margin-top: 12px; padding: 18px 18px 20px; color: #4a3938; font-size: .72rem; line-height: 1.9; }
+.lead { margin: 0 0 14px; color: #5c4b4a; }
+.sectionBlock { margin-top: 10px; }
+.sectionBlock h2 { margin: 0 0 7px; color: #2c2122; font-size: .88rem; line-height: 1.2; }
+.sectionBlock p { margin: 0; }
+.footer { display: flex; gap: 18px; padding: 16px 2px 0; color: #766767; font-size: .58rem; }
+.footer div { display: grid; gap: 4px; }
+.footer strong { color: #3c2f2f; font-size: .54rem; letter-spacing: .45px; text-transform: uppercase; }
+@media (max-width: 760px) { .topLine { align-items: flex-start; flex-direction: column; } .heroCard img { height: 270px; } .footer { flex-direction: column; } }
