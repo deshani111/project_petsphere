@@ -31,6 +31,7 @@ async function seedAdmin() {
           role: ADMIN_ROLE,
           password_hash: passwordHash,
           is_verified: true,
+          emailVerified: true,
         },
       }),
       prisma.admin.upsert({
@@ -52,6 +53,7 @@ async function seedAdmin() {
         password_hash: passwordHash,
         role: ADMIN_ROLE,
         is_verified: true,
+        emailVerified: true,
       },
       select: { user_id: true },
     });

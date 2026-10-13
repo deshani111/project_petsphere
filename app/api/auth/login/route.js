@@ -54,7 +54,12 @@ export async function POST(request) {
       {
         message: "Logged in successfully.",
         account,
-        redirectTo: account.role === "pet_owner" ? "/owner/dashboard" : "/",
+        redirectTo:
+          account.role === "admin"
+            ? "/admin/dashboard"
+            : account.role === "pet_owner"
+              ? "/owner/dashboard"
+              : "/",
       },
       { status: 200 }
     );

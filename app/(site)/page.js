@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ReviewGallery from "./components/review-gallery";
+import ReviewGallery from "../components/review-gallery";
 
 const ShieldIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">

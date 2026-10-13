@@ -11,7 +11,6 @@ const navLinks = [
   { href: "/register", label: "Become a Sitter", showActive: false },
   { href: "/blog", label: "Blog" },
   { href: "/marketplace", label: "Marketplace" },
-  { href: "/owner/dashboard", label: "Dashboard" },
 ];
 
 function isActive(pathname, href) {
@@ -26,6 +25,9 @@ export function SiteHeader({ isAuthenticated }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef(null);
+  const visibleNavLinks = isAuthenticated
+    ? [...navLinks, { href: "/owner/dashboard", label: "Dashboard" }]
+    : navLinks;
 
   return (
     <header
@@ -66,7 +68,7 @@ export function SiteHeader({ isAuthenticated }) {
         id="main-navigation"
         aria-label="Main navigation"
       >
-        {navLinks.map((link) => {
+        {visibleNavLinks.map((link) => {
           const className =
             link.showActive === false || !isActive(pathname, link.href)
               ? undefined
@@ -106,7 +108,7 @@ export function SiteHeader({ isAuthenticated }) {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ isAuthenticated }) {
   return (
     <footer className="site-footer">
       <div className="footer-brand">
@@ -128,7 +130,7 @@ export function SiteFooter() {
         <Link href="/register">Become a Sitter</Link>
         <Link href="/blog">Blog</Link>
         <Link href="/marketplace">Marketplace</Link>
-        <Link href="/owner/dashboard">Dashboard</Link>
+        {isAuthenticated && <Link href="/owner/dashboard">Dashboard</Link>}
       </div>
       <small className="footer-copyright">
         &copy; 2024 PetSphere. All rights reserved.
