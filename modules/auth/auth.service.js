@@ -5,6 +5,7 @@ import { prisma } from "../../lib/prisma";
 const SESSION_COOKIE_NAME = "petsphere_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 const SESSION_TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24;
+const ADMIN_ROLE = "admin";
 const DUMMY_PASSWORD_HASH =
   "$2b$12$vaknvapn8DjnoHvc49bLy.NsN7HISd2pzroMp87d3JRdS7vgl5qW2";
 
