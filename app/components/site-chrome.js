@@ -1,17 +1,34 @@
+
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About Us" },
-  { href: "/register", label: "Find a Sitter", showActive: false },
-  { href: "/register", label: "Become a Sitter", showActive: false },
-  { href: "/blog", label: "Blog" },
-  { href: "/marketplace", label: "Marketplace" },
-];
+function getDashboardHref(userRole) {
+  return userRole === "pet_sitter"
+    ? "/sitter"
+    : "/owner/dashboard";
+}
+
+function getNavLinks() {
+  return [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About Us" },
+    {
+      href: "/register",
+      label: "Find a Sitter",
+      showActive: false,
+    },
+    {
+      href: "/register",
+      label: "Become a Sitter",
+      showActive: false,
+    },
+    { href: "/blog", label: "Blog" },
+    { href: "/marketplace", label: "Marketplace" },
+  ];
+}
 
 function isActive(pathname, href) {
   if (href === "/") {
@@ -21,12 +38,21 @@ function isActive(pathname, href) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SiteHeader({ isAuthenticated }) {
+export function SiteHeader({ isAuthenticated, userRole }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef(null);
+
+  const navLinks = getNavLinks();
+
   const visibleNavLinks = isAuthenticated
-    ? [...navLinks, { href: "/owner/dashboard", label: "Dashboard" }]
+    ? [
+        ...navLinks,
+        {
+          href: getDashboardHref(userRole),
+          label: "Dashboard",
+        },
+      ]
     : navLinks;
 
   return (
@@ -40,18 +66,25 @@ export function SiteHeader({ isAuthenticated }) {
         }
       }}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget))
+        if (!event.currentTarget.contains(event.relatedTarget)) {
           setMenuOpen(false);
+        }
       }}
     >
       <Link className="brand" href="/" aria-label="PetSphere home">
         <span className="brand-mark">
-          <img src="/petsphere-mark.svg" alt="" width="26" height="26" />
+          <img
+            src="/petsphere-mark.svg"
+            alt=""
+            width="26"
+            height="26"
+          />
         </span>
         <span>
           Pet<span>Sphere</span>
         </span>
       </Link>
+
       <button
         className="mobile-menu"
         type="button"
@@ -63,6 +96,7 @@ export function SiteHeader({ isAuthenticated }) {
       >
         <span className="menu-lines" aria-hidden="true" />
       </button>
+
       <nav
         className="site-nav"
         id="main-navigation"
@@ -70,9 +104,11 @@ export function SiteHeader({ isAuthenticated }) {
       >
         {visibleNavLinks.map((link) => {
           const className =
-            link.showActive === false || !isActive(pathname, link.href)
+            link.showActive === false ||
+            !isActive(pathname, link.href)
               ? undefined
               : "is-active";
+
           return (
             <Link
               key={`${link.href}-${link.label}`}
@@ -86,10 +122,14 @@ export function SiteHeader({ isAuthenticated }) {
           );
         })}
       </nav>
+
       <div className="header-actions">
         {isAuthenticated ? (
           <form action="/api/auth/logout" method="post">
-            <button className="login-link logout-button" type="submit">
+            <button
+              className="login-link logout-button"
+              type="submit"
+            >
               Logout
             </button>
           </form>
@@ -108,20 +148,29 @@ export function SiteHeader({ isAuthenticated }) {
   );
 }
 
-export function SiteFooter({ isAuthenticated }) {
+export function SiteFooter({ isAuthenticated, userRole }) {
+  const dashboardHref = getDashboardHref(userRole);
+
   return (
     <footer className="site-footer">
       <div className="footer-brand">
         <Link className="brand" href="/">
           <span className="brand-mark">
-            <img src="/petsphere-mark.svg" alt="" width="26" height="26" />
+            <img
+              src="/petsphere-mark.svg"
+              alt=""
+              width="26"
+              height="26"
+            />
           </span>
           <span>
             Pet<span>Sphere</span>
           </span>
         </Link>
+
         <p>Trusted care for every member of your family.</p>
       </div>
+
       <div className="footer-column footer-navigation">
         <strong>Navigation</strong>
         <Link href="/">Home</Link>
@@ -130,8 +179,12 @@ export function SiteFooter({ isAuthenticated }) {
         <Link href="/register">Become a Sitter</Link>
         <Link href="/blog">Blog</Link>
         <Link href="/marketplace">Marketplace</Link>
-        {isAuthenticated && <Link href="/owner/dashboard">Dashboard</Link>}
+
+        {isAuthenticated && (
+          <Link href={dashboardHref}>Dashboard</Link>
+        )}
       </div>
+
       <small className="footer-copyright">
         &copy; 2024 PetSphere. All rights reserved.
       </small>

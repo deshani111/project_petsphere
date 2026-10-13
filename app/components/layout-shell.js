@@ -1,4 +1,3 @@
-// app/components/layout-shell.js
 
 "use client";
 
@@ -8,15 +7,18 @@ import { SiteFooter, SiteHeader } from "./site-chrome";
 export default function LayoutShell({
   children,
   isAuthenticated,
+  userRole,
 }) {
   const pathname = usePathname();
 
   const isAuthPage =
-    pathname === "/login" ||
     pathname === "/register" ||
+    pathname === "/login" ||
     pathname === "/verify-email";
 
-  // Login/register/verification pages
+  const hideChrome = pathname.startsWith("/sitter");
+
+  // Login, registration, and email verification pages
   if (isAuthPage) {
     return (
       <div
@@ -26,25 +28,36 @@ export default function LayoutShell({
             : ""
         }`}
       >
-        <SiteHeader isAuthenticated={isAuthenticated} />
+        <SiteHeader
+          isAuthenticated={isAuthenticated}
+          userRole={userRole}
+        />
         {children}
       </div>
     );
   }
 
-  // Owner pages have their own navigation/layout
-  if (pathname.startsWith("/owner")) {
+  // Sitter and owner pages have their own navigation/layout
+  if (hideChrome || pathname.startsWith("/owner")) {
     return <>{children}</>;
   }
 
   // All normal pages
   return (
     <>
-      <SiteHeader isAuthenticated={isAuthenticated} />
+      <SiteHeader
+        isAuthenticated={isAuthenticated}
+        userRole={userRole}
+      />
 
       {children}
 
-      <SiteFooter isAuthenticated={isAuthenticated} />
+      
+<SiteFooter
+  isAuthenticated={isAuthenticated}
+  userRole={userRole}
+/>
+
     </>
   );
 }
