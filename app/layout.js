@@ -1,3 +1,4 @@
+
 import "./globals.css";
 import { cookies } from "next/headers";
 import { createHmac, timingSafeEqual } from "crypto";
@@ -21,6 +22,11 @@ function verifySessionToken(token) {
   }
 
   const [encodedPayload, signature] = token.split(".");
+
+  if (!encodedPayload || !signature) {
+    return null;
+  }
+
   const expectedSignature = signSessionPayload(encodedPayload);
   const signatureBuffer = Buffer.from(signature);
   const expectedSignatureBuffer = Buffer.from(expectedSignature);
@@ -50,12 +56,16 @@ function verifySessionToken(token) {
 export const metadata = {
   title: "PetSphere | Trusted Pet Care",
   description: "Find a trusted pet sitter who treats your pet like family.",
-  icons: { icon: "/petsphere-mark.svg" },
+  icons: {
+    icon: "/petsphere-mark.svg",
+  },
 };
 
 export default async function RootLayout({ children }) {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+
+  // Verify the session once and retrieve the user's role.
   const sessionPayload = verifySessionToken(sessionToken);
   const isAuthenticated = Boolean(sessionPayload);
   const userRole = sessionPayload?.role ?? null;
@@ -63,15 +73,26 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+        />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
+
       <body>
-        <LayoutShell isAuthenticated={isAuthenticated} userRole={userRole}>
+        <LayoutShell
+          isAuthenticated={isAuthenticated}
+          userRole={userRole}
+        >
           {children}
         </LayoutShell>
       </body>

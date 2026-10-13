@@ -1,0 +1,408 @@
+.page {
+  display: grid;
+  gap: 14px;
+  color: #2e2020;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titleBlock h1 {
+  margin: 0;
+  font-size: 29px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.countBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 20px;
+  margin-left: 8px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #f9e3e1;
+  color: #b14848;
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.toolbar,
+.filters,
+.tableCard {
+  border: 1px solid #f1dede;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(132, 82, 82, 0.06);
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  align-items: center;
+}
+
+.searchField {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 260px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid #eadbda;
+  border-radius: 12px;
+  color: #8e7474;
+}
+
+.searchField input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #463a39;
+  font: inherit;
+}
+
+.searchField input::placeholder {
+  color: #ae9a98;
+}
+
+.searchButton,
+.filterButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid #ead4d1;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.searchButton {
+  background: #ad3f42;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(173, 63, 66, 0.18);
+}
+
+.filterButton {
+  background: #fff7f6;
+  color: #5d4b4a;
+}
+
+.filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  padding: 12px;
+}
+
+.filters label {
+  display: grid;
+  gap: 4px;
+  color: #675958;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.filters select {
+  min-width: 150px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #e7d9d7;
+  border-radius: 10px;
+  background: #fff;
+  color: #544746;
+  font: inherit;
+}
+
+.filters button {
+  height: 34px;
+  border: 0;
+  background: transparent;
+  color: #ad3f42;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tableCard {
+  overflow: hidden;
+}
+
+.tableWrap {
+  position: relative;
+  overflow-x: auto;
+}
+
+.tableWrap table {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.tableWrap th {
+  height: 48px;
+  padding: 0 16px;
+  border-bottom: 1px solid #eadbd9;
+  color: #655555;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.tableWrap th:nth-child(1) { width: 16%; }
+.tableWrap th:nth-child(2) { width: 26%; }
+.tableWrap th:nth-child(3) { width: 24%; }
+.tableWrap th:nth-child(4) { width: 14%; }
+.tableWrap th:nth-child(5) { width: 12%; }
+.tableWrap th:nth-child(6) { width: 8%; }
+
+.tableWrap td {
+  height: 56px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f5eeee;
+  color: #5e5250;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.tableWrap tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.reviewId {
+  font-weight: 700;
+  color: #6b5655;
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.person strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2f2726;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #d9a38c, #6e5149);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.sitterAvatar {
+  background: linear-gradient(145deg, #8db6a6, #3f7363);
+}
+
+.ratingCell {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+}
+
+.stars {
+  display: inline-flex;
+  gap: 1px;
+  color: #d6c2c0;
+  font-size: 12px;
+}
+
+.starFilled {
+  color: #f4b23a;
+}
+
+.starMuted {
+  color: #ecdcdc;
+}
+
+.ratingCell span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #524342;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff3f2;
+  color: #b14848;
+  cursor: pointer;
+}
+
+.actions button:last-child {
+  color: #a65a5a;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 54px;
+  padding: 0 16px;
+  border-top: 1px solid #eadbd9;
+  color: #695b59;
+  font-size: 12px;
+}
+
+.pagination > div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pagination button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #eedfdd;
+  border-radius: 8px;
+  background: #fff;
+  color: #765c5a;
+  font: inherit;
+  cursor: pointer;
+}
+
+.pagination .current {
+  border-color: #ad3f42;
+  background: #ad3f42;
+  color: #fff;
+}
+
+.pagination button:disabled {
+  color: #aa9c9a;
+}
+
+.pagination em {
+  font-style: normal;
+}
+
+.emptyState {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  padding: 42px 24px;
+  color: #766866;
+}
+
+.emptyState strong {
+  color: #322929;
+}
+
+.emptyState button {
+  border: 0;
+  background: transparent;
+  color: #ad3f42;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.loadingState,
+.errorState {
+  padding: 16px;
+  border: 1px solid #f1dede;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(132, 82, 82, 0.06);
+}
+
+.errorState {
+  color: #b14848;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(47, 31, 30, 0.3);
+}
+
+.modal {
+  width: min(380px, 100%);
+  border-radius: 16px;
+  background: #fff;
+  padding: 22px;
+  box-shadow: 0 18px 50px rgba(61, 37, 36, 0.22);
+}
+
+.modal h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal p {
+  margin: 10px 0 18px;
+  color: #6f605e;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.modal button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: #ad3f42;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .toolbar,
+  .filters {
+    flex-wrap: wrap;
+  }
+
+  .searchField,
+  .searchButton,
+  .filterButton,
+  .filters label {
+    width: 100%;
+  }
+
+  .pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 16px;
+  }
+}

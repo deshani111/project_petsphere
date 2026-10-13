@@ -1,32 +1,63 @@
+
 "use client";
 
 import { usePathname } from "next/navigation";
 import { SiteFooter, SiteHeader } from "./site-chrome";
 
-export default function LayoutShell({ children, isAuthenticated, userRole }) {
+export default function LayoutShell({
+  children,
+  isAuthenticated,
+  userRole,
+}) {
   const pathname = usePathname();
+
   const isAuthPage =
-    pathname === "/register" || pathname === "/login" || pathname === "/verify-email";
+    pathname === "/register" ||
+    pathname === "/login" ||
+    pathname === "/verify-email";
+
   const hideChrome = pathname.startsWith("/sitter");
 
+  // Login, registration, and email verification pages
   if (isAuthPage) {
     return (
-      <div className={`auth-layout${pathname === "/register" ? " auth-layout-scroll" : ""}`}>
-        <SiteHeader isAuthenticated={isAuthenticated} userRole={userRole} />
+      <div
+        className={`auth-layout${
+          pathname === "/register"
+            ? " auth-layout-scroll"
+            : ""
+        }`}
+      >
+        <SiteHeader
+          isAuthenticated={isAuthenticated}
+          userRole={userRole}
+        />
         {children}
       </div>
     );
   }
 
+  // Sitter and owner pages have their own navigation/layout
   if (hideChrome || pathname.startsWith("/owner")) {
-    return children;
+    return <>{children}</>;
   }
 
+  // All normal pages
   return (
     <>
-      <SiteHeader isAuthenticated={isAuthenticated} userRole={userRole} />
+      <SiteHeader
+        isAuthenticated={isAuthenticated}
+        userRole={userRole}
+      />
+
       {children}
-      <SiteFooter userRole={userRole} />
+
+      
+<SiteFooter
+  isAuthenticated={isAuthenticated}
+  userRole={userRole}
+/>
+
     </>
   );
 }

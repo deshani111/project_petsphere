@@ -5,6 +5,7 @@ import { prisma } from "../../lib/prisma";
 const SESSION_COOKIE_NAME = "petsphere_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 const SESSION_TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24;
+const ADMIN_ROLE = "admin";
 const DUMMY_PASSWORD_HASH =
   "$2b$12$vaknvapn8DjnoHvc49bLy.NsN7HISd2pzroMp87d3JRdS7vgl5qW2";
 
@@ -119,6 +120,54 @@ export function verifySessionToken(token) {
   } catch {
     return null;
   }
+}
+
+export function isAdminRole(role) {
+  return typeof role === "string" && role.toLowerCase() === ADMIN_ROLE;
+}
+
+export async function getSessionAccount(sessionToken) {
+  const session = verifySessionToken(sessionToken);
+
+  if (!session || typeof session.sub !== "string") {
+    return null;
+  }
+
+  let userId;
+
+  try {
+    userId = BigInt(session.sub);
+  } catch {
+    return null;
+  }
+
+  const user = await prisma.users.findUnique({
+    where: { user_id: userId },
+    select: {
+      user_id: true,
+      first_name: true,
+      last_name: true,
+      email: true,
+      role: true,
+      is_verified: true,
+      admin: { select: { admin_id: true } },
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  return {
+    id: user.user_id.toString(),
+    firstName: user.first_name,
+    lastName: user.last_name,
+    fullName: `${user.first_name} ${user.last_name}`.trim(),
+    email: user.email,
+    role: user.role,
+    isVerified: user.is_verified,
+    hasAdminProfile: Boolean(user.admin),
+  };
 }
 
 export async function registerAccount({
@@ -241,6 +290,12 @@ export async function loginAccount({ email, password, rememberMe = false }) {
   const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
   if (!isPasswordValid) {
+    if (process.env.NODE_ENV !== "production") {
+      console.info("Login diagnostic:", {
+        accountFound: true,
+        passwordMatches: false,
+      });
+    }
     throw new AuthenticationError();
   }
 
