@@ -2,10 +2,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 
 function getDashboardHref(userRole) {
+  if (userRole === "admin") return "/admin/dashboard";
   return userRole === "pet_sitter"
     ? "/sitter"
     : "/owner/dashboard";
@@ -45,15 +47,7 @@ export function SiteHeader({ isAuthenticated, userRole }) {
 
   const navLinks = getNavLinks();
 
-  const visibleNavLinks = isAuthenticated
-    ? [
-        ...navLinks,
-        {
-          href: getDashboardHref(userRole),
-          label: "Dashboard",
-        },
-      ]
-    : navLinks;
+  const visibleNavLinks = navLinks;
 
   return (
     <header
@@ -73,11 +67,11 @@ export function SiteHeader({ isAuthenticated, userRole }) {
     >
       <Link className="brand" href="/" aria-label="PetSphere home">
         <span className="brand-mark">
-          <img
+          <Image
             src="/petsphere-mark.svg"
             alt=""
-            width="26"
-            height="26"
+            width={26}
+            height={26}
           />
         </span>
         <span>
@@ -125,14 +119,16 @@ export function SiteHeader({ isAuthenticated, userRole }) {
 
       <div className="header-actions">
         {isAuthenticated ? (
-          <form action="/api/auth/logout" method="post">
-            <button
-              className="login-link logout-button"
-              type="submit"
-            >
-              Logout
-            </button>
-          </form>
+          <>
+            <Link className="header-cta header-dashboard" href={getDashboardHref(userRole)}>
+              Dashboard
+            </Link>
+            <form action="/api/auth/logout" method="post">
+              <button className="login-link logout-button" type="submit">
+                Logout
+              </button>
+            </form>
+          </>
         ) : (
           <>
             <Link className="login-link" href="/login">
@@ -156,11 +152,11 @@ export function SiteFooter({ isAuthenticated, userRole }) {
       <div className="footer-brand">
         <Link className="brand" href="/">
           <span className="brand-mark">
-            <img
+            <Image
               src="/petsphere-mark.svg"
               alt=""
-              width="26"
-              height="26"
+              width={26}
+              height={26}
             />
           </span>
           <span>

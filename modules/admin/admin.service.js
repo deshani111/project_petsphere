@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { prisma } from "../../lib/prisma";
 import {
-  getSessionAccount,
+  getCachedSessionAccount,
   isAdminRole,
   SESSION_COOKIE_NAME,
 } from "../auth/auth.service";
@@ -9,7 +9,7 @@ import {
 export async function getCurrentAdmin() {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  const account = await getSessionAccount(sessionToken);
+  const account = await getCachedSessionAccount(sessionToken);
 
   return account && isAdminRole(account.role) && account.hasAdminProfile && account.isVerified
     ? account
@@ -43,7 +43,7 @@ export async function getAdminDashboardData() {
       prisma.service_type.findMany({
         select: {
           name: true,
-          booking: { select: { booking_id: true } },
+          _count: { select: { booking: true } },
         },
       }),
     ]);
@@ -66,7 +66,7 @@ export async function getAdminDashboardData() {
     })),
     bookingsByService: services.map((service) => ({
       name: service.name,
-      bookings: service.booking.length,
+      bookings: service._count.booking,
     })),
   };
 }

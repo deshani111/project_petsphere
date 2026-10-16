@@ -15,5 +15,5 @@ export const nights = 3;
 export const serviceFee = 199;
 
 export function formatRs(value: number) {
-  return `₹${value}`;
+  return `Rs. ${value.toLocaleString("en-LK")}`;
 }

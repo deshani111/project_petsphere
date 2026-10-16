@@ -14,7 +14,7 @@ export function DashboardHeader({
       .join("") || "PO";
 
   return (
-    <header className="h-[60px] border-b border-[#e9dddd] bg-white px-5">
+    <header className="h-15 border-b border-[#e9dddd] bg-white px-5">
       <div className="flex h-full items-center justify-end gap-5">
         <button
           type="button"

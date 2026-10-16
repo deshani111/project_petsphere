@@ -43,7 +43,7 @@ CREATE TABLE users (
     full_name      VARCHAR(200) GENERATED ALWAYS AS (first_name || ' ' || last_name) STORED,
     email          VARCHAR(255) NOT NULL UNIQUE,
     password_hash  VARCHAR(255) NOT NULL,
-    phone_number   VARCHAR(20),
+    phone_number   VARCHAR(20) UNIQUE,
     role           VARCHAR(20)  NOT NULL CHECK (role IN ('pet_owner','pet_sitter','admin')),
     is_verified    BOOLEAN      NOT NULL DEFAULT FALSE,
     created_at     TIMESTAMP    NOT NULL DEFAULT now(),

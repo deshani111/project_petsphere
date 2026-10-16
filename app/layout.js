@@ -1,57 +1,24 @@
 
 import "./globals.css";
+import { Inter, Playfair_Display } from "next/font/google";
 import { cookies } from "next/headers";
-import { createHmac, timingSafeEqual } from "crypto";
 import LayoutShell from "./components/layout-shell";
+import { SESSION_COOKIE_NAME, getCachedSessionAccount } from "../modules/auth/auth.service";
 
-const SESSION_COOKIE_NAME = "petsphere_session";
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+});
 
-function getSessionSecret() {
-  return process.env.AUTH_SECRET || "petsphere-dev-session-secret";
-}
-
-function signSessionPayload(encodedPayload) {
-  return createHmac("sha256", getSessionSecret())
-    .update(encodedPayload)
-    .digest("base64url");
-}
-
-function verifySessionToken(token) {
-  if (typeof token !== "string" || !token.includes(".")) {
-    return null;
-  }
-
-  const [encodedPayload, signature] = token.split(".");
-
-  if (!encodedPayload || !signature) {
-    return null;
-  }
-
-  const expectedSignature = signSessionPayload(encodedPayload);
-  const signatureBuffer = Buffer.from(signature);
-  const expectedSignatureBuffer = Buffer.from(expectedSignature);
-
-  if (
-    signatureBuffer.length !== expectedSignatureBuffer.length ||
-    !timingSafeEqual(signatureBuffer, expectedSignatureBuffer)
-  ) {
-    return null;
-  }
-
-  try {
-    const payload = JSON.parse(
-      Buffer.from(encodedPayload, "base64url").toString("utf8")
-    );
-
-    if (!payload.exp || payload.exp < Math.floor(Date.now() / 1000)) {
-      return null;
-    }
-
-    return payload;
-  } catch {
-    return null;
-  }
-}
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-playfair-display",
+  style: "italic",
+  weight: "700",
+});
 
 export const metadata = {
   title: "PetSphere | Trusted Pet Care",
@@ -65,33 +32,17 @@ export default async function RootLayout({ children }) {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
 
-  // Verify the session once and retrieve the user's role.
-  const sessionPayload = verifySessionToken(sessionToken);
-  const isAuthenticated = Boolean(sessionPayload);
-  const userRole = sessionPayload?.role ?? null;
+  const account = await getCachedSessionAccount(sessionToken);
+  const isAuthenticated = Boolean(account);
+  const userRole = account?.role ?? null;
 
   return (
     <html lang="en">
-      <head>
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-        />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-
-      <body>
+      <body className={`${inter.variable} ${playfairDisplay.variable}`}>
         <LayoutShell
           isAuthenticated={isAuthenticated}
           userRole={userRole}
+          userName={account?.fullName ?? ""}
         >
           {children}
         </LayoutShell>

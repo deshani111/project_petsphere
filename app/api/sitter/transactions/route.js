@@ -1,4 +1,22 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 import { getCurrentSitter, serialize } from "../../../../modules/sitter/sitter.service";
-export async function GET(request) { const sitter=await getCurrentSitter(); if(!sitter)return NextResponse.json({message:"Sitter access is required."},{status:401}); const q=new URL(request.url).searchParams,page=Math.max(1,Number(q.get("page"))||1),take=10,range=q.get("range")||"30",status=q.get("status")||"all"; const since=range==="all"?null:new Date(Date.now()-Number(range)*86400000); const payments=await prisma.payment.findMany({where:{booking:{sitter_id:sitter.sitter_id},...(status!=="all"?{status}:{}),...(since?{payment_date:{gte:since}}:{})},include:{booking:{include:{pet:true,service_type:true}}},orderBy:{payment_date:"desc"}}); const all=payments.map(p=>({id:p.payment_id,date:p.payment_date,description:`${p.booking?.service_type?.name||"Pet care"} · ${p.booking?.pet?.pet_name||"Booking"}`,amount:Number(p.amount),fee:0,netAmount:Number(p.amount),status:p.status,reference:p.transaction_ref||p.invoice_number||null})); const successful=all.filter(x=>["paid","completed"].includes(x.status)).reduce((s,x)=>s+x.netAmount,0),pending=all.filter(x=>["pending","processing"].includes(x.status)).reduce((s,x)=>s+x.netAmount,0); return NextResponse.json(serialize({summary:{totalEarnings:successful+pending,pendingPayouts:pending,successfulPayouts:successful},transactions:all.slice((page-1)*take,page*take),pagination:{page,total:all.length,pages:Math.max(1,Math.ceil(all.length/take))}})); }
+
+export async function GET(request) {
+  const sitter = await getCurrentSitter();
+  if (!sitter) return NextResponse.json({ message: "Sitter access is required." }, { status: 401 });
+  const q = new URL(request.url).searchParams;
+  const page = Math.max(1, Number(q.get("page")) || 1), take = 10;
+  const range = q.get("range") || "30", status = q.get("status") || "all";
+  const since = range === "all" ? null : new Date(Date.now() - Number(range) * 86400000);
+  const where = { booking: { sitter_id: sitter.sitter_id }, ...(status !== "all" ? { status } : {}), ...(since ? { payment_date: { gte: since } } : {}) };
+  const [payments, total, groups] = await Promise.all([
+    prisma.payment.findMany({ where, select: { payment_id: true, payment_date: true, amount: true, status: true, transaction_ref: true, invoice_number: true, booking: { select: { pet: { select: { pet_name: true } }, service_type: { select: { name: true } } } } }, orderBy: { payment_date: "desc" }, skip: (page - 1) * take, take }),
+    prisma.payment.count({ where }),
+    prisma.payment.groupBy({ by: ["status"], where, _sum: { amount: true } }),
+  ]);
+  const transactions = payments.map((payment) => ({ id: payment.payment_id, date: payment.payment_date, description: `${payment.booking?.service_type?.name || "Pet care"} · ${payment.booking?.pet?.pet_name || "Booking"}`, amount: Number(payment.amount), fee: 0, netAmount: Number(payment.amount), status: payment.status, reference: payment.transaction_ref || payment.invoice_number || null }));
+  const totalFor = (statuses) => groups.filter((group) => statuses.includes(group.status)).reduce((sum, group) => sum + Number(group._sum.amount || 0), 0);
+  const successful = totalFor(["paid", "completed"]), pending = totalFor(["pending", "processing"]);
+  return NextResponse.json(serialize({ summary: { totalEarnings: successful + pending, pendingPayouts: pending, successfulPayouts: successful }, transactions, pagination: { page, total, pages: Math.max(1, Math.ceil(total / take)) } }));
+}

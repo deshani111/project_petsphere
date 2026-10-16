@@ -31,7 +31,7 @@ export default function NewPuppyCareArticle() {
 
         <div className={styles.cover}>
           <img
-            src="/blog-featured-puppy.jpg"
+            src="/blog-featured-puppy.webp"
             alt="Golden puppy relaxing in a bright living room"
           />
         </div>
