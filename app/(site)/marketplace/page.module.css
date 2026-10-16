@@ -1,36 +1,25 @@
-.marketplacePage { min-height: 100vh; background: #fffaf9; color: #2a2021; }
-.activeLink { color: #A13D3F !important; font-weight: 700 !important; }
-.marketplaceContent { max-width: 1440px; margin: 0 auto; padding: 35px 3.1% 90px; }
-.filters { padding: 28px; border: 1px solid #e8cbc7; border-radius: 28px; background: #fffafa; box-shadow: 0 3px 8px rgba(82,49,45,.03); }
-.filterHeading { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-bottom: 26px; }
-.filterHeading h1 { margin: 0 0 4px; font-size: 32px; letter-spacing: -1px; }
-.filterHeading p { margin: 0; color: #75686a; font-size: 15px; }
-.sort { display: flex; align-items: center; gap: 15px; color: #75686a; font-size: 15px; }
-.sort strong { color: #A13D3F; }
-.sort > span { color: #75686a; font-size: 20px; }
-.sort button { margin-left: 11px; padding: 0; border: 0; background: transparent; color: #A13D3F; font: inherit; font-size: 13px; font-weight: 700; }
-.filterFields { display: grid; grid-template-columns: 1.05fr 1.1fr 1.05fr 1.05fr; gap: 24px; }
-.filterFields label { display: block; color: #3d3132; font-size: 14px; font-weight: 700; }
-.filterFields input, .filterFields select { width: 100%; height: 43px; margin-top: 9px; padding: 0 13px; border: 1px solid #e7cbc7; border-radius: 12px; outline: 0; background: #fff; color: #75686a; font: inherit; font-size: 14px; }
-.filterFields select { appearance: auto; }
-.priceFields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.listingGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 30px; }
-.petCard { overflow: hidden; border: 1px solid #e7cbc7; border-radius: 25px; background: #fffafa; }
-.petImage { position: relative; height: 370px; overflow: hidden; background: #f2e4df; }
-.petImage img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.petImage button { position: absolute; top: 17px; right: 17px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: #fff; color: #A13D3F; font-size: 29px; line-height: 1; }
-.badge { position: absolute; top: 17px; left: 17px; padding: 6px 12px; border-radius: 20px; background: #087c5b; color: #fff; font-size: 12px; font-weight: 700; }
-.popular { background: #f37c83; color: #7b282d; }
-.petDetails { padding: 22px 24px 24px; }
-.nameRow { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.nameRow h2, .nameRow strong { margin: 0; font-size: 23px; letter-spacing: -.5px; }
-.nameRow strong { color: #A13D3F; }
-.petDetails > p { margin: 8px 0 17px; color: #76686a; font-size: 14px; }
-.petDetails > p span { color: #574849; }
-.tags { display: flex; flex-wrap: wrap; gap: 8px; min-height: 29px; margin-bottom: 20px; }
-.tags span { padding: 6px 12px; border-radius: 18px; background: #fff0ee; color: #8b6e6b; font-size: 11px; font-weight: 700; }
-.petDetails > a { display: grid; height: 49px; place-items: center; border: 2px solid #b64b4e; border-radius: 12px; color: #b64b4e; font-size: 15px; font-weight: 700; }
-.socials { display: flex; gap: 12px; }
-.socials span { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: #fff; color: #6e5f60; font-size: 14px; }
-@media (max-width: 980px) { .filterFields { grid-template-columns: repeat(2, 1fr); } .listingGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 700px) { .marketplaceContent { padding-right: 6%; padding-left: 6%; } .filterHeading { align-items: flex-start; flex-direction: column; } .sort { flex-wrap: wrap; } .filterFields, .listingGrid { grid-template-columns: 1fr; } .filters { padding: 20px; } .petImage { height: 330px; } }
+.marketplacePage { min-height: 100vh; background: #fffaf8; color: #2a2021; }
+.eyebrow, .resultLabel { display: block; color: #a13d3f; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.marketplaceContent { max-width: 1320px; margin: 0 auto; padding: 45px 5% 90px; }
+.toolbar { display: flex; align-items: end; justify-content: space-between; margin-bottom: 25px; }.toolbar h2 { margin: 6px 0 0; font-size: 30px; letter-spacing: -1px; }.toolbarActions { display: flex; align-items: center; gap: 10px; }.postAd, .myAds { display: inline-flex; height: 38px; align-items: center; justify-content: center; border-radius: 9px; padding: 0 14px; font-size: 12px; font-weight: 800; text-decoration: none; }.postAd { background: #a13d3f; color: #fff; box-shadow: 0 7px 16px rgba(161,61,63,.18); }.postAd:hover { background: #8f3335; }.myAds { border: 1px solid #d9b9b5; background: #fff; color: #a13d3f; }.myAds:hover { background: #fff2f0; }.resultMeta { display: flex; align-items: baseline; gap: 7px; margin-left: 8px; color: #897879; font-size: 13px; }.resultMeta strong { color: #a13d3f; font-size: 22px; }
+.filters { padding: 22px 24px 25px; border: 1px solid #ead8d2; border-radius: 19px; background: #fff; box-shadow: 0 7px 20px rgba(90,52,45,.04); }.filterTop { display: flex; justify-content: space-between; margin-bottom: 17px; }.filterTitle { color: #493536; font-size: 14px; font-weight: 800; }.filterTop button { border: 0; background: none; color: #a13d3f; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }.filterFields { display: grid; grid-template-columns: 1fr 1.15fr 1fr 1fr; gap: 17px; }.filterFields label { color: #655556; font-size: 12px; font-weight: 700; }.filterFields input, .filterFields select { width: 100%; height: 43px; margin-top: 8px; padding: 0 12px; border: 1px solid #e8d8d3; border-radius: 10px; outline: none; background: #fff; color: #554445; font: inherit; font-size: 13px; }.filterFields input:focus, .filterFields select:focus { border-color: #b85b5d; box-shadow: 0 0 0 3px rgba(161,61,63,.1); }.priceFields { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.gridHeading { display: flex; align-items: center; justify-content: space-between; margin: 36px 0 16px; color: #927f80; font-size: 12px; }.sortButton { border: 0; background: none; color: #513d3e; font: inherit; font-weight: 700; cursor: pointer; }.sortButton span { margin-left: 6px; color: #a13d3f; font-size: 17px; }
+.listingGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }.petCard { overflow: hidden; border: 1px solid #eadbd6; border-radius: 20px; background: #fff; box-shadow: 0 9px 25px rgba(91,51,45,.045); transition: transform .2s ease, box-shadow .2s ease; }.petCard:hover { transform: translateY(-4px); box-shadow: 0 17px 34px rgba(91,51,45,.1); }.petImage { position: relative; height: 290px; overflow: hidden; background: #f3e4de; }.petImage img { object-fit: cover; transition: transform .35s ease; }.petCard:hover .petImage img { transform: scale(1.04); }.petImage button { position: absolute; top: 14px; right: 14px; z-index: 1; width: 38px; height: 38px; border: 0; border-radius: 50%; background: rgba(255,255,255,.94); color: #a13d3f; font-size: 24px; line-height: 1; cursor: pointer; }.badge { position: absolute; top: 15px; left: 15px; z-index: 1; padding: 6px 10px; border-radius: 20px; background: #16785d; color: #fff; font-size: 11px; font-weight: 800; }.popular { background: #f4c6bb; color: #80393b; }
+.petDetails { padding: 20px 20px 19px; }.nameRow { display: flex; align-items: start; justify-content: space-between; gap: 12px; }.nameRow h3 { margin: 0; color: #342627; font-size: 22px; letter-spacing: -.5px; }.nameRow p { margin: 6px 0 0; color: #897878; font-size: 12px; }.nameRow p span { color: #c39b94; }.nameRow > strong { color: #a13d3f; font-size: 18px; white-space: nowrap; }.tags { display: flex; flex-wrap: wrap; gap: 6px; min-height: 26px; margin: 17px 0; }.tags span { padding: 5px 9px; border-radius: 20px; background: #fff2ef; color: #8d6c68; font-size: 10px; font-weight: 700; }.petDetails > a { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid #f0e4df; color: #a13d3f; font-size: 13px; font-weight: 800; text-decoration: none; }.petDetails > a span { font-size: 18px; }
+@media (max-width: 980px) { .filterFields { grid-template-columns: repeat(2, 1fr); }.listingGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .marketplaceContent { padding: 34px 6% 65px; }.toolbar { align-items: start; flex-direction: column; gap: 17px; }.toolbar h2 { font-size: 26px; }.toolbarActions { width: 100%; flex-wrap: wrap; }.resultMeta { display: block; margin-left: auto; text-align: right; }.resultMeta strong { display: block; }.filters { padding: 19px; }.filterFields, .listingGrid { grid-template-columns: 1fr; }.gridHeading { margin-top: 28px; }.petImage { height: 315px; } }
+
+/* Marketplace UX refinements: clear hierarchy, forgiving tap targets, and a calmer reading rhythm. */
+.filterFields { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.toolbar { align-items: center; padding: 18px 0 8px; }
+.toolbar h1 { margin: 7px 0 0; color: #2f2223; font-size: clamp(32px, 4vw, 48px); line-height: 1.05; letter-spacing: -1.8px; }
+.intro { max-width: 480px; margin: 12px 0 0; color: #806d6d; font-size: 15px; line-height: 1.6; }
+.resultBar { display: flex; align-items: baseline; gap: 8px; margin: 22px 0 10px; color: #927f80; font-size: 12px; }
+.resultBar strong { color: #493536; font-size: 15px; }
+.filters { box-shadow: 0 12px 30px rgba(90,52,45,.06); }
+.filterFields input, .filterFields select { min-height: 46px; }
+.postAd, .myAds { min-height: 44px; }
+.petImage button { min-width: 44px; min-height: 44px; }
+.petDetails > a { min-height: 40px; }
+.postAd:focus-visible, .myAds:focus-visible, .filterTop button:focus-visible, .sortButton:focus-visible, .petImage button:focus-visible, .petDetails > a:focus-visible, .filterFields input:focus-visible, .filterFields select:focus-visible { outline: 3px solid rgba(161,61,63,.28); outline-offset: 2px; }
+@media (max-width: 700px) { .toolbar h1 { font-size: 34px; }.intro { font-size: 14px; }.resultBar { margin-top: 8px; }.toolbarActions { gap: 8px; }.postAd, .myAds { flex: 1; } }

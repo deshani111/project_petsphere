@@ -95,8 +95,8 @@ export function DashboardOverview({
           <h1 className="page-title text-[#30272a]">Welcome back, {userName}!</h1>
           <p className="page-subtitle mt-1 text-[#887c7d]">Everything looks great with your companions today.</p>
         </div>
-        <Link href="/owner/bookings/new" className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-[#ab3d42] px-5 text-[14px] font-semibold !text-white shadow-[0_7px_15px_rgba(171,61,66,0.15)] transition hover:bg-[#963438] [&_svg]:!text-white">
-          <SearchIcon className="size-3.5 !text-white" /> Find a Sitter
+        <Link href="/owner/bookings/new" className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-[#ab3d42] px-5 text-[14px] font-semibold text-white! shadow-[0_7px_15px_rgba(171,61,66,0.15)] transition hover:bg-[#963438] [&_svg]:text-white!">
+          <SearchIcon className="size-3.5 text-white!" /> Find a Sitter
         </Link>
       </section>
 
@@ -142,11 +142,11 @@ export function DashboardOverview({
               className="group block h-full"
               aria-label="Add another pet"
             >
-              <article className="flex h-full min-h-[392px] flex-col overflow-hidden rounded-[20px] border-2 border-dashed border-[#e6c7c7] bg-[#fffaf9] p-4 shadow-[0_10px_30px_rgba(91,52,51,0.06)] transition hover:border-[#d99a9d] hover:bg-[#fff6f5]">
-                <div className="relative mb-4 h-[220px] w-full overflow-hidden rounded-[18px] bg-[#fffaf9]">
+              <article className="flex h-full min-h-98 flex-col overflow-hidden rounded-[20px] border-2 border-dashed border-[#e6c7c7] bg-[#fffaf9] p-4 shadow-[0_10px_30px_rgba(91,52,51,0.06)] transition hover:border-[#d99a9d] hover:bg-[#fff6f5]">
+                <div className="relative mb-4 h-55 w-full overflow-hidden rounded-[18px] bg-[#fffaf9]">
                   <div className="absolute inset-0 rounded-[18px] border border-dashed border-[#e8c7c7]" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-full border-[2px] border-[#d69a9e] text-[42px] font-light leading-none text-[#ab3d42]">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-[#d69a9e] text-[42px] font-light leading-none text-[#ab3d42]">
                       +
                     </div>
                   </div>

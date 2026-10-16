@@ -1,12 +1,12 @@
 import { cookies } from "next/headers";
 import { prisma } from "../../lib/prisma";
-import { SESSION_COOKIE_NAME, verifySessionToken } from "../auth/auth.service";
+import { SESSION_COOKIE_NAME, getCachedSessionAccount } from "../auth/auth.service";
 
 const BOOKING_STATUSES = new Set(["pending", "confirmed", "in_progress", "completed", "cancelled", "rejected"]);
 
 export async function getCurrentSitter() {
   const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
-  const session = verifySessionToken(token);
+  const session = await getCachedSessionAccount(token);
   if (!session || session.role !== "pet_sitter") return null;
   return prisma.pet_sitter.findUnique({
     where: { user_id: BigInt(session.sub) },

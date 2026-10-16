@@ -11,6 +11,7 @@
 
 # environment files
 .env*
+!.env.example
 
 # debugging
 npm-debug.log*

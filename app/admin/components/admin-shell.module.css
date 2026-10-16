@@ -4,7 +4,7 @@
   grid-template-columns: 174px minmax(0, 1fr);
   background: #fff8f7;
   color: #302627;
-  font-family: var(--admin-font-family, "Inter", Arial, sans-serif);
+  font-family: var(--admin-font-family, var(--font-inter), Arial, sans-serif);
   font-size: 14px;
   line-height: 1.5;
 }

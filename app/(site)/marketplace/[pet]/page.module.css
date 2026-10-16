@@ -1,41 +1,187 @@
-.profilePage { min-height: 100vh; background: #fffaf9; color: #2a2021; }
-.activeLink { color: #ad4141 !important; font-weight: 700 !important; }
-.profileContent { width: min(1320px, 94%); margin: 0 auto; padding: 30px 0 90px; }
-.backLink { display: inline-block; margin: 0 0 22px; color: #463839; font-size: 16px; }
-.topGrid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; align-items: start; gap: 26px; }
+.profilePage {
+  min-height: 100vh;
+  color: #302526;
+  background: #fbf7f4;
+}
+
+.profileContent {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 28px 0 88px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  margin-bottom: 18px;
+  color: #675657;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.backLink:hover { color: #9d3e40; }
+
+.topGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(310px, .78fr);
+  align-items: start;
+  gap: 24px;
+}
+
 .gallery { min-width: 0; }
-.mainImage { height: 510px; overflow: hidden; border-radius: 22px; background: #f1e2dc; }
-.mainImage img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.sidePanel { display: grid; gap: 15px; }
-.priceCard, .contactCard, .story { border-radius: 15px; background: #fff; box-shadow: 0 6px 16px rgba(82,49,45,.07); }
-.priceCard { padding: 28px 30px; }
-.priceCard small { display: block; color: #817375; font-size: 11px; }
-.priceCard strong { display: block; margin-top: 8px; color: #b04144; font-size: 32px; }
-.contactCard { padding: 30px; }
-.contactCard h2 { margin: 0 0 20px; font-size: 20px; }
-.owner, .contactCard > a { display: flex; align-items: center; gap: 10px; }
-.owner { padding: 14px; border-radius: 11px; background: #e9f7f1; }
-.owner > span { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 50%; background: #d88f75; color: #fff; font-size: 12px; font-weight: 700; }
+
+.mainImage {
+  position: relative;
+  height: 450px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #eee1dc;
+  box-shadow: 0 12px 28px rgba(65, 43, 40, .09);
+}
+
+.mainImage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sidePanel { position: sticky; top: 20px; }
+
+.priceCard, .contactCard, .story {
+  border: 1px solid #e9dfda;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(65, 43, 40, .045);
+}
+
+.priceCard { padding: 24px; }
+
+.cardTop { display: flex; align-items: center; justify-content: space-between; }
+
+.cardTop > span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #eaf5ed;
+  color: #27694d;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.cardTop button {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid #e8ddda;
+  border-radius: 50%;
+  background: #fff;
+  color: #9d3e40;
+  cursor: pointer;
+}
+
+.cardTop button:hover { background: #fff5f2; }
+.breed { margin: 20px 0 5px; color: #9d3e40; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.priceCard h1 { margin: 0; font-size: clamp(34px, 4vw, 42px); line-height: 1.1; letter-spacing: -1.4px; }
+.location { display: flex; align-items: center; gap: 7px; margin-top: 11px; color: #76696a; font-size: 13px; }
+.priceCard > small { display: block; margin-top: 24px; padding-top: 17px; border-top: 1px solid #eee7e3; color: #786b6b; font-size: 12px; }
+.priceCard > strong { display: block; margin-top: 5px; color: #95383b; font-size: clamp(24px, 2.5vw, 29px); letter-spacing: -.5px; }
+
+.contactButton {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 18px;
+  border-radius: 11px;
+  background: #9d3e40;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 750;
+  text-decoration: none;
+  transition: background .18s ease, transform .18s ease;
+}
+
+.contactButton:hover { transform: translateY(-1px); background: #843235; }
+.trustNote { margin: 12px 4px 0; color: #786d6d; font-size: 11px; line-height: 1.5; text-align: center; }
+
+.gallery > .contactCard {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 16px;
+}
+
+.gallery > .contactCard h2 { grid-column: 1 / -1; margin: 0; font-size: 15px; }
+.owner { display: flex; min-height: 50px; align-items: center; gap: 10px; margin: 0; padding: 8px 10px; border-radius: 11px; background: #f2f7f3; }
+.owner > span { display: grid; width: 36px; height: 36px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #d78a73; color: #fff; font-size: 11px; font-weight: 800; }
 .owner strong, .owner small, .contactCard > a small, .contactCard > a strong { display: block; }
-.owner strong { font-size: 15px; }
-.owner small { margin-top: 3px; color: #168363; font-size: 11px; }
-.contactCard > a { margin-top: 12px; padding: 14px; border: 1px solid #ecd9d6; border-radius: 11px; color: #4b3c3c; }
-.contactCard > a > span { width: 20px; text-align: center; color: #8b7776; }
-.contactCard > a small { color: #958685; font-size: 10px; }
-.contactCard > a strong { margin-top: 3px; font-size: 12px; }
-.story { margin-top: 26px; padding: 28px 32px; }
+.owner strong { color: #3e3434; font-size: 12px; }
+.owner small { margin-top: 3px; color: #387354; font-size: 10px; }
+.contactCard > a { display: flex; min-height: 50px; box-sizing: border-box; align-items: center; gap: 9px; margin: 0; padding: 9px 10px; border: 1px solid #eee3df; border-radius: 11px; color: #9d3e40; text-decoration: none; }
+.contactCard > a:hover { border-color: #d8b4ad; background: #fffaf8; }
+.contactCard > a > span { width: 18px; text-align: center; }
+.contactCard > a small { color: #827575; font-size: 9px; font-weight: 750; letter-spacing: .04em; }
+.contactCard > a strong { margin-top: 3px; color: #463b3b; font-size: 11px; overflow-wrap: anywhere; }
+.sidePanel > .contactCard { display: none; }
+
+.story { margin-top: 26px; padding: clamp(22px, 3.5vw, 34px); }
 .story header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.story h1 { margin: 0; font-size: 21px; }
-.story header span { color: #827373; font-size: 12px; }
-.story p { margin: 18px 0 0; color: #766869; font-size: 14px; line-height: 1.7; }
-.facts { display: flex; justify-content: center; flex-wrap: wrap; gap: 13px; margin-top: 24px; }
-.facts div { min-width: 106px; padding: 12px 15px; border-radius: 12px; background: #fff0ee; text-align: center; }
+.sectionLabel { display: block; margin-bottom: 5px; color: #9d3e40; font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.story h1 { margin: 0; color: #302526; font-size: clamp(25px, 3vw, 31px); letter-spacing: -.8px; }
+.story header > span { padding: 8px 10px; border-radius: 9px; background: #faf5f2; color: #6f6262; font-size: 12px; }
+.story p { max-width: 78ch; margin: 17px 0 0; color: #615758; font-size: 14px; line-height: 1.75; }
+
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 24px; }
+.facts div { padding: 14px; border: 1px solid #eee4e0; border-radius: 12px; background: #fdfbf9; }
 .facts small, .facts strong { display: block; }
-.facts small { color: #9d817e; font-size: 10px; }
-.facts strong { margin-top: 5px; color: #ad4141; font-size: 12px; }
-.life { margin-top: 40px; }
-.life h2 { margin: 0 0 18px; font-size: 20px; }
-.life > div { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-.life img { width: 100%; aspect-ratio: 1; border-radius: 15px; object-fit: cover; }
-@media (max-width: 800px) { .topGrid { grid-template-columns: 1fr; } .sidePanel { grid-template-columns: 1fr 1fr; } .mainImage { height: 370px; } }
-@media (max-width: 560px) { .profileContent { width: 88%; } .sidePanel { grid-template-columns: 1fr; } .mainImage { height: 300px; } .thumbnails { gap: 6px; } .story header { align-items: flex-start; flex-direction: column; } .life > div { gap: 7px; } }
+.facts small { color: #847676; font-size: 10px; font-weight: 750; letter-spacing: .06em; }
+.facts strong { margin-top: 6px; color: #403637; font-size: 13px; }
+
+.life { margin-top: 38px; }
+.life h2 { margin: 0 0 16px; color: #302526; font-size: 24px; letter-spacing: -.5px; }
+.life > div { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.life img { display: block; width: 100%; aspect-ratio: 1.15; border-radius: 13px; object-fit: cover; }
+
+.backLink:focus-visible, .cardTop button:focus-visible, .contactButton:focus-visible, .contactCard > a:focus-visible { outline: 3px solid rgba(157, 62, 64, .3); outline-offset: 3px; }
+
+@media (max-width: 900px) {
+  .topGrid { grid-template-columns: minmax(0, 1.25fr) minmax(285px, .85fr); gap: 18px; }
+  .mainImage { height: 390px; }
+  .gallery > .contactCard { grid-template-columns: 1fr 1fr; }
+  .gallery > .contactCard h2 { grid-column: 1 / -1; }
+  .gallery > .contactCard .owner { grid-column: 1 / -1; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .profileContent { width: min(100% - 32px, 620px); padding-top: 18px; }
+  .topGrid { grid-template-columns: 1fr; }
+  .sidePanel { position: static; }
+  .mainImage { height: min(88vw, 400px); }
+  .priceCard { padding: 21px; }
+  .gallery > .contactCard { grid-template-columns: 1fr 1fr; }
+  .gallery > .contactCard .owner { grid-column: 1 / -1; }
+  .story { margin-top: 20px; }
+  .life > div { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .life > div img:nth-child(n + 4) { display: none; }
+}
+
+@media (max-width: 480px) {
+  .profileContent { width: calc(100% - 24px); padding-bottom: 56px; }
+  .mainImage { height: min(88vw, 360px); border-radius: 16px; }
+  .gallery > .contactCard { grid-template-columns: 1fr; padding: 14px; }
+  .gallery > .contactCard .owner, .gallery > .contactCard h2 { grid-column: auto; }
+  .story header { align-items: flex-start; flex-direction: column; }
+  .story header > span { font-size: 11px; }
+  .story p { font-size: 13px; }
+  .facts div { padding: 12px; }
+  .life > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .life > div img:nth-child(n + 3) { display: none; }
+}

@@ -1,10 +1,10 @@
 import { prisma } from "../../lib/prisma";
 
 const DEFAULT_IMAGES = [
-  "/blog-training.jpg",
-  "/blog-dog-health.jpg",
-  "/blog-cat-behavior.jpg",
-  "/blog-featured-puppy.jpg",
+  "/blog-training.webp",
+  "/blog-dog-health.webp",
+  "/blog-cat-behavior.webp",
+  "/blog-featured-puppy.webp",
 ];
 
 const CATEGORY_HINTS = [
@@ -80,15 +80,15 @@ function chooseImage(category, title) {
   const source = `${category || ""} ${title || ""}`.toLowerCase();
 
   if (source.includes("cat")) {
-    return "/blog-cat-behavior.jpg";
+    return "/blog-cat-behavior.webp";
   }
 
   if (source.includes("groom")) {
-    return "/blog-training.jpg";
+    return "/blog-training.webp";
   }
 
   if (source.includes("health") || source.includes("nutrition")) {
-    return "/blog-dog-health.jpg";
+    return "/blog-dog-health.webp";
   }
 
   return DEFAULT_IMAGES[Math.abs(source.length) % DEFAULT_IMAGES.length];
