@@ -3,9 +3,9 @@
 
 import { usePathname } from "next/navigation";
 import { SiteFooter, SiteHeader } from "./site-chrome";
-import SitterSidebar from "../sitter/Sidebar";
-import { OwnerSidebar } from "../../components/owner-dashboard/owner-sidebar";
-import { Bell } from "lucide-react";
+import SitterSidebar from "../../app/sitter/Sidebar";
+import { OwnerSidebar } from "../owner-dashboard/owner-sidebar";
+import { DashboardTopbar } from "../dashboard/dashboard-topbar";
 
 export default function LayoutShell({
   children,
@@ -22,26 +22,32 @@ export default function LayoutShell({
     pathname === "/forgot-password" ||
     pathname === "/reset-password";
 
-  const hideChrome = pathname.startsWith("/sitter");
+  const hideMarketplaceNavigation = pathname.startsWith("/marketplace/");
+  const hideChrome = pathname.startsWith("/sitter") || pathname.startsWith("/admin") || hideMarketplaceNavigation;
+  const isMarketplaceRoute =
+    pathname === "/marketplace" ||
+    pathname === "/marketplace/new" ||
+    pathname === "/marketplace/my-ads" ||
+    /^\/marketplace\/\d+$/.test(pathname);
 
-  if (pathname === "/marketplace" && userRole === "pet_sitter") {
+  if (isMarketplaceRoute && userRole === "pet_sitter") {
     return (
       <div className="marketplace-sitter-shell">
         <SitterSidebar />
         <div className="marketplace-dashboard-main marketplace-sitter-content">
-          <DashboardTopbar userName={userName} />
+          <DashboardTopbar userName={userName} variant="marketplace" />
           <main>{children}</main>
         </div>
       </div>
     );
   }
 
-  if (pathname === "/marketplace" && userRole === "pet_owner") {
+  if (isMarketplaceRoute && userRole === "pet_owner") {
     return (
       <div className="marketplace-owner-shell">
         <OwnerSidebar />
         <div className="marketplace-dashboard-main marketplace-owner-content">
-          <DashboardTopbar userName={userName} />
+          <DashboardTopbar userName={userName} variant="marketplace" />
           <main>{children}</main>
         </div>
       </div>
@@ -61,6 +67,7 @@ export default function LayoutShell({
         <SiteHeader
           isAuthenticated={isAuthenticated}
           userRole={userRole}
+          userName={userName}
         />
         {children}
       </div>
@@ -69,6 +76,14 @@ export default function LayoutShell({
 
   // Sitter and owner pages have their own navigation/layout
   if (hideChrome || pathname.startsWith("/owner")) {
+    if (hideMarketplaceNavigation) {
+      return (
+        <>
+          <SiteHeader isAuthenticated={isAuthenticated} hideNavigation />
+          {children}
+        </>
+      );
+    }
     return <>{children}</>;
   }
 
@@ -78,6 +93,7 @@ export default function LayoutShell({
       <SiteHeader
         isAuthenticated={isAuthenticated}
         userRole={userRole}
+        userName={userName}
       />
 
       {children}
@@ -89,23 +105,5 @@ export default function LayoutShell({
 />
 
     </>
-  );
-}
-
-function DashboardTopbar({ userName }) {
-  const initials = userName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "PS";
-
-  return (
-    <header className="marketplace-dashboard-topbar">
-      <button type="button" aria-label="View notifications" className="marketplace-notification">
-        <Bell size={18} strokeWidth={1.7} />
-        <span />
-      </button>
-      <div className="marketplace-topbar-divider" />
-      <div className="marketplace-user">
-        <span>{initials}</span>
-        <strong>{userName || "PetSphere user"}</strong>
-      </div>
-    </header>
   );
 }

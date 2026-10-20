@@ -1,5 +1,21 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../lib/prisma";
-import { getCurrentSitter, serialize } from "../../../../modules/sitter/sitter.service";
-export async function GET() { const sitter = await getCurrentSitter(); if (!sitter) return NextResponse.json({ message: "Sitter access is required." }, { status: 401 }); const notifications = await prisma.notification.findMany({ where: { user_id: sitter.user_id }, orderBy: { created_date: "desc" }, take: 30 }); return NextResponse.json({ notifications: serialize(notifications) }); }
-export async function PATCH(request) { const sitter = await getCurrentSitter(); if (!sitter) return NextResponse.json({ message: "Sitter access is required." }, { status: 401 }); const body = await request.json().catch(() => ({})); await prisma.notification.updateMany({ where: { user_id: sitter.user_id, ...(body.id ? { notification_id: BigInt(body.id) } : {}) }, data: { is_read: true } }); return NextResponse.json({ message: "Notifications updated." }); }
+import { getCurrentSitter } from "../../../../modules/sitter/sitter.service";
+import {
+  listUserNotifications,
+  markUserNotificationsRead,
+} from "../../../../modules/notifications/notification.service";
+
+export async function GET() {
+  const sitter = await getCurrentSitter();
+  if (!sitter) return NextResponse.json({ message: "Sitter access is required." }, { status: 401 });
+  return NextResponse.json({ notifications: await listUserNotifications(sitter.user_id) });
+}
+
+export async function PATCH(request) {
+  const sitter = await getCurrentSitter();
+  if (!sitter) return NextResponse.json({ message: "Sitter access is required." }, { status: 401 });
+  const body = await request.json().catch(() => ({}));
+  const result = await markUserNotificationsRead(sitter.user_id, body.id);
+  if (result.error) return NextResponse.json({ message: result.error }, { status: 400 });
+  return NextResponse.json({ message: "Notifications updated." });
+}

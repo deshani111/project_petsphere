@@ -2,6 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+
 const values = [
   { number: "01", title: "Care with intention", text: "Good care respects the routines, quirks, and comforts that make every pet unique." },
   { number: "02", title: "Trust through clarity", text: "Thoughtful details and open communication help pet parents feel at ease." },

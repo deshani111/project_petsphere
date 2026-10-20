@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import styles from "./page.module.css";
 
@@ -38,7 +39,7 @@ export default function ForgotPasswordPage() {
 
   return <main className={styles.page}><section className={styles.card}>
     <div className={styles.recoveryHeading}>
-      <div className={styles.iconCircle}><img src="/petsphere-mark.svg" alt="" /></div>
+      <div className={styles.iconCircle}><Image src="/petsphere-mark.svg" alt="" width={21} height={21} /></div>
       <div className={styles.headingLabel}><span>PetSphere</span><strong>Account recovery</strong></div>
     </div>
     <h1>{sent ? "Please check your email" : "Let’s get you back in"}</h1>

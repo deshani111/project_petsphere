@@ -269,3 +269,4 @@
     padding: 15px;
   }
 }
+.navigation a small { margin-left: auto; min-width: 18px; border-radius: 999px; padding: 2px 5px; background: #ad3f42; color: #fff; font-size: .55rem; line-height: 1.2; text-align: center; }

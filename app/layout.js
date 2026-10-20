@@ -2,8 +2,12 @@
 import "./globals.css";
 import { Inter, Playfair_Display } from "next/font/google";
 import { cookies } from "next/headers";
-import LayoutShell from "./components/layout-shell";
+import LayoutShell from "../components/shared/layout-shell";
 import { SESSION_COOKIE_NAME, getCachedSessionAccount } from "../modules/auth/auth.service";
+
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,7 +41,7 @@ export default async function RootLayout({ children }) {
   const userRole = account?.role ?? null;
 
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={`${inter.variable} ${playfairDisplay.variable}`}>
         <LayoutShell
           isAuthenticated={isAuthenticated}

@@ -3,6 +3,10 @@ import { notFound } from "next/navigation";
 import { getAdminBlogPostById, parseAdminBlogId } from "../../../../modules/admin/blog.service";
 import styles from "./page.module.css";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+
 function Icon({ name }) {
   const common = {
     width: 14,
@@ -77,13 +81,14 @@ function formatLongDate(value) {
 }
 
 export default async function AdminBlogDetailPage({ params }) {
-  const blogId = parseAdminBlogId(params.blogId);
+  const { blogId } = await params;
+  const parsedBlogId = parseAdminBlogId(blogId);
 
-  if (!blogId) {
+  if (!parsedBlogId) {
     notFound();
   }
 
-  const blog = await getAdminBlogPostById(blogId);
+  const blog = await getAdminBlogPostById(parsedBlogId);
 
   if (!blog) {
     notFound();
