@@ -6,13 +6,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 
-function getDashboardHref(userRole) {
-  if (userRole === "admin") return "/admin/dashboard";
-  return userRole === "pet_sitter"
-    ? "/sitter"
-    : "/owner/dashboard";
-}
-
 function getNavLinks() {
   return [
     { href: "/", label: "Home" },
@@ -40,7 +33,7 @@ function isActive(pathname, href) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SiteHeader({ isAuthenticated, userRole }) {
+export function SiteHeader({ isAuthenticated, hideNavigation = false }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef(null);
@@ -79,7 +72,7 @@ export function SiteHeader({ isAuthenticated, userRole }) {
         </span>
       </Link>
 
-      <button
+      {!hideNavigation && <button
         className="mobile-menu"
         type="button"
         ref={menuButton}
@@ -89,9 +82,9 @@ export function SiteHeader({ isAuthenticated, userRole }) {
         onClick={() => setMenuOpen(!menuOpen)}
       >
         <span className="menu-lines" aria-hidden="true" />
-      </button>
+      </button>}
 
-      <nav
+      {!hideNavigation && <nav
         className="site-nav"
         id="main-navigation"
         aria-label="Main navigation"
@@ -115,20 +108,15 @@ export function SiteHeader({ isAuthenticated, userRole }) {
             </Link>
           );
         })}
-      </nav>
+      </nav>}
 
       <div className="header-actions">
         {isAuthenticated ? (
-          <>
-            <Link className="header-cta header-dashboard" href={getDashboardHref(userRole)}>
-              Dashboard
-            </Link>
-            <form action="/api/auth/logout" method="post">
-              <button className="login-link logout-button" type="submit">
-                Logout
-              </button>
-            </form>
-          </>
+          <form action="/api/auth/logout" method="post">
+            <button className="login-link logout-button" type="submit">
+              Logout
+            </button>
+          </form>
         ) : (
           <>
             <Link className="login-link" href="/login">
@@ -144,9 +132,7 @@ export function SiteHeader({ isAuthenticated, userRole }) {
   );
 }
 
-export function SiteFooter({ isAuthenticated, userRole }) {
-  const dashboardHref = getDashboardHref(userRole);
-
+export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="footer-brand">
@@ -176,9 +162,6 @@ export function SiteFooter({ isAuthenticated, userRole }) {
         <Link href="/blog">Blog</Link>
         <Link href="/marketplace">Marketplace</Link>
 
-        {isAuthenticated && (
-          <Link href={dashboardHref}>Dashboard</Link>
-        )}
       </div>
 
       <small className="footer-copyright">

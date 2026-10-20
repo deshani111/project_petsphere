@@ -1,5 +1,4 @@
 {
-  "$schema": "https://json.schemastore.org/package.json",
   "name": "petsphere-frontend",
   "version": "0.1.0",
   "private": true,
@@ -7,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "db:seed-admin": "node --env-file=.env prisma/seed-admin.js",
     "db:seed-earnings": "node --env-file=.env prisma/seed-earnings.js",
     "db:seed-reviews": "node --env-file=.env prisma/seed-reviews.js",
@@ -23,18 +22,18 @@
     "@vercel/blob": "^2.8.0",
     "bcrypt": "^6.0.0",
     "lucide-react": "^1.30.0",
-    "next": "^15.5.4",
+    "next": "16.4.2",
     "pg": "^8.22.0",
     "prisma": "^7.9.1",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "26.1.2",
     "dotenv": "^17.4.2",
     "eslint": "9.39.5",
-    "eslint-config-next": "^15.5.4",
+    "eslint-config-next": "16.4.2",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   }

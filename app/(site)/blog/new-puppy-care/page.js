@@ -1,5 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./page.module.css";
+
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
 export default function NewPuppyCareArticle() {
   return (
@@ -30,9 +35,13 @@ export default function NewPuppyCareArticle() {
         </header>
 
         <div className={styles.cover}>
-          <img
+          <Image
             src="/blog-featured-puppy.webp"
             alt="Golden puppy relaxing in a bright living room"
+            width={1600}
+            height={1000}
+            sizes="(max-width: 760px) 88vw, (max-width: 850px) 88vw, 91.5vw"
+            priority
           />
         </div>
 

@@ -1,6 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import ReviewGallery from "../components/review-gallery";
+import ReviewGallery from "../../components/shared/review-gallery";
+
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
 const ShieldIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export function middleware(request) {
+export function proxy(request) {
   if (process.env.NODE_ENV !== "development") {
     return NextResponse.redirect(new URL("/login", request.url));
   }

@@ -27,7 +27,8 @@ export function OwnerSidebar() {
         </Link>
         <nav aria-label="Owner dashboard navigation" className="mt-3 space-y-1">
           {navigation.map(({ label, icon: Icon, href }) => {
-            const isActive = href.startsWith("/") ? pathname === href || pathname.startsWith(href) : false;
+            const isMarketplace = label === "Marketplace" && (pathname.startsWith("/owner/marketplace") || pathname === "/marketplace/new");
+            const isActive = isMarketplace || (href.startsWith("/") ? pathname === href || pathname.startsWith(href) : false);
             return (
               <Link
                 key={label}

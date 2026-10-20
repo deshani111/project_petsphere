@@ -2,6 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+
 const articles = [
   { title: "5 Tips for Stress-Free Grooming", excerpt: "Help your pet learn to love bath time with these expert-approved desensitization techniques.", date: "May 10, 2024", author: "Mark Hudson", image: "/blog-featured-puppy.webp" },
   { title: "Understanding Cat Body Language", excerpt: "Slow blinks to tail flicks: what your feline companion is actually trying to tell you.", date: "May 08, 2024", author: "Sarah J. Miller", image: "/blog-cat-behavior.webp" },

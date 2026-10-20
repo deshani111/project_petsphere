@@ -81,6 +81,38 @@
 .marketplace-user > span { display: grid; width: 39px; height: 39px; place-items: center; border-radius: 50%; background: #ab3d42; color: #fff; font-size: 12px; font-weight: 800; }
 .marketplace-user strong { font-weight: 700; }
 
+.marketplace-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 27px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  white-space: nowrap;
+}
+
+.marketplace-status-badge[data-status="approved"] {
+  border-color: #bfe2ce;
+  background: #edf9f1;
+  color: #287156;
+}
+
+.marketplace-status-badge[data-status="pending"] {
+  border-color: #f0d49c;
+  background: #fff8e8;
+  color: #9c6a17;
+}
+
+.marketplace-status-badge[data-status="rejected"] {
+  border-color: #efc4c1;
+  background: #fff1f0;
+  color: #b14e4b;
+}
+
 @media (max-width: 520px) {
   .marketplace-dashboard-topbar { padding: 0 14px; }
   .marketplace-user strong { display: none; }
