@@ -24,7 +24,7 @@ type Params = {
 
 function OwnerShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-[#fbf7f7]">
+    <div className="flex flex-col min-h-screen bg-[#fbf7f7] lg:flex-row">
       <OwnerSidebar />
       <div className="min-w-0 flex-1">
         <DashboardHeader />
@@ -138,7 +138,6 @@ export default function PetProfilePage({ params }: Params) {
               <Link href="/owner/pets" className="hover:text-[#a63c42]">My Pets</Link><span aria-hidden="true">›</span><span className="text-[#544244]">{pet.pet_name}</span>
             </nav>
             <h1 className="text-2xl font-bold tracking-tight text-[#392e30] sm:text-[28px]">Pet Profile</h1>
-            <p className="mt-1 text-sm text-[#887779]">Everything you need to know about your companion.</p>
           </div>
           <Link href={`/owner/pets/${petId}/edit`} className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#ad3d43] px-4 text-sm font-semibold text-white transition hover:bg-[#96353a]"><Pencil size={15} />Edit Profile</Link>
         </div>
@@ -221,11 +220,6 @@ export default function PetProfilePage({ params }: Params) {
               <Link href={`/owner/pets/${petId}/edit`} className="mt-3 inline-flex h-9 w-full items-center justify-center rounded-lg bg-[#ad3d43] px-3 text-sm font-semibold text-white transition hover:bg-[#96353a]">Upload / manage health record</Link>
             </Card>
 
-            <Card className="bg-[#fffafa]">
-              <h2 className="text-base font-semibold text-[#3c3031]">Need a sitter for {pet.pet_name}?</h2>
-              <p className="mt-2 text-sm leading-5 text-[#806e70]">Browse pet care providers and find someone who fits your schedule.</p>
-              <Link href="/owner/bookings/new" className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-[#ad3d43] px-4 text-sm font-semibold text-white transition hover:bg-[#96353a]"><PawPrint size={15} />Find a Pet Sitter</Link>
-            </Card>
           </div>
         </div>
       </div>

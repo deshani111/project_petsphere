@@ -110,7 +110,7 @@ export function PetFamilyPage({
   };
 
   return (
-    <main className="min-w-0 bg-[#f8f8fa] px-4 py-6 sm:px-6 lg:px-7 lg:py-7">
+    <main className="min-w-0 bg-[#f8f8fa] px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
       <div className="mx-auto max-w-[1480px]">
         <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -183,7 +183,7 @@ export function PetFamilyPage({
               {["Dog Walking", "Pet Sitting", "Overnight Boarding", "Grooming"].map((service) => <span key={service} className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[9px] font-medium text-slate-600">{service}</span>)}
             </div>
           </div>
-          <Link href="/owner/bookings/new" className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md bg-[#a33237] px-4 text-xs font-semibold text-white transition hover:bg-[#85262b]"><Sparkles size={13} /> Find a Sitter</Link>
+          <Link href="/owner/sitters" className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md bg-[#a33237] px-4 text-xs font-semibold text-white transition hover:bg-[#85262b]"><Sparkles size={13} /> Find a Sitter</Link>
         </section>
       </div>
     </main>
