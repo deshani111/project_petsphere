@@ -1,22 +1,13 @@
 import { DashboardHeader } from "../../../components/owner-dashboard/dashboard-header";
-import { DashboardOverview } from "../../../components/owner-dashboard/dashboard-overview";
+import { DashboardOverview, type DashboardBooking } from "../../../components/owner-dashboard/dashboard-overview";
+import { getCurrentSession } from "../../../lib/session";
 import { OwnerSidebar } from "../../../components/owner-dashboard/owner-sidebar";
 import { prisma } from "../../../lib/prisma";
-import { getCurrentSession } from "../../../lib/session";
-
-function formatAppointment(date: Date | null) {
-  if (!date) return "None scheduled";
-
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(date);
-}
 
 export default async function OwnerDashboardPage() {
   const session = await getCurrentSession();
-  const userId = BigInt(session!.sub);
+  if (!session) return null; // The owner layout redirects unauthenticated visitors.
+  const userId = BigInt(session.sub);
 
   const [user, owner, unreadMessages] = await Promise.all([
     prisma.users.findUnique({
@@ -28,16 +19,16 @@ export default async function OwnerDashboardPage() {
       select: {
         booking: {
           orderBy: { booking_date: "desc" },
-          take: 5,
           select: {
             booking_id: true,
             status: true,
             start_date: true,
+            end_date: true,
             total_amount: true,
             pet: { select: { pet_name: true } },
             pet_sitter: {
               select: {
-                users: { select: { first_name: true, last_name: true } },
+                users: { select: { first_name: true, last_name: true} },
               },
             },
             service_type: { select: { name: true } },
@@ -45,43 +36,38 @@ export default async function OwnerDashboardPage() {
         },
       },
     }),
-    prisma.message.count({
-      where: { receiver_id: userId, is_read: false },
-    }),
+    prisma.message.count({ where: { receiver_id: userId, is_read: false } }),
   ]);
 
   const userName = `${user?.first_name || "Pet"} ${user?.last_name || "Owner"}`.trim();
   const bookings = owner?.booking ?? [];
-  const activeBookings = bookings.filter((booking) =>
-    ["pending", "confirmed", "upcoming"].includes(booking.status.toLowerCase())
-  ).length;
-  const nextBooking = bookings
-    .filter((booking) => booking.start_date && booking.start_date >= new Date())
-    .sort((left, right) => left.start_date!.getTime() - right.start_date!.getTime())[0];
-
-  const recentBookings = bookings.map((booking) => ({
+  // These are the active values already used by the owner dashboard's business logic.
+  const activeBookings = bookings.filter((booking) => ["pending", "confirmed", "upcoming"].includes(booking.status.toLowerCase())).length;
+  const dashboardBookings: DashboardBooking[] = bookings.map((booking) => ({
     id: booking.booking_id.toString(),
     sitter: booking.pet_sitter
       ? `${booking.pet_sitter.users.first_name} ${booking.pet_sitter.users.last_name}`.trim()
       : "Awaiting sitter",
+    sitterImage: null,
     pet: booking.pet.pet_name,
     service: booking.service_type?.name || "Pet care",
-    date: formatAppointment(booking.start_date),
+    date: booking.start_date?.toISOString() ?? null,
+    endDate: booking.end_date?.toISOString() ?? null,
     status: booking.status,
     amount: booking.total_amount ? `Rs. ${booking.total_amount.toString()}` : "Pending",
   }));
 
   return (
-    <div className="flex min-h-screen bg-[#FFF8F7]">
+    <div className="flex min-h-screen flex-col bg-[#f6f7f9] lg:flex-row">
       <OwnerSidebar />
       <div className="min-w-0 flex-1">
-        <DashboardHeader userName={userName} />
+        <DashboardHeader userName={userName} userImage={null} unreadMessages={unreadMessages} />
         <DashboardOverview
-          userName={user?.first_name || "Pet Owner"}
+          userName={userName}
           activeBookings={activeBookings}
+          totalBookings={bookings.length}
           unreadMessages={unreadMessages}
-          nextAppointment={formatAppointment(nextBooking?.start_date ?? null)}
-          recentBookings={recentBookings}
+          bookings={dashboardBookings}
         />
       </div>
     </div>
