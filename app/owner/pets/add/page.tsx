@@ -479,7 +479,7 @@ setIsSaving(false);
 
 
   return (
-    <div className="flex min-h-screen bg-[#fff8f7]">
+    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
       <OwnerSidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <DashboardHeader />
@@ -492,9 +492,6 @@ setIsSaving(false);
                   My Pets <span aria-hidden="true">&rsaquo;</span> Add New Pet
                 </Link>
                 <h1 className="page-title text-[#29252b]">Add New Pet</h1>
-                <p className="page-subtitle mt-1 text-sm text-[#857a7d]">
-                  Let&apos;s create a tailored profile and medical records sheet for your furry companion.
-                </p>
               </div>
             </div>
 

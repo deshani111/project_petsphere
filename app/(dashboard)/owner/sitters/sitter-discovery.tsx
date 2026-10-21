@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
@@ -140,9 +139,8 @@ export default function SitterDiscovery() {
   };
 
   return <div className="min-w-0 max-w-full text-[#252630]">
-    <div className="mb-1 flex flex-wrap items-center gap-2 text-[11px] text-[#6f6e78]"><Link href="/owner/dashboard" className="hover:text-[#A63842]">PetSphere</Link><span>/</span><span className="font-medium text-[#A63842]">Find a Sitter</span></div>
-    <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
-      <div><h1 className="text-[25px] font-bold tracking-[-.7px] sm:text-[30px]">Find Your Perfect Pet Sitter</h1><p className="mt-1.5 max-w-2xl text-[13px] leading-5 text-[#6f6e78]">Discover trusted, caring pet sitters near you. Find the perfect companion for your furry family.</p></div>
+    <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
+      <div><h1 className="text-[25px] font-bold tracking-[-.7px] sm:text-[30px]">Find Your Perfect Pet Sitter</h1></div>
       <div className="inline-flex items-center gap-2 rounded-full border border-[#EEDFE1] bg-white px-3 py-2 text-[11px] text-[#6f6e78]"><MapPin size={14} className="text-[#A63842]"/><span>Location details unavailable</span></div>
     </div>
 

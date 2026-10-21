@@ -498,7 +498,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           : "none";
 
   const shell = (content: ReactNode) => (
-    <div className="flex min-h-screen bg-[#fff8f7]">
+    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
       <OwnerSidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <DashboardHeader />
@@ -532,9 +532,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
               Edit Pet Profile
             </h1>
           </div>
-          <p className="page-subtitle mt-1 text-sm text-[#9f8e8f]">
-            Keep your pet&apos;s information up to date.
-          </p>
         </div>
       </div>
 

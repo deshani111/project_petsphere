@@ -47,11 +47,10 @@ export default async function OwnerBookingsPage() {
       <div className="min-w-0 flex-1">
         <DashboardHeader userName={userName} />
         <main className="mx-auto max-w-6xl px-5 py-9">
-          <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-[#ab3d42]">Owner dashboard</p>
               <h1 className="mt-2 text-3xl font-bold text-[#30272a]">My Bookings</h1>
-              <p className="mt-2 text-sm text-[#887c7d]">View and manage your pet-care bookings.</p>
             </div>
             <Link href="/owner/bookings/new" className="rounded-lg bg-[#ab3d42] px-5 py-3 text-sm font-semibold text-white">New booking</Link>
           </div>

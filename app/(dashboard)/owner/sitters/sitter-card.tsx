@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Check, MapPin, Star } from "lucide-react";
 import type { ApprovedPublicMapLocation } from "../../../../lib/sitters/public-map-location";
 
@@ -41,8 +42,11 @@ export function SitterCard({
   isSelected: boolean;
   onSelect: () => void;
 }) {
+  const [failedProfileImage, setFailedProfileImage] = useState<string | null>(null);
   const hasReviews = sitter.reviewCount > 0 && sitter.rating > 0;
   const services = sitter.services.filter((service) => service.name.trim());
+  const profileImage = sitter.profileImage?.trim() || null;
+  const showProfileImage = profileImage !== null && failedProfileImage !== profileImage;
 
   return (
     <article
@@ -60,10 +64,10 @@ export function SitterCard({
       className={`grid min-w-0 cursor-pointer grid-cols-[64px_minmax(0,1fr)] gap-3 rounded-xl border p-3 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A63842] sm:grid-cols-[72px_minmax(0,1fr)_145px] sm:gap-3.5 sm:p-3.5 ${isSelected ? "border-[#A63842] bg-[#FFF1F2] shadow-[0_3px_12px_rgba(166,56,66,.14)]" : "border-[#EEDFE1] bg-white shadow-[0_2px_9px_rgba(37,38,48,.035)] hover:border-[#A63842]/45"}`}
     >
       <div className="relative size-16 overflow-hidden rounded-lg bg-[#FFF1F2] sm:size-[72px]">
-        {sitter.profileImage ? (
+        {showProfileImage ? (
           // Profile images are user-provided URLs, so use a regular img without remote-host config.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={sitter.profileImage} alt={`${sitter.name} profile`} loading="lazy" className="size-full object-cover" />
+          <img src={profileImage} alt={`${sitter.name} profile`} loading="lazy" onError={() => setFailedProfileImage(profileImage)} className="size-full object-cover" />
         ) : (
           <div aria-label={`${sitter.name} initials`} className="grid size-full place-items-center text-lg font-semibold tracking-wide text-[#A63842]">
             {initialsFor(sitter.name)}
