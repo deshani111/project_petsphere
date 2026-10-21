@@ -16,7 +16,7 @@ export default function LayoutShell({
     pathname === "/login" ||
     pathname === "/verify-email";
 
-  const hideChrome = pathname.startsWith("/sitter");
+  const hideChrome = pathname.startsWith("/sitter") || pathname.startsWith("/admin");
 
   // Login, registration, and email verification pages
   if (isAuthPage) {

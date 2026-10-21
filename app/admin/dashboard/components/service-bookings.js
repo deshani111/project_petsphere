@@ -1,7 +1,26 @@
-const tones = ["walk", "sit", "groom", "board"];
+import styles from "../page.module.css";
+
 export default function ServiceBookings({ services }) {
-  const fallback = [{ name: "Dog Walking", bookings: 45 }, { name: "Pet Sitting", bookings: 30 }, { name: "Grooming", bookings: 15 }, { name: "Boarding", bookings: 10 }];
-  const entries = services.length ? services : fallback;
-  const total = entries.reduce((sum, entry) => sum + entry.bookings, 0) || 1;
-  return <>{entries.slice(0, 4).map((service, index) => { const percentage = Math.round((service.bookings / total) * 100); return <div className="service-row" key={service.name}><div><span>{service.name}</span><strong>{percentage}%</strong></div><div className="track"><span className={`bar-${tones[index] || "walk"}`} style={{ width: `${percentage}%` }} /></div></div>; })}</>;
+  const entries = [...services].sort((first, second) => second.bookings - first.bookings).slice(0, 5);
+  const total = services.reduce((sum, service) => sum + service.bookings, 0);
+
+  if (!entries.length || total === 0) return <p className={styles.emptyState}>Service booking data will appear here.</p>;
+
+  return (
+    <div className={styles.serviceList}>
+      {entries.map((service, index) => {
+        const percentage = (service.bookings / total) * 100;
+        return (
+          <div className={styles.serviceRow} key={service.name}>
+            <div className={styles.serviceMeta}>
+              <span><i className={index === 0 ? styles.topService : ""} />{service.name}</span>
+              <span className={styles.serviceNumbers}><strong>{service.bookings.toLocaleString("en-US")}</strong><small>{percentage.toFixed(1)}%</small></span>
+            </div>
+            <div className={styles.serviceTrack} role="img" aria-label={`${service.name}: ${service.bookings} bookings, ${percentage.toFixed(1)} percent`}><span style={{ width: `${percentage}%` }} /></div>
+          </div>
+        );
+      })}
+      <div className={styles.serviceTotal}><span>Bookings across listed services</span><strong>{total.toLocaleString("en-US")}</strong></div>
+    </div>
+  );
 }

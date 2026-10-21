@@ -7,7 +7,7 @@ const previewData = {
   totalPetOwners: 12000,
   totalPetSitters: 482,
   pendingSitterVerifications: 28,
-  totalBookings: 843,
+  activeBookings: 843,
   revenue: [
     { amount: 2500, date: "2026-01-01T00:00:00.000Z" },
     { amount: 4200, date: "2026-02-01T00:00:00.000Z" },
@@ -21,6 +21,15 @@ const previewData = {
     { name: "Pet Sitting", bookings: 30 },
     { name: "Grooming", bookings: 15 },
     { name: "Boarding", bookings: 10 },
+  ],
+  recentBookings: [
+    { id: "PS-10482", status: "confirmed", petName: "Milo", petPhoto: null, ownerName: "Nadia Perera", serviceName: "Dog Walking", date: "2026-10-16T00:00:00.000Z" },
+    { id: "PS-10481", status: "pending", petName: "Coco", petPhoto: null, ownerName: "Amal Fernando", serviceName: "Pet Sitting", date: "2026-10-15T00:00:00.000Z" },
+    { id: "PS-10480", status: "completed", petName: "Luna", petPhoto: null, ownerName: "Ruwani Silva", serviceName: "Grooming", date: "2026-10-14T00:00:00.000Z" },
+  ],
+  pendingSitters: [
+    { id: "preview-sitter-1", name: "Preview Sitter", submittedAt: "2026-10-15T00:00:00.000Z", dateLabel: "Submitted" },
+    { id: "preview-sitter-2", name: "Sample Caregiver", submittedAt: "2026-10-12T00:00:00.000Z", dateLabel: "Submitted" },
   ],
   recentUsers: [
     { id: "preview-owner", fullName: "Preview Owner", email: "owner@example.test", role: "pet_owner", createdAt: "2026-03-01T00:00:00.000Z" },

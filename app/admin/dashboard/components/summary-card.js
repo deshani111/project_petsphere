@@ -1,5 +1,11 @@
-const icons = { users: "♧", bookings: "▣", revenue: "▤", applications: "♙" };
+import styles from "../page.module.css";
 
-export default function SummaryCard({ label, value, trend, direction = "up", icon }) {
-  return <article className="summary-card"><span className="summary-card__icon" aria-hidden="true">{icons[icon]}</span><span className={`summary-card__trend summary-card__trend--${direction}`}>{direction === "up" ? "↑" : "↓"} {trend}</span><small>{label}</small><strong>{value}</strong></article>;
+export default function SummaryCard({ label, value, detail, icon: Icon, featured = false, alert = false }) {
+  return (
+    <article className={`${styles.summaryCard} ${featured ? styles.summaryFeatured : ""} ${alert ? styles.summaryAlert : ""}`}>
+      <div className={styles.summaryTop}><span>{label}</span><span className={styles.summaryIcon}><Icon size={17} strokeWidth={1.8} aria-hidden="true" /></span></div>
+      <strong>{value}</strong>
+      <small>{detail}</small>
+    </article>
+  );
 }
