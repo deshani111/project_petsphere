@@ -22,8 +22,8 @@ const items = [
   ["My Services", "/sitter/services", PawPrint],
   ["Earnings", "/sitter/earnings", WalletCards],
   ["Messages", "/sitter/messages", MessageSquare],
-  ["Blogs", "/sitter/blogs", FileText],
-  ["Marketplace", "/sitter/marketplace", Store],
+  ["Blogs", "/blog", FileText],
+  ["Marketplace", "/marketplace", Store],
   ["Reviews", "/sitter/reviews", Star],
   ["My Profile", "/sitter/Profile", UserRound],
 ];
