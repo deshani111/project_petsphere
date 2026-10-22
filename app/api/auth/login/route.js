@@ -59,6 +59,8 @@ export async function POST(request) {
             ? "/admin/dashboard"
             : account.role === "pet_owner"
               ? "/owner/dashboard"
+              : account.role === "pet_sitter"
+                ? "/sitter"
               : "/",
       },
       { status: 200 }

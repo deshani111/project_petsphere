@@ -33,6 +33,11 @@ export default function ProfileHeader() {
     return () => controller.abort();
   }, []);
 
+  const profileName =
+    profile?.fullName ||
+    [profile?.firstName, profile?.lastName].filter(Boolean).join(" ") ||
+    "My Profile";
+
   return (
     <Link href="/sitter/Profile" className={styles.user} aria-label="Open my profile">
       <img
@@ -40,7 +45,7 @@ export default function ProfileHeader() {
         alt=""
         className={styles.headerAvatar}
       />
-      <span>{profile?.fullName || "Sarah Jenkins"}</span>
+      <span>{profileName}</span>
     </Link>
   );
 }
