@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import styles from "./page.module.css";
 
@@ -14,8 +15,33 @@ const initialFormState = {
   confirmPassword: "",
 };
 
+const passwordRuleMessage =
+  "Use 8–16 characters with an uppercase letter, lowercase letter, and special character.";
+
+function hasValidPassword(password) {
+  return (
+    password.length >= 8 &&
+    password.length <= 16 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /[^A-Za-z0-9\s]/.test(password)
+  );
+}
+
+function EyeIcon({ hidden }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z" />
+      <circle cx="12" cy="12" r="2.5" />
+      {hidden ? <path d="m4 4 16 16" /> : null}
+    </svg>
+  );
+}
+
 export default function RegisterPage() {
   const [formData, setFormData] = useState(initialFormState);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [status, setStatus] = useState({ state: "idle", message: "" });
 
   function handleChange(event) {
@@ -28,8 +54,15 @@ export default function RegisterPage() {
       return "Please fill in all required fields.";
     }
 
-    if (formData.password.length < 8) {
-      return "Password must be at least 8 characters long.";
+    if (!hasValidPassword(formData.password)) {
+      return passwordRuleMessage;
+    }
+
+    if (
+      formData.password.trim().toLowerCase() ===
+      formData.email.trim().toLowerCase()
+    ) {
+      return "Your password cannot be the same as your email address.";
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -91,42 +124,28 @@ export default function RegisterPage() {
       <section className={styles.panelWrap}>
         <aside className={styles.infoPanel}>
           <div className={styles.infoCopy}>
-            <p className={styles.eyebrow}>Welcome to PetSphere</p>
-          <h1>
-              Better care starts with the <span>right connection.</span>
-          </h1>
-          <p>
-              Join a trusted community built to make finding—or providing—
-              thoughtful pet care feel simple and safe.
-          </p>
+            <p className={styles.eyebrow}>PetSphere</p>
+            <h1>Your pet&apos;s <span>happy place.</span></h1>
           </div>
 
           <div className={styles.imageFrame}>
-            <img
-              src="/register-pet-care.jpg"
-              alt="Pet sitter sharing a calm moment with a cat at home"
+            <Image
+              src="/register-dog-care-pexels.webp"
+              alt="A woman holding her golden retriever at home"
+              fill
+              priority
+              sizes="(max-width: 850px) 100vw, 44vw"
             />
-            <div className={styles.trustCard}>
-              <span className={styles.checkIcon} aria-hidden="true">✓</span>
-              <span><strong>Trusted community</strong>Safe care, lasting connections</span>
-            </div>
           </div>
 
-          <div className={styles.benefits} aria-label="PetSphere benefits">
-            <span>Verified profiles</span>
-            <span>Secure experience</span>
-            <span>Local pet lovers</span>
-          </div>
         </aside>
 
         <section className={styles.formPanel}>
           <div className={styles.formHeading}>
-            <span className={styles.step}>Get started</span>
             <h2>Create your account</h2>
-            <p>Choose how you&apos;ll use PetSphere, then tell us about yourself.</p>
           </div>
 
-          <p className={styles.sectionLabel}>I&apos;m joining as a</p>
+          <p className={styles.sectionLabel}>I&apos;m joining as</p>
           <div className={styles.roleGrid}>
             <button
               type="button"
@@ -137,7 +156,6 @@ export default function RegisterPage() {
               <span className={styles.roleIcon} aria-hidden="true">♡</span>
               <span className={styles.roleCopy}>
                 <strong>Pet owner</strong>
-                <small>Find loving, reliable care</small>
               </span>
               <span className={styles.roleCheck} aria-hidden="true">✓</span>
             </button>
@@ -150,7 +168,6 @@ export default function RegisterPage() {
               <span className={styles.roleIcon} aria-hidden="true">⌂</span>
               <span className={styles.roleCopy}>
                 <strong>Pet sitter</strong>
-                <small>Offer care to local owners</small>
               </span>
               <span className={styles.roleCheck} aria-hidden="true">✓</span>
             </button>
@@ -209,31 +226,59 @@ export default function RegisterPage() {
           </div>
           <div>
             <label htmlFor="password">Password</label>
+            <div className={styles.passwordField}>
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="At least 8 characters"
                 autoComplete="new-password"
                 minLength={8}
+                maxLength={16}
+                title={passwordRuleMessage}
+                aria-describedby="password-requirements"
                 required
               />
+              <button
+                type="button"
+                className={styles.passwordToggle}
+                onClick={() => setShowPassword((value) => !value)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                <EyeIcon hidden={showPassword} />
+              </button>
+            </div>
+            <p id="password-requirements" className={styles.passwordRequirements}>
+              8–16 characters, uppercase, lowercase &amp; special character.
+            </p>
             </div>
             <div>
               <label htmlFor="confirmPassword">Confirm Password</label>
+            <div className={styles.passwordField}>
               <input
                 id="confirmPassword"
                 name="confirmPassword"
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Repeat your password"
                 autoComplete="new-password"
                 minLength={8}
+                maxLength={16}
+                title={passwordRuleMessage}
                 required
               />
+              <button
+                type="button"
+                className={styles.passwordToggle}
+                onClick={() => setShowConfirmPassword((value) => !value)}
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+              >
+                <EyeIcon hidden={showConfirmPassword} />
+              </button>
+            </div>
             </div>
 
             <button type="submit" disabled={status.state === "loading"} className={styles.submitBtn}>
@@ -257,7 +302,7 @@ export default function RegisterPage() {
             Already have an account? <Link href="/login">Log in</Link>
           </p>
           <p className={styles.termsText}>
-            By creating an account, you agree to PetSphere&apos;s Terms of Service and Privacy Policy.
+            By continuing, you agree to our Terms &amp; Privacy Policy.
           </p>
         </section>
       </section>

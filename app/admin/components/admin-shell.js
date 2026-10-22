@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./admin-shell.module.css";
 
 function Icon({ children, className }) {
@@ -116,8 +116,13 @@ export default function AdminShell({ admin, children }) {
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [pendingAds, setPendingAds] = useState(0);
   const name = admin.fullName || "Admin User";
   const roleLabel = getRoleLabel(admin.role);
+
+  useEffect(() => {
+    fetch("/api/admin/ads?status=pending").then((response) => response.ok ? response.json() : []).then((ads) => setPendingAds(Array.isArray(ads) ? ads.length : 0)).catch(() => {});
+  }, []);
 
   function isActiveRoute(itemHref) {
     if (itemHref === "/admin/pet-marketplace") {
@@ -147,7 +152,7 @@ export default function AdminShell({ admin, children }) {
             aria-current={isActiveRoute(item.href) ? "page" : undefined}
           >
             <span aria-hidden="true">{Icons[item.icon]}</span>
-            {item.label}
+            {item.label}{item.label === "Pet Marketplace" && pendingAds > 0 && <small aria-label={`${pendingAds} pending ads`}>{pendingAds}</small>}
           </Link>
         ) : (
           <span className={styles.disabledLink} key={item.label} aria-disabled="true">

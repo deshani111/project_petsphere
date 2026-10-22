@@ -4,7 +4,7 @@
   grid-template-columns: 188px minmax(0, 1fr);
   background: #fff8f7;
   color: #302627;
-  font-family: var(--admin-font-family, "Inter", Arial, sans-serif);
+  font-family: var(--admin-font-family, var(--font-inter), Arial, sans-serif);
   font-size: 14px;
   line-height: 1.5;
 }
@@ -295,3 +295,4 @@
     padding: 15px;
   }
 }
+.navigation a small { margin-left: auto; min-width: 18px; border-radius: 999px; padding: 2px 5px; background: #ad3f42; color: #fff; font-size: .55rem; line-height: 1.2; text-align: center; }

@@ -1,19 +1,30 @@
-import { cookies } from "next/headers";
 import { prisma } from "../../lib/prisma";
-import {
-  getSessionAccount,
-  isAdminRole,
-  SESSION_COOKIE_NAME,
-} from "../auth/auth.service";
+import { authorizeAdmin } from "../../lib/authorization";
+
+function toAdminAccount(session) {
+  return {
+    id: session.sub,
+    firstName: session.firstName,
+    lastName: session.lastName,
+    fullName: session.fullName,
+    email: session.email,
+    role: session.role,
+    isVerified: session.isVerified,
+    hasAdminProfile: session.hasAdminProfile,
+  };
+}
+
+export async function resolveCurrentAdmin() {
+  const authorization = await authorizeAdmin();
+  return {
+    status: authorization.status,
+    account: authorization.session ? toAdminAccount(authorization.session) : null,
+  };
+}
 
 export async function getCurrentAdmin() {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  const account = await getSessionAccount(sessionToken);
-
-  return account && isAdminRole(account.role) && account.hasAdminProfile && account.isVerified
-    ? account
-    : null;
+  const resolved = await resolveCurrentAdmin();
+  return resolved.account;
 }
 
 export async function getAdminDashboardData() {
@@ -43,7 +54,7 @@ export async function getAdminDashboardData() {
       prisma.service_type.findMany({
         select: {
           name: true,
-          booking: { select: { booking_id: true } },
+          _count: { select: { booking: true } },
         },
       }),
       prisma.booking.findMany({
@@ -93,7 +104,7 @@ export async function getAdminDashboardData() {
     })),
     bookingsByService: services.map((service) => ({
       name: service.name,
-      bookings: service.booking.length,
+      bookings: service._count.booking,
     })),
     recentBookings: recentBookings.map((booking) => ({
       id: booking.booking_id.toString(),

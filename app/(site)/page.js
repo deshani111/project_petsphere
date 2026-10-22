@@ -1,5 +1,10 @@
 import Link from "next/link";
-import ReviewGallery from "../components/review-gallery";
+import Image from "next/image";
+import ReviewGallery from "../../components/shared/review-gallery";
+
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
 const ShieldIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -39,28 +44,28 @@ const routine = [
 const services = [
   {
     title: "Boarding",
-    image: "/home-hero-pet-care.jpg",
+    image: "/home-hero-pet-care.webp",
     imageAlt: "A dog resting beside their caregiver at home",
     description:
       "Your pet stays overnight in a vetted sitter's home, with the same routine they'd get from you.",
   },
   {
     title: "Walking",
-    image: "/marketplace-cooper.jpg",
+    image: "/marketplace-cooper.webp",
     imageAlt: "A golden puppy sitting in the grass",
     description:
       "On-demand or recurring walks, matched to your dog's energy and your street's rhythm.",
   },
   {
     title: "Grooming",
-    image: "/blog-cat-behavior.jpg",
+    image: "/blog-cat-behavior.webp",
     imageAlt: "An orange cat relaxing indoors",
     description:
       "In-home grooming sessions, from a quick trim to a full wash and brush-out.",
   },
   {
     title: "Training",
-    image: "/home-hero-petsphere.jpg",
+    image: "/home-hero-petsphere.webp",
     imageAlt: "A happy dog sitting outside",
     description:
       "One-on-one sessions with certified trainers, built around behaviors you actually want to fix.",
@@ -86,20 +91,23 @@ const testimonials = [
   },
 ];
 
-const heroImageUrl = "/petcare.jpg";
+const heroImageUrl = "/petcare.webp";
 
 export default function Home() {
   return (
     <main className="landing-page">
       <section className="hero-section hero-home">
         <div className="hero-media" aria-hidden="true">
-          <img
+          <Image
             src={heroImageUrl}
             alt="A golden retriever resting beside a gray cat in a warm, calm pet care setting"
-            width="2400"
-            height="1600"
+            width={2400}
+            height={1260}
+            sizes="100vw"
+            quality={85}
             loading="eager"
             fetchPriority="high"
+            priority
           />
         </div>
 
@@ -206,10 +214,13 @@ export default function Home() {
           {services.map((service, i) => (
             <article key={service.title} className="service-row">
               <div className="service-image">
-                <img
+                <Image
                   src={service.image}
                   alt={service.imageAlt}
                   loading="lazy"
+                  width={800}
+                  height={600}
+                  sizes="(max-width: 700px) 100vw, 50vw"
                 />
               </div>
               <div className="service-body">
@@ -241,7 +252,7 @@ export default function Home() {
               <blockquote>{review.quote}</blockquote>
 
               <div className="review-author">
-                <img src={review.avatar} alt={review.name} />
+                <Image src={review.avatar} alt={review.name} width={80} height={80} sizes="80px" />
 
                 <div>
                   <strong>{review.name}</strong>

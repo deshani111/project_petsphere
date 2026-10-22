@@ -1,41 +1,14 @@
-.profilePage { min-height: 100vh; background: #fffaf9; color: #2a2021; }
-.activeLink { color: #ad4141 !important; font-weight: 700 !important; }
-.profileContent { width: min(1320px, 94%); margin: 0 auto; padding: 30px 0 90px; }
-.backLink { display: inline-block; margin: 0 0 22px; color: #463839; font-size: 16px; }
-.topGrid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; align-items: start; gap: 26px; }
-.gallery { min-width: 0; }
-.mainImage { height: 510px; overflow: hidden; border-radius: 22px; background: #f1e2dc; }
-.mainImage img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.sidePanel { display: grid; gap: 15px; }
-.priceCard, .contactCard, .story { border-radius: 15px; background: #fff; box-shadow: 0 6px 16px rgba(82,49,45,.07); }
-.priceCard { padding: 28px 30px; }
-.priceCard small { display: block; color: #817375; font-size: 11px; }
-.priceCard strong { display: block; margin-top: 8px; color: #b04144; font-size: 32px; }
-.contactCard { padding: 30px; }
-.contactCard h2 { margin: 0 0 20px; font-size: 20px; }
-.owner, .contactCard > a { display: flex; align-items: center; gap: 10px; }
-.owner { padding: 14px; border-radius: 11px; background: #e9f7f1; }
-.owner > span { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 50%; background: #d88f75; color: #fff; font-size: 12px; font-weight: 700; }
-.owner strong, .owner small, .contactCard > a small, .contactCard > a strong { display: block; }
-.owner strong { font-size: 15px; }
-.owner small { margin-top: 3px; color: #168363; font-size: 11px; }
-.contactCard > a { margin-top: 12px; padding: 14px; border: 1px solid #ecd9d6; border-radius: 11px; color: #4b3c3c; }
-.contactCard > a > span { width: 20px; text-align: center; color: #8b7776; }
-.contactCard > a small { color: #958685; font-size: 10px; }
-.contactCard > a strong { margin-top: 3px; font-size: 12px; }
-.story { margin-top: 26px; padding: 28px 32px; }
-.story header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.story h1 { margin: 0; font-size: 21px; }
-.story header span { color: #827373; font-size: 12px; }
-.story p { margin: 18px 0 0; color: #766869; font-size: 14px; line-height: 1.7; }
-.facts { display: flex; justify-content: center; flex-wrap: wrap; gap: 13px; margin-top: 24px; }
-.facts div { min-width: 106px; padding: 12px 15px; border-radius: 12px; background: #fff0ee; text-align: center; }
-.facts small, .facts strong { display: block; }
-.facts small { color: #9d817e; font-size: 10px; }
-.facts strong { margin-top: 5px; color: #ad4141; font-size: 12px; }
-.life { margin-top: 40px; }
-.life h2 { margin: 0 0 18px; font-size: 20px; }
-.life > div { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-.life img { width: 100%; aspect-ratio: 1; border-radius: 15px; object-fit: cover; }
-@media (max-width: 800px) { .topGrid { grid-template-columns: 1fr; } .sidePanel { grid-template-columns: 1fr 1fr; } .mainImage { height: 370px; } }
-@media (max-width: 560px) { .profileContent { width: 88%; } .sidePanel { grid-template-columns: 1fr; } .mainImage { height: 300px; } .thumbnails { gap: 6px; } .story header { align-items: flex-start; flex-direction: column; } .life > div { gap: 7px; } }
+.profilePage { min-height: 100vh; color: #32292a; background: radial-gradient(circle at 88% 2%, #f8e8e2 0, transparent 25rem), #fdfaf8; }
+.profileContent { width: min(1160px, calc(100% - 48px)); margin: 0 auto; padding: 32px 0 92px; }
+.back { display: inline-flex; align-items: center; gap: 8px; padding: 9px 13px; border: 1px solid #e7d7d1; border-radius: 10px; background: rgba(255,255,255,.84); color: #715d5d; box-shadow: 0 5px 14px rgba(77,48,42,.04); font-size: 13px; font-weight: 750; text-decoration: none; transition: .18s ease; }.back span { color: #a13d3f; font-size: 18px; }.back:hover { border-color: #c98d86; background: #fff4f1; color: #9d3e40; }
+.layout { display: grid; grid-template-columns: minmax(0, 1.62fr) minmax(306px, .72fr); align-items: start; gap: 28px; margin-top: 20px; }.mainColumn { min-width: 0; }
+.imageWrap { position: relative; height: min(52vw, 540px); overflow: hidden; border: 7px solid #fff; border-radius: 24px; background: #eee2dd; box-shadow: 0 20px 45px rgba(78,47,41,.14); }.imageWrap::after { position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgba(34,22,20,.7)); content: ""; pointer-events: none; }.imageWrap img { object-fit: cover; }.imageOverlay { position: absolute; right: 26px; bottom: 23px; left: 26px; z-index: 1; color: #fff; }.imageOverlay span { display: inline-block; padding: 6px 10px; border-radius: 999px; background: rgba(40,113,86,.94); font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }.imageOverlay p { margin: 9px 0 0; overflow: hidden; font-size: clamp(22px, 3vw, 31px); font-weight: 800; letter-spacing: -.7px; text-overflow: ellipsis; text-shadow: 0 2px 10px rgba(0,0,0,.3); white-space: nowrap; }
+.about, .priceCard, .posterCard { border: 1px solid #eaded9; border-radius: 19px; background: rgba(255,255,255,.94); box-shadow: 0 10px 30px rgba(76,48,42,.06); }.about { margin-top: 22px; padding: clamp(25px, 4vw, 37px); }.eyebrow, .posterLabel { display: block; color: #a13d3f; font-size: 10px; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }.about h1 { margin: 8px 0 0; color: #312728; font-size: clamp(31px, 4vw, 45px); line-height: 1.07; letter-spacing: -1.7px; }.meta { display: flex; flex-wrap: wrap; gap: 11px 20px; margin-top: 21px; padding: 14px 0; border-top: 1px solid #f0e5e1; border-bottom: 1px solid #f0e5e1; color: #796868; font-size: 12px; font-weight: 700; }.meta span, .location, .status { display: inline-flex; align-items: center; gap: 7px; }.meta svg, .location svg { color: #ad595a; }.copy { max-width: 72ch; margin-top: 22px; color: #665859; font-size: 14px; line-height: 1.8; }.copy p { margin: 0 0 15px; }.copy p:last-child { margin-bottom: 0; }
+.petFacts { margin-top: 23px; }.petFacts h2 { margin: 0 0 11px; color: #49393a; font-size: 15px; }.petFacts > div { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }.petFacts span { padding: 11px 10px; border: 1px solid #eee2de; border-radius: 10px; background: #fffcfa; }.petFacts small, .petFacts b { display: block; }.petFacts small { color: #9c8987; font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }.petFacts b { margin-top: 5px; overflow: hidden; color: #4b3d3d; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar { position: sticky; top: 22px; display: grid; gap: 16px; }.priceCard { padding: 25px; border-color: #e7d6d0; background: linear-gradient(145deg, #fff, #fff7f4); }.status { padding: 6px 10px; border-radius: 999px; background: #e9f5ec; color: #287156; font-size: 10px; font-weight: 850; }.priceCard > p { margin: 27px 0 4px; color: #8a7675; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }.priceCard > strong { display: block; color: #973c3e; font-size: clamp(28px, 3vw, 35px); letter-spacing: -1px; }.divider { height: 1px; margin: 22px 0 15px; background: #eedfda; }.location { color: #6d5b5c; font-size: 13px; font-weight: 700; }.priceCard small { display: block; margin: 17px 2px 0; padding-top: 15px; border-top: 1px solid #f0e4e0; color: #8d7b7a; font-size: 11px; line-height: 1.55; }
+.posterCard { padding: 22px; }.posterCard h2 { display: flex; align-items: center; gap: 8px; margin: 10px 0 15px; color: #403132; font-size: 17px; letter-spacing: -.2px; }.posterCard h2 svg { color: #a85557; }.posterCard a, .unavailable { display: flex; align-items: center; gap: 9px; min-width: 0; padding: 11px 0; border-top: 1px solid #f1e7e3; color: #615253; font-size: 12px; font-weight: 650; text-decoration: none; overflow-wrap: anywhere; transition: color .18s ease; }.posterCard a:hover { color: #9d3e40; }.posterCard a svg, .unavailable svg { flex: 0 0 auto; color: #ad595a; }.unavailable { color: #998c8b; }
+.dashboardShell { display: flex; min-height: 100vh; background: #fdfaf8; }.dashboardMain { min-width: 0; flex: 1; }.back:focus-visible, .posterCard a:focus-visible { outline: 3px solid rgba(161,61,63,.26); outline-offset: 3px; }
+@media (max-width: 850px) { .layout { grid-template-columns: 1fr; }.sidebar { position: static; grid-template-columns: 1fr 1fr; }.imageWrap { height: min(82vw, 520px); } }
+@media (max-width: 650px) { .profileContent { width: min(100% - 32px, 580px); padding: 21px 0 64px; }.imageWrap { border-width: 4px; border-radius: 18px; }.imageOverlay { right: 18px; bottom: 17px; left: 18px; }.sidebar { grid-template-columns: 1fr; }.about, .priceCard, .posterCard { border-radius: 15px; }.about, .priceCard { padding: 21px; }.meta { align-items: flex-start; flex-direction: column; gap: 9px; }.petFacts > div { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.photoStrip { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; }
+.photoStrip img { flex: 0 0 110px; height: 80px; border-radius: 8px; object-fit: cover; }

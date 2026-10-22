@@ -3,6 +3,10 @@ import AdminDashboardClient from "../dashboard/dashboard-client";
 import ProfileClient from "../profile/profile-client";
 import styles from "./page.module.css";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+
 const previewData = {
   totalPetOwners: 12000,
   totalPetSitters: 482,
@@ -90,12 +94,14 @@ const profilePreviewData = {
   ],
 };
 
-export default function AdminDashboardPreviewPage({ searchParams }) {
+export default async function AdminDashboardPreviewPage({ searchParams }) {
+  const sp = await searchParams;
+
   if (process.env.NODE_ENV !== "development") {
     redirect("/login");
   }
 
-  if (searchParams?.view === "profile") {
+  if (sp?.view === "profile") {
     return (
       <>
         <p className={styles.previewLabel}>Development Preview — profile mock data only</p>

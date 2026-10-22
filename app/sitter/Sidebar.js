@@ -23,7 +23,7 @@ const items = [
   ["Earnings", "/sitter/earnings", WalletCards],
   ["Messages", "/sitter/messages", MessageSquare],
   ["Blogs", "/sitter/blogs", FileText],
-  ["Marketplace", "/sitter/marketplace", Store],
+  ["Marketplace", "/marketplace", Store],
   ["Reviews", "/sitter/reviews", Star],
   ["My Profile", "/sitter/Profile", UserRound],
 ];

@@ -1,31 +1,9 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { getSessionAccount, isAdminRole, SESSION_COOKIE_NAME } from "../../../../modules/auth/auth.service";
+import { resolveCurrentAdmin } from "../../../../modules/admin/admin.service";
 import { getAdminProfileData, updateAdminProfile } from "../../../../modules/admin/profile.service";
 
-async function resolveAdminAccount() {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-
-  if (!sessionToken) {
-    return { status: 401 };
-  }
-
-  const account = await getSessionAccount(sessionToken);
-
-  if (!account) {
-    return { status: 401 };
-  }
-
-  if (!isAdminRole(account.role) || !account.hasAdminProfile || !account.isVerified) {
-    return { status: 403 };
-  }
-
-  return { status: 200, account };
-}
-
 export async function GET() {
-  const resolved = await resolveAdminAccount();
+  const resolved = await resolveCurrentAdmin();
 
   if (resolved.status !== 200) {
     return NextResponse.json(
@@ -44,7 +22,7 @@ export async function GET() {
 }
 
 export async function PATCH(request) {
-  const resolved = await resolveAdminAccount();
+  const resolved = await resolveCurrentAdmin();
 
   if (resolved.status !== 200) {
     return NextResponse.json(

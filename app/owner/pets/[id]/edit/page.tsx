@@ -5,6 +5,7 @@ import { use, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardHeader } from "../../../../../components/owner-dashboard/dashboard-header";
 import { OwnerSidebar } from "../../../../../components/owner-dashboard/owner-sidebar";
+import { CalendarIcon, FileIcon, PawIcon } from "../../../../../components/owner-dashboard/dashboard-icons";
 import { combinePetNotes, parsePetNotes } from "../../../../../lib/pet-notes";
 
 type RealPet = {
@@ -159,7 +160,27 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           return;
         }
 
-        if (!cancelled) setPet(data);
+        if (!cancelled) {
+          const notes = parsePetNotes(data.medical_notes);
+          setPet(data);
+          setForm({
+            pet_name: data.pet_name ?? "",
+            species: data.species ?? "",
+            breed: data.breed ?? "",
+            gender: data.gender ? data.gender.charAt(0).toUpperCase() + data.gender.slice(1).toLowerCase() : "",
+            age: data.age != null ? String(data.age) : "",
+            weight_kg: data.weight_kg ?? "",
+            about: notes.about,
+            medications: notes.medications,
+            care_instructions: notes.careInstructions,
+            sterilized: notes.sterilized,
+            last_dental_check: notes.lastDentalVaccination,
+          });
+          setPhotoFile(null);
+          setPhotoPreview(data.photo ?? "");
+          setMedicalReportFile(null);
+          setMedicalReportPreview(data.medical_report ?? "");
+        }
       } catch {
         if (!cancelled) setLoadError("Could not reach the server. Please try again.");
       } finally {
@@ -173,30 +194,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
       cancelled = true;
     };
   }, [petId]);
-
-  useEffect(() => {
-    if (!pet) return;
-
-    const notes = parsePetNotes(pet.medical_notes);
-    setForm({
-      pet_name: pet.pet_name ?? "",
-      species: pet.species ?? "",
-      breed: pet.breed ?? "",
-      gender: pet.gender ? pet.gender.charAt(0).toUpperCase() + pet.gender.slice(1).toLowerCase() : "",
-      age: pet.age != null ? String(pet.age) : "",
-      weight_kg: pet.weight_kg ?? "",
-      about: notes.about,
-      medications: notes.medications,
-      care_instructions: notes.careInstructions,
-      sterilized: notes.sterilized,
-      last_dental_check: notes.lastDentalVaccination,
-    });
-
-    setPhotoFile(null);
-    setPhotoPreview(pet.photo ?? "");
-    setMedicalReportFile(null);
-    setMedicalReportPreview(pet.medical_report ?? "");
-  }, [pet]);
 
   useEffect(() => {
     return () => {
@@ -497,9 +494,9 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           : "none";
 
   const shell = (content: ReactNode) => (
-    <div className="flex min-h-screen bg-[#fff8f7]">
+    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
       <OwnerSidebar />
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <DashboardHeader />
         {content}
       </div>
@@ -519,44 +516,34 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
   }
 
   return shell(
-    <main className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-6">
-      <div className="mb-4 flex items-start justify-between gap-4">
+    <main className="w-full px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+      <div className="mb-5">
         <div>
+          <Link href={`/owner/pets/${petId}`} className="mb-1 inline-flex text-xs text-[#8b7d7e] hover:text-[#ab3d42]">
+            My Pets&nbsp;›&nbsp;{pet.pet_name}
+          </Link>
           <div className="flex items-center gap-2 text-[#4f4143]">
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className="text-[18px] font-semibold leading-none hover:text-[#ab3d42]"
-              aria-label="Back to pet profile"
-            >
-              <span aria-hidden>‹</span>
-            </button>
             <h1 className="page-title text-[#30272a]">
               Edit Pet Profile
             </h1>
           </div>
-          <p className="page-subtitle mt-1 text-[#9f8e8f]">
-            Keep your pet&apos;s information up to date to ensure safe, personalized, and loving care.
-          </p>
         </div>
       </div>
 
-      <section className="w-full rounded-[18px] border border-[#f3dede] bg-white px-5 py-6 shadow-[0_1px_0_rgba(255,255,255,0.9)] sm:px-6">
-        <div className="mb-6 rounded-[18px] border border-[#f2e2e2] bg-[#fffafa] p-4 sm:p-5">
+      <section className="w-full rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_3px_16px_rgba(117,55,59,0.04)] sm:p-5">
+        <div className="mb-5 rounded-xl border border-[#f0dada] bg-[#fffafa] p-4 sm:p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
-            <div className="relative mx-auto h-24 w-24 overflow-hidden rounded-full border border-[#f1dede] bg-[#f7f0ef] sm:mx-0 sm:h-28 sm:w-28">
+            <div className="relative mx-auto flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#f1dede] bg-[#fff2f1] text-[#b34b50] sm:mx-0 sm:size-24">
               {photoPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={photoPreview} alt={form.pet_name} className="h-full w-full object-cover" />
-              ) : null}
+                <img src={photoPreview} alt={form.pet_name} className="size-full object-cover" />
+              ) : <PawIcon className="size-8" />}
             </div>
             <div className="flex-1 text-center sm:text-left">
-              <div className="space-y-1">
-                <h2 className="text-[18px] font-semibold text-[#30272a]">{form.pet_name}</h2>
-                <p className="text-[16px] text-[#8b7d7e]">
-                  Update your pet&apos;s photo and key identifiers to keep their profile current.
-                </p>
-              </div>
+              <h2 className="text-lg font-semibold text-[#30272a]">{form.pet_name}</h2>
+              <p className="mt-1 text-sm text-[#8b7d7e]">{[pet.age != null ? `${pet.age} ${pet.age === 1 ? "year" : "years"} old` : null, pet.gender].filter(Boolean).join(" · ")}</p>
+              <p className="mt-2 flex items-center justify-center gap-1.5 text-xs text-[#927e80] sm:justify-start"><CalendarIcon className="size-3.5" />Registered {new Intl.DateTimeFormat(undefined, { year: "numeric", month: "short", day: "numeric" }).format(new Date(pet.created_date))}</p>
               <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
                 <label className="inline-flex h-9 cursor-pointer items-center justify-center rounded-md border border-[#f0dede] bg-white px-3 text-[12px] font-medium text-[#ab3d42] hover:bg-[#fff7f7]">
                   Change Photo
@@ -571,14 +558,15 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
         </div>
 
         <form
+          id="edit-pet-profile-form"
           onSubmit={(event) => {
             event.preventDefault();
             handleSave();
           }}
         >
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_340px]">
-            <div className="space-y-4">
-              <div className="rounded-[16px] bg-[#fff6f6] p-4">
+          <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(280px,2fr)]">
+            <div className="flex min-w-0 flex-col gap-4">
+              <div className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   Basic information
@@ -671,7 +659,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                 </div>
               </div>
 
-              <div className="rounded-[16px] bg-[#fff6f6] p-4">
+              <div className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   About Pet
@@ -687,27 +675,27 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                   />
                 </FieldGroup>
 
-                <div className="mt-4 rounded-[16px] bg-[#fff6f6]">
-                  <h3 className="mb-4 flex items-center gap-2 text-[14px] font-semibold text-[#b54a50]">
-                    <span aria-hidden>◌</span>
-                    Medications
-                  </h3>
-
-                  <FieldGroup error={errors.medications}>
-                    <FieldLabel>Medications</FieldLabel>
-                    <textarea
-                      value={form.medications}
-                      onChange={(event) => setValue("medications", event.target.value)}
-                      onBlur={() => handleFieldBlur("medications")}
-                      rows={4}
-                      className="mt-1 w-full rounded-md border border-[#eedddd] bg-white px-3 py-2 text-[14px] text-[#403537] outline-none focus:border-[#c96f73]"
-                      placeholder="List any medications your pet is taking"
-                    />
-                  </FieldGroup>
-                </div>
               </div>
 
-              <div className="rounded-[16px] bg-[#fff6f6] p-4">
+              <div className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
+                <h2 className="mb-4 flex items-center gap-2 text-[18px] font-semibold text-[#a63842]">
+                  <FileIcon className="size-4" />
+                  Medications &amp; Health Notes
+                </h2>
+                <FieldGroup error={errors.medications}>
+                  <FieldLabel>Medications</FieldLabel>
+                  <textarea
+                    value={form.medications}
+                    onChange={(event) => setValue("medications", event.target.value)}
+                    onBlur={() => handleFieldBlur("medications")}
+                    rows={4}
+                    className="mt-1 w-full rounded-lg border border-[#eedddd] bg-white px-3 py-2 text-sm leading-6 text-[#403537] outline-none focus:border-[#c96f73]"
+                    placeholder="List any medications your pet is taking"
+                  />
+                </FieldGroup>
+              </div>
+
+              <div className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   Care Instructions
@@ -725,8 +713,8 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
               </div>
             </div>
 
-            <aside className="space-y-4">
-              <section className="rounded-[16px] bg-[#fff6f6] p-4">
+            <aside className="flex min-w-0 flex-col gap-4">
+              <section className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   Medical Information
@@ -739,7 +727,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                       {[
                         { value: "yes", label: "Yes — Neutered/Spayed" },
                         { value: "no", label: "No — Not sterilized" },
-                        { value: "unknown", label: "Unknown" },
+                        { value: "unknown", label: sterilizationLabel.unknown },
                       ].map((option) => {
                         const selected = form.sterilized === option.value;
 
@@ -782,41 +770,41 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                 </div>
               </section>
 
-              <section className="rounded-[16px] bg-[#fff6f6] p-4">
+              <section className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
-                  Vaccination Records
+                  Medical Records
                 </h2>
 
                 <div className="rounded-[14px] border border-[#f0dede] bg-white p-3">
-                  <FieldLabel>Current Certificate</FieldLabel>
+                  <FieldLabel>Uploaded Medical Document</FieldLabel>
 
                   <div className="mt-3 overflow-hidden rounded-xl border border-[#f0dede] bg-[#fff8f7]">
                     {medicalReportPreview && certificateSource === "image" ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={medicalReportPreview}
-                        alt={`${form.pet_name || "Pet"} vaccination record`}
-                        className="h-56 w-full object-cover"
+                        alt={`${form.pet_name || "Pet"} medical record`}
+                        className="h-56 w-full object-contain bg-[#fff8f7]"
                       />
                     ) : medicalReportPreview ? (
                       <div className="flex h-56 flex-col items-center justify-center px-4 text-center text-[14px] text-[#9f8e8f]">
                         <div className="rounded-full bg-[#fff1f1] px-3 py-2 text-[12px] font-semibold text-[#b54a50]">
-                          Vaccination document
+                          Medical document
                         </div>
                         <p className="mt-3 max-w-[220px]">
-                          {medicalReportFile?.name || "Current certificate uploaded"}
+                          {medicalReportFile?.name || "Medical record uploaded"}
                         </p>
                       </div>
                     ) : (
                       <div className="flex h-56 items-center justify-center px-4 text-center text-[14px] text-[#9f8e8f]">
-                        No vaccination certificate uploaded yet.
+                        No medical document uploaded yet.
                       </div>
                     )}
                   </div>
 
                 <label className="mt-3 inline-flex h-9 cursor-pointer items-center justify-center rounded-md border border-[#f0dede] bg-white px-3 text-[12px] font-medium text-[#ab3d42] hover:bg-[#fff7f7]">
-                  Replace Document
+                  Replace Medical Document
                   <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleMedicalReportChange} />
                 </label>
 
@@ -847,6 +835,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           ) : null}
         </form>
       </section>
+      </div>
     </main>,
   );
 }
