@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { DashboardHeader } from "../../../../components/owner-dashboard/dashboard-header";
 import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
-import { prisma } from "../../../../lib/prisma";
-import { getCurrentSession } from "../../../../lib/session";
+import { getCurrentOwnerId, getCurrentSession } from "../../../../lib/session";
+import { listOwnerBookings } from "../../../../modules/bookings/booking.service";
+
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
 function formatDate(date: Date | null) {
   return date
@@ -12,34 +16,9 @@ function formatDate(date: Date | null) {
 
 export default async function OwnerBookingsPage() {
   const session = await getCurrentSession();
-  const userId = BigInt(session!.sub);
-  const user = await prisma.users.findUnique({
-    where: { user_id: userId },
-    select: {
-      first_name: true,
-      last_name: true,
-      pet_owner: {
-        select: {
-          booking: {
-            orderBy: { booking_date: "desc" },
-            select: {
-              booking_id: true,
-              status: true,
-              start_date: true,
-              end_date: true,
-              total_amount: true,
-              pet: { select: { pet_name: true } },
-              service_type: { select: { name: true } },
-              pet_sitter: { select: { users: { select: { first_name: true, last_name: true } } } },
-            },
-          },
-        },
-      },
-    },
-  });
-
-  const userName = `${user?.first_name || "Pet"} ${user?.last_name || "Owner"}`.trim();
-  const bookings = user?.pet_owner?.booking ?? [];
+  const ownerId = await getCurrentOwnerId();
+  const userName = `${session?.firstName || "Pet"} ${session?.lastName || "Owner"}`.trim();
+  const bookings = ownerId ? await listOwnerBookings(ownerId) : [];
 
   return (
     <div className="flex min-h-screen bg-[#fff8f7]">
@@ -47,11 +26,10 @@ export default async function OwnerBookingsPage() {
       <div className="min-w-0 flex-1">
         <DashboardHeader userName={userName} />
         <main className="mx-auto max-w-6xl px-5 py-9">
-          <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-[#ab3d42]">Owner dashboard</p>
               <h1 className="mt-2 text-3xl font-bold text-[#30272a]">My Bookings</h1>
-              <p className="mt-2 text-sm text-[#887c7d]">View and manage your pet-care bookings.</p>
             </div>
             <Link href="/owner/bookings/new" className="rounded-lg bg-[#ab3d42] px-5 py-3 text-sm font-semibold text-white">New booking</Link>
           </div>
