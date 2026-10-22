@@ -34,11 +34,7 @@ function Icon({ name }) {
 }
 
 function formatCurrency(value) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-  }).format(Number(value || 0));
+  return `Rs. ${Number(value || 0).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 function formatShortDate(value) {
@@ -124,32 +120,18 @@ export default function AdminEarningsOverviewPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const loadEarnings = async (selectedPeriod = period) => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch(`/api/admin/earnings?period=${selectedPeriod}`, {
-        cache: "no-store",
-      });
-      const payload = await response.json();
-
-      if (!response.ok) {
-        throw new Error(payload.message || "Earnings data could not be loaded.");
-      }
-
-      setData(payload);
-    } catch (loadError) {
-      setError(loadError.message || "Earnings data could not be loaded.");
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadEarnings(period);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let cancelled = false;
+    fetch(`/api/admin/earnings?period=${period}`, { cache: "no-store" })
+      .then(async (response) => {
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.message || "Earnings data could not be loaded.");
+        return payload;
+      })
+      .then((payload) => { if (!cancelled) setData(payload); })
+      .catch((loadError) => { if (!cancelled) { setError(loadError.message || "Earnings data could not be loaded."); setData(null); } })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [period]);
 
   const transactions = data?.transactions || [];
@@ -173,7 +155,7 @@ export default function AdminEarningsOverviewPage() {
         <div className={styles.controlRow}>
           <label className={styles.periodSelect}>
             <Icon name="calendar" />
-            <select value={period} onChange={(event) => setPeriod(event.target.value)} aria-label="Earnings period">
+            <select value={period} onChange={(event) => { if (event.target.value !== period) { setLoading(true); setError(""); setPeriod(event.target.value); } }} aria-label="Earnings period">
               {periodOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}

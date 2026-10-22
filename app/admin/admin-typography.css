@@ -1,5 +1,5 @@
 .admin-shell {
-  --admin-font-family: "Inter", Arial, sans-serif;
+  --admin-font-family: var(--font-inter), Arial, sans-serif;
   --admin-page-title-size: 30px;
   --admin-section-title-size: 16px;
   --admin-card-title-size: 14px;
