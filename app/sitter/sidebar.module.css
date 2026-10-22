@@ -1,7 +1,7 @@
 .sidebar {
   position: fixed;
   inset: 0 auto 0 0;
-  width: 171px;
+  width: 224px;
   background: #fff;
   border-right: 1px solid #eadad8;
   display: flex;
@@ -10,84 +10,89 @@
 }
 
 .brand {
-  margin: 28px 14px 0;
-  padding: 0 10px 17px;
-  border-bottom: 1px solid #eadad8;
+  margin: 0;
+  padding: 24px 20px 0;
+  border-bottom: 0;
   text-decoration: none;
-  color: #96363a;
+  color: #ab3d42;
 }
 
 .brandRow {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 17px;
-  line-height: 20px;
+  gap: 7px;
+  font-size: 24px;
+  line-height: 26px;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -1px;
 }
 
+.brandMark{width:auto;height:auto;display:grid;place-items:center;border-radius:0;background:transparent;flex:none}.brandMark img{display:block;width:26px;height:26px}
+.brandRow>span:last-child{color:#a13d3f}.brandRow>span:last-child>span{color:inherit}
+
 .tagline {
-  margin-left: 25px;
-  margin-top: 0;
-  color: #887b79;
-  font-size: 7px;
-  line-height: 9px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  margin: 0 0 24px 36px;
+  color: #aa9a9a;
+  font-size: 9px;
+  line-height: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
 }
 
 .nav {
-  padding: 8px 13px 0;
+  padding: 0 16px;
   flex: 1;
 }
 
 .navItem {
-  height: 31px;
-  margin-bottom: 1px;
-  padding: 0 10px;
+  height: 40px;
+  margin-bottom: 4px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   gap: 12px;
   border-radius: 6px;
-  color: #665d5b;
+  color: #4f4143;
   text-decoration: none;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 500;
   transition: 0.15s ease;
 }
 
 .navItem:hover {
-  background: #fff3f1;
-  color: #96363a;
+  background: #fff2f2;
+  color: #ab3d42;
 }
 
 .active {
-  background: #96363a;
+  background: #b8454a;
   color: #fff;
 }
 
 .active:hover {
-  background: #96363a;
+  background: #b8454a;
   color: #fff;
 }
 
 .logoutArea {
-  margin: 0 13px 16px;
-  padding-top: 15px;
-  border-top: 1px solid #eadad8;
+  margin: 0 20px 20px;
+  padding-top: 20px;
+  border-top: 1px solid #f1e6e4;
 }
 
 .logout {
   width: 100%;
-  height: 30px;
+  height: 36px;
   border: 0;
   background: transparent;
-  padding: 0 10px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #665d5b;
-  font-size: 11px;
+  border-radius: 6px;
+  color: #665a5b;
+  font-size: 12px;
   cursor: pointer;
   text-align: left;
 }

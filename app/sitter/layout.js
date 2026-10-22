@@ -1,5 +1,6 @@
 import Sidebar from "./Sidebar";
-import { Bell, ChevronDown } from "lucide-react";
+import { Bell } from "lucide-react";
+import ProfileHeader from "./ProfileHeader";
 import styles from "./page.module.css";
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -18,14 +19,10 @@ export default function SitterLayout({ children }) {
             <span />
           </button>
 
-          <div className={styles.user}>
-            <div className={styles.avatar}>SJ</div>
-            <span>Sarah Jenkins</span>
-            <ChevronDown size={13} />
-          </div>
+          <ProfileHeader />
         </header>
 
-        <main>{children}</main>
+        <main className={styles.mainContent}>{children}</main>
       </div>
     </div>
   );

@@ -63,6 +63,11 @@ export function parseVerificationFiles(formData) {
   return VERIFICATION_DOCUMENT_TYPES.map((type) => [type, formData.get(type)]).filter(([, file]) => file && typeof file === "object" && file.size > 0);
 }
 
+export function parseProfileImage(formData) {
+  const file = formData.get("profileImage");
+  return file && typeof file === "object" && file.size > 0 ? file : null;
+}
+
 export async function parseProfileRequest(request) {
   const contentType = request.headers.get("content-type") ?? "";
 
@@ -75,6 +80,7 @@ export async function parseProfileRequest(request) {
     return {
       body,
       files: parseVerificationFiles(form),
+      profileImage: parseProfileImage(form),
     };
   }
 
@@ -83,6 +89,7 @@ export async function parseProfileRequest(request) {
   return {
     body,
     files: [],
+    profileImage: null,
   };
 }
 

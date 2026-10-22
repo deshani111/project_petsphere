@@ -22,7 +22,7 @@ const items = [
   ["My Services", "/sitter/services", PawPrint],
   ["Earnings", "/sitter/earnings", WalletCards],
   ["Messages", "/sitter/messages", MessageSquare],
-  ["Blogs", "/sitter/blogs", FileText],
+  ["Blogs", "/blog", FileText],
   ["Marketplace", "/marketplace", Store],
   ["Reviews", "/sitter/reviews", Star],
   ["My Profile", "/sitter/Profile", UserRound],
@@ -37,8 +37,8 @@ export default function Sidebar() {
     <aside className={styles.sidebar}>
       <Link href="/sitter" className={styles.brand}>
         <div className={styles.brandRow}>
-          <PawPrint size={20} fill="currentColor" strokeWidth={1.5} />
-          <span>PetSphere</span>
+          <span className={styles.brandMark}><img src="/petsphere-mark.svg" alt="" width="26" height="26" /></span>
+          <span>Pet<span>Sphere</span></span>
         </div>
         <div className={styles.tagline}>PET CARE PLATFORM</div>
       </Link>
