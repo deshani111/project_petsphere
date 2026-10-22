@@ -42,8 +42,25 @@ export default function PetFamilyPage() {
   }, []);
 
   useEffect(() => {
-    void loadPets();
-  }, [loadPets]);
+    let cancelled = false;
+
+    fetch("/api/pets")
+      .then(async (response) => {
+        if (!response.ok) throw new Error(await getApiMessage(response));
+        return response.json();
+      })
+      .then((data: ApiPet[]) => {
+        if (!cancelled) setPets(data);
+      })
+      .catch((loadError) => {
+        if (!cancelled) setError(loadError instanceof Error ? loadError.message : "Could not load pets. Please try again.");
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, []);
 
   const handleDelete = async (petId: string) => {
     const response = await fetch(`/api/pets/${encodeURIComponent(petId)}`, {

@@ -114,8 +114,17 @@ export default function AdminEarningsPage() {
   };
 
   useEffect(() => {
-    loadEarnings(period);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let cancelled = false;
+    fetch(`/api/admin/earnings?period=${period}`, { cache: "no-store" })
+      .then(async (response) => {
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.message || "Earnings data could not be loaded.");
+        return payload;
+      })
+      .then((payload) => { if (!cancelled) setData(payload); })
+      .catch((loadError) => { if (!cancelled) { setError(loadError.message || "Earnings data could not be loaded."); setData(null); } })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [period]);
 
   const transactions = data?.transactions || [];
@@ -163,7 +172,7 @@ export default function AdminEarningsPage() {
         <div className={styles.headerControls}>
           <label className={styles.periodPicker}>
             <Icon name="calendar" />
-            <select value={period} onChange={(event) => setPeriod(event.target.value)}>
+            <select value={period} onChange={(event) => { if (event.target.value !== period) { setLoading(true); setError(""); setPeriod(event.target.value); } }}>
               {periodOptions.map((option) => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}

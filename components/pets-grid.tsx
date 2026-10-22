@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PetCard from "./pet-card";
@@ -22,25 +22,20 @@ export default function PetsGrid({
   onDelete: (petId: string) => Promise<void>;
 }) {
   const router = useRouter();
-  const [visiblePets, setVisiblePets] = useState(pets);
   const [deleteTarget, setDeleteTarget] = useState<PetItem | null>(null);
-
-  useEffect(() => {
-    setVisiblePets(pets);
-  }, [pets]);
 
   const [deleteError, setDeleteError] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleEdit = (petId: string) => {
-    const pet = visiblePets.find((item) => item.id === petId);
+    const pet = pets.find((item) => item.id === petId);
     if (pet) {
       router.push(`/owner/pets/${pet.id}/edit`);
     }
   };
 
   const openDeleteDialog = (petId: string) => {
-    const pet = visiblePets.find((item) => item.id === petId) || null;
+    const pet = pets.find((item) => item.id === petId) || null;
     setDeleteError("");
     setDeleteTarget(pet);
   };
@@ -64,7 +59,7 @@ export default function PetsGrid({
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {visiblePets.map((p) => (
+        {pets.map((p) => (
           <PetCard
             key={p.id}
             image={p.image}

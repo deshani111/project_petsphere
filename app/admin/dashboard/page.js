@@ -6,9 +6,14 @@ import { getAdminDashboardData } from "../../../modules/admin/admin.service";
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
 export default async function AdminDashboardPage() {
+  let previewData;
+  let initialError;
+
   try {
-    return <AdminDashboardClient previewData={await getAdminDashboardData()} />;
+    previewData = await getAdminDashboardData();
   } catch {
-    return <AdminDashboardClient initialError="Dashboard data could not be loaded." />;
+    initialError = "Dashboard data could not be loaded.";
   }
+
+  return <AdminDashboardClient previewData={previewData} initialError={initialError} />;
 }
