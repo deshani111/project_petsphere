@@ -24,11 +24,11 @@ export default function BookingFlowShell({
   return (
     <div className="mx-auto w-full min-w-0 max-w-[1200px] px-5 lg:px-8">
       <section
-        className="mb-6 mt-5 rounded-2xl border border-[#efdcda] bg-white px-3 py-4 sm:px-5 sm:py-5"
+        className="mb-4 mt-4 rounded-xl border border-[#efdcda] bg-white px-3 py-3 sm:px-4"
         aria-label="Booking progress"
       >
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="m-0 text-[16px] font-bold text-[#30272a] sm:text-[18px]">
+        <div className="mb-2.5 flex items-center justify-between gap-3">
+          <h2 className="m-0 text-[14px] font-bold text-[#30272a] sm:text-[15px]">
             Book a Sitter
           </h2>
           <span className="shrink-0 text-[12px] font-medium text-[#887577]" aria-live="polite">
@@ -43,7 +43,7 @@ export default function BookingFlowShell({
           aria-valuemax={100}
           aria-valuenow={(currentStep + 1) * 25}
           aria-valuetext={`Step ${currentStep + 1} of ${steps.length}: ${steps[currentStep]}`}
-          className="h-1 overflow-hidden rounded-full bg-[#f6e5e3] sm:h-[5px]"
+          className="h-[3px] overflow-hidden rounded-full bg-[#f6e5e3]"
         >
           <div
             className="h-full rounded-full bg-[#A13D3F] transition-[width] duration-300 ease-out motion-reduce:transition-none"
@@ -51,7 +51,7 @@ export default function BookingFlowShell({
           />
         </div>
 
-        <ol className="m-0 mt-5 grid list-none grid-cols-4 gap-1 p-0 sm:gap-3">
+        <ol className="m-0 mt-3 grid list-none grid-cols-4 gap-1 p-0 sm:gap-3">
           {steps.map((label, index) => {
             const completed = index < currentStep;
             const active = index === currentStep;
@@ -60,20 +60,20 @@ export default function BookingFlowShell({
               <li
                 key={label}
                 aria-current={active ? "step" : undefined}
-                className="flex min-w-0 flex-col items-center gap-2 text-center"
+                className="flex min-w-0 flex-col items-center gap-1 text-center"
               >
                 <span
                   aria-hidden="true"
-                  className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border text-[13px] font-semibold sm:h-9 sm:w-9 sm:text-[14px] ${
+                  className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border text-[12px] font-semibold ${
                     index <= currentStep
                       ? "border-[#A13D3F] bg-[#A13D3F] text-white"
                       : "border-[#e8cecb] bg-[#fff8f7] text-[#a38b8d]"
-                  } ${active ? "ring-4 ring-[#f7e5e3]" : ""}`}
+                  } ${active ? "ring-2 ring-[#f7e5e3]" : ""}`}
                 >
-                  {completed ? <Check size={17} strokeWidth={2.5} /> : index + 1}
+                  {completed ? <Check size={14} strokeWidth={2.5} /> : index + 1}
                 </span>
                 <span
-                  className={`text-[12px] sm:text-[13px] ${
+                  className={`text-[11px] sm:text-[12px] ${
                     active
                       ? "font-bold text-[#A13D3F]"
                       : completed

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Clock3 } from "lucide-react";
 import BookingSummary from "../components/booking-summary";
 import { useBooking } from "../components/booking-context";
 
@@ -36,7 +37,7 @@ export default function BookingDatesPage() {
   const today = new Date();
 
   const [month, setMonth] = useState(
-    new Date(today.getFullYear(), today.getMonth(), 1)
+    new Date((draft.startDate ?? today).getFullYear(), (draft.startDate ?? today).getMonth(), 1)
   );
 
   const startDate = draft.startDate;
@@ -110,15 +111,15 @@ export default function BookingDatesPage() {
           When do you need care?
         </h1>
 
-        <p className="mb-4 mt-1.5 text-[9px] text-[#7c7071]">
+        <p className="mb-5 mt-2 text-[13px] text-[#7c7071]">
           Select the dates and times for your companion&apos;s boarding
           experience.
         </p>
 
-        <div className="rounded-[12px] border border-[#e9cfcd] bg-white p-3.5">
-          <div className="mb-4 flex items-center justify-between">
+        <div className="rounded-[16px] border border-[#e9cfcd] bg-white p-4 sm:p-6">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <strong className="text-[11px]">
+              <strong className="text-[16px]">
                 {monthNames[month.getMonth()]} {month.getFullYear()}
               </strong>
 
@@ -134,7 +135,7 @@ export default function BookingDatesPage() {
                   )
                 }
                 aria-label="Previous month"
-                className="grid h-5 w-5 place-items-center rounded-full border border-[#ead5d3] text-[11px] text-[#A13D3F]"
+                className="grid h-8 w-8 place-items-center rounded-full border border-[#ead5d3] text-[11px] text-[#A13D3F]"
               >
                 ‹
               </button>
@@ -151,13 +152,13 @@ export default function BookingDatesPage() {
                   )
                 }
                 aria-label="Next month"
-                className="grid h-5 w-5 place-items-center rounded-full border border-[#ead5d3] text-[11px] text-[#A13D3F]"
+                className="grid h-8 w-8 place-items-center rounded-full border border-[#ead5d3] text-[11px] text-[#A13D3F]"
               >
                 ›
               </button>
             </div>
 
-            <span className="rounded-full bg-[#fff0ef] px-2.5 py-1 text-[7px] text-[#A13D3F]">
+            <span className="rounded-full border border-[#f5dedb] bg-[#fff0ef] px-2.5 py-1 text-[10px] font-medium text-[#A13D3F]">
               <i className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-[#A13D3F]" />
               Selected Range
             </span>
@@ -167,7 +168,7 @@ export default function BookingDatesPage() {
             {weekdays.map((day) => (
               <span
                 key={day}
-                className="mb-2 text-[7px] font-medium uppercase tracking-[.4px] text-[#a39798]"
+                className="mb-3 text-[11px] font-medium uppercase tracking-[.4px] text-[#a39798]"
               >
                 {day}
               </span>
@@ -178,7 +179,7 @@ export default function BookingDatesPage() {
                 return (
                   <span
                     key={`empty-${index}`}
-                    className="h-[37px]"
+                    className="h-12 sm:h-16"
                   />
                 );
               }
@@ -199,14 +200,14 @@ export default function BookingDatesPage() {
                   onClick={() => selectDate(date)}
                   aria-pressed={selected}
                   aria-label={`${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`}
-                  className={`relative h-[37px] text-[9px] ${
+                  className={`relative my-1 h-10 text-[13px] sm:my-2 sm:h-12 ${
                     inRange(date) ? "bg-[#fce4e1]" : ""
-                  } ${isStart ? "rounded-l-full" : ""} ${
-                    isEnd ? "rounded-r-full" : ""
+                  } ${isStart || index % 7 === 0 ? "rounded-l-full" : ""} ${
+                    isEnd || index % 7 === 6 ? "rounded-r-full" : ""
                   }`}
                 >
                   <span
-                    className={`relative z-10 inline-grid h-[25px] w-[25px] place-items-center rounded-full ${
+                    className={`relative z-10 inline-grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full ${
                       selected
                         ? "bg-[#A13D3F] font-bold text-white shadow-[0_3px_6px_rgba(161,61,63,.2)]"
                         : "hover:bg-[#fff0ef]"
@@ -219,37 +220,43 @@ export default function BookingDatesPage() {
             })}
           </div>
 
-          <div className="mt-3 grid gap-3 border-t border-[#efdcda] pt-4 sm:grid-cols-2">
-            <label className="text-[8px] text-[#776b6c]">
+          <div className="mt-5 grid gap-4 border-t border-[#efdcda] pt-5 sm:grid-cols-2">
+            <label className="text-[12px] text-[#776b6c]">
               Estimated Drop-off
 
+              <span className="relative mt-2 block">
+                <Clock3 size={15} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#b74b4e]" />
               <select
                 value={dropOff}
                 onChange={(event) =>
                   setDraft({ dropOff: event.target.value })
                 }
-                className="mt-1 block h-[27px] w-full rounded-[7px] border border-[#e6cfcd] bg-[#fff4f2] px-2 text-[8px] text-[#493d3e] outline-none"
+                className="block h-10 w-full rounded-[8px] border border-[#e6cfcd] bg-[#fff4f2] pl-9 pr-2 text-[12px] text-[#493d3e] outline-none focus:border-[#A13D3F] focus:ring-1 focus:ring-[#A13D3F]"
               >
                 <option>09:00 AM</option>
                 <option>10:00 AM</option>
                 <option>11:00 AM</option>
               </select>
+              </span>
             </label>
 
-            <label className="text-[8px] text-[#776b6c]">
+            <label className="text-[12px] text-[#776b6c]">
               Estimated Pick-up
 
+              <span className="relative mt-2 block">
+                <Clock3 size={15} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#b74b4e]" />
               <select
                 value={pickUp}
                 onChange={(event) =>
                   setDraft({ pickUp: event.target.value })
                 }
-                className="mt-1 block h-[27px] w-full rounded-[7px] border border-[#e6cfcd] bg-[#fff4f2] px-2 text-[8px] text-[#493d3e] outline-none"
+                className="block h-10 w-full rounded-[8px] border border-[#e6cfcd] bg-[#fff4f2] pl-9 pr-2 text-[12px] text-[#493d3e] outline-none focus:border-[#A13D3F] focus:ring-1 focus:ring-[#A13D3F]"
               >
                 <option>04:00 PM</option>
                 <option>05:00 PM</option>
                 <option>06:00 PM</option>
               </select>
+              </span>
             </label>
           </div>
         </div>
