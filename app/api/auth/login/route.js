@@ -2,10 +2,18 @@ import { NextResponse } from "next/server";
 import {
   AuthenticationError,
   EmailVerificationRequiredError,
+  isAdminRole,
   loginAccount,
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_SECONDS,
 } from "../../../../modules/auth/auth.service";
+
+function getDashboardPath(role) {
+  if (isAdminRole(role)) return "/admin/dashboard";
+  if (role === "pet_sitter") return "/sitter";
+  if (role === "pet_owner") return "/owner/dashboard";
+  return "/";
+}
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -54,12 +62,7 @@ export async function POST(request) {
       {
         message: "Logged in successfully.",
         account,
-        redirectTo:
-          account.role === "admin"
-            ? "/admin/dashboard"
-            : account.role === "pet_owner"
-              ? "/owner/dashboard"
-              : "/",
+        redirectTo: getDashboardPath(account.role),
       },
       { status: 200 }
     );

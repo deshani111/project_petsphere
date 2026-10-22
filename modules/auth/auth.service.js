@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import { cache } from "react";
 import { createHmac, randomBytes, timingSafeEqual } from "crypto";
 import { prisma } from "../../lib/prisma";
 
@@ -69,6 +70,7 @@ function createSessionToken(user, maxAgeSeconds) {
   const payload = {
     sub: user.id,
     role: user.role,
+    sv: user.sessionVersion,
     exp: Math.floor(Date.now() / 1000) + maxAgeSeconds,
   };
 
@@ -149,12 +151,17 @@ export async function getSessionAccount(sessionToken) {
       last_name: true,
       email: true,
       role: true,
+      session_version: true,
       is_verified: true,
       admin: { select: { admin_id: true } },
     },
   });
 
   if (!user) {
+    return null;
+  }
+
+  if (!Number.isInteger(session.sv) || session.sv !== user.session_version) {
     return null;
   }
 
@@ -167,8 +174,11 @@ export async function getSessionAccount(sessionToken) {
     role: user.role,
     isVerified: user.is_verified,
     hasAdminProfile: Boolean(user.admin),
+    sessionVersion: user.session_version,
   };
 }
+
+export const getCachedSessionAccount = cache(getSessionAccount);
 
 export async function registerAccount({
   role,
@@ -184,12 +194,14 @@ export async function registerAccount({
   let duplicateAccount;
 
   try {
-    duplicateAccount = await prisma.users.findUnique({
+    duplicateAccount = await prisma.users.findFirst({
       where: {
-        email,
+        OR: [{ email }, { phone_number: phoneNumber }],
       },
       select: {
         user_id: true,
+        email: true,
+        phone_number: true,
       },
     });
   } catch (error) {
@@ -207,7 +219,9 @@ export async function registerAccount({
 
   if (duplicateAccount) {
     throw new RegistrationConflictError(
-      "An account with this email already exists."
+      duplicateAccount.email === email
+        ? "An account with this email already exists."
+        : "An account with this phone number already exists."
     );
   }
 
@@ -278,6 +292,7 @@ export async function loginAccount({ email, password, rememberMe = false }) {
       email: true,
       password_hash: true,
       role: true,
+      session_version: true,
       emailVerified: true,
     },
   });
@@ -311,6 +326,7 @@ export async function loginAccount({ email, password, rememberMe = false }) {
     email: user.email,
     role: user.role,
     isVerified: user.emailVerified,
+    sessionVersion: user.session_version,
   };
 
   return {

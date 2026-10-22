@@ -27,6 +27,70 @@ export function buildVerificationLink(token) {
   return verificationUrl.toString();
 }
 
+export function buildPasswordResetLink(token) {
+  const resetUrl = new URL("/reset-password", getAppUrl());
+  resetUrl.searchParams.set("token", token);
+  return resetUrl.toString();
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[character]);
+}
+
+export async function sendPasswordResetEmail({ to, recipientName, resetUrl }) {
+  if (!process.env.BREVO_API_KEY) {
+    throw new Error("BREVO_API_KEY is not configured.");
+  }
+
+  const displayName = recipientName || "there";
+  const safeDisplayName = escapeHtml(displayName);
+  const textContent = [
+    `Hi ${displayName},`,
+    "",
+    "We received a request to reset your PetSphere password.",
+    resetUrl,
+    "",
+    "This single-use link expires in one hour.",
+    "If you did not request a password reset, you can safely ignore this email.",
+  ].join("\n");
+  const htmlContent = `
+    <div style="margin:0;padding:40px 20px;background:#f8f5f5;font-family:Arial,sans-serif;">
+      <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:16px;padding:40px;">
+        <div style="margin-bottom:30px;font-size:24px;font-weight:700;color:#A13D3F;">PetSphere</div>
+        <h1 style="margin:0 0 16px;font-size:28px;line-height:1.08;">Reset your password</h1>
+        <p style="margin:0 0 18px;color:#5e5356;font-size:16px;line-height:1.6;">Hi ${safeDisplayName},</p>
+        <p style="margin:0 0 22px;color:#5e5356;font-size:16px;line-height:1.6;">We received a request to reset your PetSphere password.</p>
+        <p style="margin:0 0 28px;"><a href="${resetUrl}" style="display:inline-block;background:#A13D3F;color:#fff;text-decoration:none;padding:14px 22px;border-radius:12px;font-weight:700;">Reset password</a></p>
+        <p style="margin:0 0 10px;color:#7f7477;font-size:14px;line-height:1.6;">If the button does not work, copy and paste this link into your browser:</p>
+        <p style="margin:0 0 22px;word-break:break-all;color:#A13D3F;font-size:14px;line-height:1.6;">${resetUrl}</p>
+        <p style="margin:0;color:#7f7477;font-size:14px;line-height:1.6;">This link expires in one hour and can only be used once. If you did not request it, you can safely ignore this email.</p>
+      </div>
+    </div>`;
+
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: { accept: "application/json", "api-key": process.env.BREVO_API_KEY, "content-type": "application/json" },
+    body: JSON.stringify({
+      sender: { name: getFromName(), email: getFromAddress() },
+      to: [{ email: to, name: displayName }],
+      subject: "Reset your PetSphere password",
+      textContent,
+      htmlContent,
+    }),
+  });
+
+  if (!response.ok) {
+    // Do not log the provider response: it may include recipient or request data.
+    throw new Error("Brevo rejected the password reset email.");
+  }
+}
+
 export async function sendVerificationEmail({
   to,
   recipientName,

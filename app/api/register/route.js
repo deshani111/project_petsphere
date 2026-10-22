@@ -25,6 +25,20 @@ function isValidPhoneNumber(phoneNumber) {
   return /^[+0-9()\-\s]{8,20}$/.test(phoneNumber);
 }
 
+function isValidPassword(password) {
+  return (
+    password.length >= 8 &&
+    password.length <= 16 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /[^A-Za-z0-9\s]/.test(password)
+  );
+}
+
+function isPasswordSameAsEmail(password, email) {
+  return password.trim().toLowerCase() === email;
+}
+
 function normalizeRole(role) {
   const normalizedRole = role.toLowerCase();
   return roleMap[normalizedRole] || "";
@@ -119,9 +133,19 @@ export async function POST(request) {
     );
   }
 
-  if (password.length < 8) {
+  if (!isValidPassword(password)) {
     return NextResponse.json(
-      { message: "Password must be at least 8 characters long." },
+      {
+        message:
+          "Password must be 8–16 characters and include uppercase, lowercase, and special characters.",
+      },
+      { status: 400 }
+    );
+  }
+
+  if (isPasswordSameAsEmail(password, email)) {
+    return NextResponse.json(
+      { message: "Your password cannot be the same as your email address." },
       { status: 400 }
     );
   }
@@ -187,15 +211,28 @@ export async function POST(request) {
       );
     }
 
-    if (error instanceof RegistrationConflictError || error?.code === "P2002") {
+    if (error instanceof RegistrationConflictError) {
       return NextResponse.json(
         {
-          message: "An account with this email already exists.",
+          message: error.message,
         },
         {
           status: 409,
         }
       );
+    }
+
+    if (error?.code === "P2002") {
+      const conflictingFields = Array.isArray(error.meta?.target)
+        ? error.meta.target
+        : [String(error.meta?.target || "")];
+      const message = conflictingFields.some((field) =>
+        String(field).includes("phone_number")
+      )
+        ? "An account with this phone number already exists."
+        : "An account with this email already exists.";
+
+      return NextResponse.json({ message }, { status: 409 });
     }
 
     console.error("Registration failed:", error);

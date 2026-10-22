@@ -1,232 +1,104 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CalendarDays, Mail, MapPin, Phone, ShieldCheck, UserRound } from "lucide-react";
+import { prisma } from "../../../../lib/prisma";
 import styles from "./page.module.css";
 
-const pets = {
-  cooper: {
-    name: "Cooper",
-    breed: "Golden Retriever",
-    price: "Rs. 62,000.00",
-    age: "3 Months",
-    gender: "Female",
-    image: "/marketplace-cooper.jpg",
-    health: "Certified",
-    training: "Advanced",
-    story:
-      "Meet Cooper, a charming and affectionate 3-year-old Golden Retriever looking for her forever home. She has been raised in a clean, loving home environment and is well-socialized with both people and other pets. Cooper loves gentle walks, interactive play, and relaxing by the fireplace during the evenings.",
-    note:
-      "She is fully house-trained, healthy, and up-to-date on all vaccinations and check-ups. Cooper is known for her calm temperament, making her a wonderful companion for families, working professionals, or anyone looking for a loyal best friend.",
-    life: [
-      "/marketplace-cooper.jpg",
-      "/blog-training.jpg",
-      "/blog-featured-puppy.jpg",
-      "/marketplace-snow.jpg",
-      "/blog-dog-health.jpg",
-    ],
-  },
-  luna: {
-    name: "Luna",
-    breed: "Siberian Husky",
-    price: "Rs. 85,000.00",
-    age: "1.5 Years",
-    gender: "Female",
-    image: "/marketplace-luna.jpg",
-    health: "Healthy",
-    training: "Trained",
-    story:
-      "Luna is a bright, energetic Siberian Husky with a gentle temperament and a curious spirit. She enjoys outdoor adventures, steady routines, and people who can match her playful energy.",
-    note:
-      "She is socialized, well cared for, and looking for a home that understands her need for regular exercise, calm leadership, and plenty of affection.",
-    life: [
-      "/marketplace-luna.jpg",
-      "/marketplace-snow.jpg",
-      "/blog-training.jpg",
-      "/blog-featured-puppy.jpg",
-      "/blog-dog-health.jpg",
-    ],
-  },
-  midnight: {
-    name: "Midnight",
-    breed: "Bengal Mix",
-    price: "Rs. 50,000.00",
-    age: "2 Years",
-    gender: "Male",
-    image: "/blog-cat-behavior.jpg",
-    health: "Certified",
-    training: "Litter Trained",
-    story:
-      "Midnight is a striking Bengal Mix with a calm indoor nature and a playful spark. He loves sunny windows, quiet company, and a cozy spot to watch the world go by.",
-    note:
-      "He is healthy, indoor-ready, and appreciates a gentle home with room for daily play and plenty of restful time.",
-    life: [
-      "/blog-cat-behavior.jpg",
-      "/blog-dog-health.jpg",
-      "/marketplace-cooper.jpg",
-      "/marketplace-luna.jpg",
-      "/marketplace-snow.jpg",
-    ],
-  },
-  bella: {
-    name: "Bella",
-    breed: "French Bulldog",
-    price: "Rs. 180,000.00",
-    age: "4 Months",
-    gender: "Female",
-    image: "/blog-training.jpg",
-    health: "Certified",
-    training: "Basic",
-    story:
-      "Bella is a cheerful French Bulldog puppy with a loving personality and a soft spot for playtime. She is happiest close to people and quickly makes a home feel brighter.",
-    note:
-      "She is registered, carefully cared for, and ready to continue her training in a patient, welcoming home.",
-    life: [
-      "/blog-training.jpg",
-      "/marketplace-cooper.jpg",
-      "/blog-featured-puppy.jpg",
-      "/marketplace-snow.jpg",
-      "/blog-dog-health.jpg",
-    ],
-  },
-  oliver: {
-    name: "Oliver",
-    breed: "Parrot",
-    price: "Rs. 35,000.00",
-    age: "5 Years",
-    gender: "Male",
-    image: "/marketplace-oliver.jpg",
-    health: "Healthy",
-    training: "Talkative",
-    story:
-      "Oliver is a colorful, social parrot with a big personality. He enjoys conversation, engaging enrichment, and being part of a lively but thoughtful household.",
-    note:
-      "He is healthy and happiest with an experienced bird-loving family who can give him daily interaction and a stimulating environment.",
-    life: [
-      "/marketplace-oliver.jpg",
-      "/marketplace-snow.jpg",
-      "/blog-cat-behavior.jpg",
-      "/marketplace-cooper.jpg",
-      "/blog-training.jpg",
-    ],
-  },
-  snow: {
-    name: "Snow",
-    breed: "Samoyed",
-    price: "Rs. 210,000.00",
-    age: "6 Months",
-    gender: "Female",
-    image: "/marketplace-snow.jpg",
-    health: "Certified",
-    training: "Socialized",
-    story:
-      "Snow is a happy, fluffy Samoyed with a gentle, friendly personality. She loves people, outdoor walks, and being included in everyday family life.",
-    note:
-      "She is purebred, socialized, and ready for a caring home that can offer companionship, brushing, and plenty of playful exercise.",
-    life: [
-      "/marketplace-snow.jpg",
-      "/marketplace-luna.jpg",
-      "/blog-training.jpg",
-      "/marketplace-cooper.jpg",
-      "/blog-featured-puppy.jpg",
-    ],
-  },
-};
+const LOCATION_MARKER = "\n\nLocation: ";
+const PET_DETAILS_MARKER = "\n\nPet details:\n";
 
-export default async function PetProfilePage({ params }) {
-  const { pet: slug } = await params;
-  const pet = pets[slug];
+function splitDescription(value) {
+  const description = value || "";
+  const locationIndex = description.lastIndexOf(LOCATION_MARKER);
+  const listingText = locationIndex === -1 ? description : description.slice(0, locationIndex);
+  const detailsIndex = listingText.lastIndexOf(PET_DETAILS_MARKER);
+  const petDetails = {};
+  if (detailsIndex !== -1) listingText.slice(detailsIndex + PET_DETAILS_MARKER.length).split("\n").forEach((line) => {
+    const [label, ...detailValue] = line.split(": ");
+    if (label && detailValue.length) petDetails[label.toLowerCase()] = detailValue.join(": ");
+  });
+  return { description: detailsIndex === -1 ? listingText : listingText.slice(0, detailsIndex), location: locationIndex === -1 ? null : description.slice(locationIndex + LOCATION_MARKER.length) || null, petDetails };
+}
 
-  if (!pet) {
-    notFound();
-  }
+function formatPrice(price) {
+  if (!price) return "Price on request";
+  return `Rs. ${new Intl.NumberFormat("en-LK", { maximumFractionDigits: 0 }).format(Number(price))}`;
+}
 
-  return (
+function getPoster(listing) {
+  const user = listing.pet_owner?.users || listing.pet_sitter?.users;
+  if (!user) return { name: "PetSphere member", phone: null, email: null };
+  return { name: user.full_name || `${user.first_name} ${user.last_name}`.trim(), phone: user.phone_number, email: user.email };
+}
+
+export default async function MarketplaceProfilePage({ params }) {
+  const { pet } = await params;
+  if (!/^\d+$/.test(pet)) notFound();
+
+  const listing = await prisma.advertisement.findUnique({
+      where: { ad_id: BigInt(pet) },
+      select: {
+        ad_id: true, title: true, description: true, price: true, photo_url: true, pet_type: true, pet_name: true, breed: true, age: true, gender: true, status: true, created_date: true,
+        vaccinated: true, microchipped: true, house_trained: true, good_with_children: true, good_with_other_pets: true, special_care_needed: true,
+        photos: { orderBy: { sort_order: "asc" }, select: { photo_url: true } },
+        pet_owner: { select: { users: { select: { first_name: true, last_name: true, full_name: true, phone_number: true, email: true } } } },
+        pet_sitter: { select: { users: { select: { first_name: true, last_name: true, full_name: true, phone_number: true, email: true } } } },
+      },
+    });
+
+  if (!listing || listing.status !== "approved") notFound();
+  const details = splitDescription(listing.description);
+  const petDetails = { type: listing.pet_type, name: listing.pet_name, breed: listing.breed, age: listing.age, gender: listing.gender };
+  const careDetails = [
+    ["Vaccinated", listing.vaccinated],
+    ["Microchipped", listing.microchipped],
+    ["House trained", listing.house_trained],
+    ["Good with children", listing.good_with_children],
+    ["Good with other pets", listing.good_with_other_pets],
+    ["Special care needed", listing.special_care_needed],
+  ].filter(([, value]) => value);
+  const poster = getPoster(listing);
+  const listedOn = new Intl.DateTimeFormat("en", { day: "numeric", month: "long", year: "numeric" }).format(listing.created_date);
+
+  const content = (
     <main className={styles.profilePage}>
       <section className={styles.profileContent}>
-        <Link className={styles.backLink} href="/marketplace">
-          &larr; <strong>{pet.name}</strong> the {pet.breed}
-        </Link>
-
-        <div className={styles.topGrid}>
-          <div className={styles.gallery}>
-            <div className={styles.mainImage}>
-              <img src={pet.image} alt={pet.name} />
+        <Link href="/marketplace" className={styles.back}><span aria-hidden="true">←</span> Marketplace</Link>
+        <div className={styles.layout}>
+          <div className={styles.mainColumn}>
+            <div className={styles.imageWrap}>
+              <Image src={listing.photo_url || "/marketplace-cooper.webp"} alt={listing.title} fill priority sizes="(max-width: 850px) 100vw, 66vw" />
+              <div className={styles.imageOverlay}><span>Available now</span><p>{listing.title}</p></div>
             </div>
+            {listing.photos.length > 1 && <div className={styles.photoStrip}>{listing.photos.map((photo, index) => <Image key={photo.photo_url} src={photo.photo_url} alt={`${listing.title} photo ${index + 1}`} width={110} height={80} />)}</div>}
+            <section className={styles.about}>
+              <span className={styles.eyebrow}>About this listing</span>
+              <h1>{listing.title}</h1>
+              <div className={styles.meta}><span><MapPin size={16} aria-hidden="true" />{details.location || "Location available on request"}</span><span><CalendarDays size={15} aria-hidden="true" />Listed {listedOn}</span></div>
+              <section className={styles.petFacts} aria-labelledby="pet-details-heading"><h2 id="pet-details-heading">Pet details</h2><div>{[["Pet type", petDetails.type], ["Pet name", petDetails.name], ["Breed", petDetails.breed], ["Age", petDetails.age], ["Gender", petDetails.gender]].map(([label, detailValue]) => <span key={label}><small>{label}</small><b>{detailValue || "Not specified"}</b></span>)}</div></section>
+              {careDetails.length > 0 && <section className={styles.petFacts} aria-labelledby="care-heading"><h2 id="care-heading">Care &amp; wellbeing</h2><div>{careDetails.map(([label]) => <span key={label}><small>{label}</small><b>Yes</b></span>)}</div></section>}
+              <div className={styles.copy}>{details.description ? details.description.split(/\n{2,}/).map((paragraph, index) => <p key={index}>{paragraph}</p>) : <p>The seller has not added a description for this listing yet.</p>}</div>
+            </section>
           </div>
-
-          <aside className={styles.sidePanel}>
+          <aside className={styles.sidebar}>
             <div className={styles.priceCard}>
-              <small>Listing Price</small>
-              <strong>{pet.price}</strong>
+              <span className={styles.status}><ShieldCheck size={15} aria-hidden="true" /> Available listing</span>
+              <p>Listing price</p><strong>{formatPrice(listing.price)}</strong><div className={styles.divider} />
+              <span className={styles.location}><MapPin size={16} aria-hidden="true" />{details.location || "Location available on request"}</span>
+              <small>Contact the seller directly to ask about care, routine, and availability.</small>
             </div>
-
-            <div className={styles.contactCard}>
-              <h2>Contact Information</h2>
-
-              <div className={styles.owner}>
-                <span>AR</span>
-                <div>
-                  <strong>Alex Rivera</strong>
-                  <small>★ 4.9 (24 Reviews)</small>
-                </div>
-              </div>
-
-              <a href="tel:+94776555443">
-                <span>⌕</span>
-                <div>
-                  <small>PHONE NUMBER</small>
-                  <strong>+94 776 555 443</strong>
-                </div>
-              </a>
-
-              <a href="mailto:alex.rivera@gmail.com">
-                <span>✉</span>
-                <div>
-                  <small>EMAIL ADDRESS</small>
-                  <strong>alex.rivera@gmail.com</strong>
-                </div>
-              </a>
+            <div className={styles.posterCard}>
+              <span className={styles.posterLabel}>Posted by</span>
+              <h2><UserRound size={16} aria-hidden="true" />{poster.name}</h2>
+              {poster.phone ? <a href={`tel:${poster.phone.replace(/\s/g, "")}`}><Phone size={15} aria-hidden="true" />{poster.phone}</a> : <span className={styles.unavailable}><Phone size={15} aria-hidden="true" />Phone not provided</span>}
+              {poster.email ? <a href={`mailto:${poster.email}`}><Mail size={15} aria-hidden="true" />{poster.email}</a> : <span className={styles.unavailable}><Mail size={15} aria-hidden="true" />Email not provided</span>}
             </div>
           </aside>
         </div>
-
-        <section className={styles.story}>
-          <header>
-            <h1>My Story</h1>
-            <span>Location: Colombo 06, Sri Lanka</span>
-          </header>
-
-          <p>{pet.story}</p>
-          <p>{pet.note}</p>
-
-          <div className={styles.facts}>
-            <div>
-              <small>AGE</small>
-              <strong>{pet.age}</strong>
-            </div>
-            <div>
-              <small>GENDER</small>
-              <strong>{pet.gender}</strong>
-            </div>
-            <div>
-              <small>HEALTH</small>
-              <strong>{pet.health}</strong>
-            </div>
-            <div>
-              <small>TRAINING</small>
-              <strong>{pet.training}</strong>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.life}>
-          <h2>{pet.name}&apos;s Life</h2>
-          <div>
-            {pet.life.map((image, index) => (
-              <img key={`${image}-${index}`} src={image} alt="" />
-            ))}
-          </div>
-        </section>
       </section>
     </main>
   );
+
+  return content;
 }

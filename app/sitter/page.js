@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CalendarDays, ClipboardList, EllipsisVertical, Filter, MessageSquare, PawPrint, Star, UserRound, WalletCards } from "lucide-react";
 import styles from "./page.module.css";
-const money = (value) => `LKR ${Number(value || 0).toLocaleString("en-LK", { minimumFractionDigits: 2 })}`;
+const money = (value) => `Rs. ${Number(value || 0).toLocaleString("en-LK", { minimumFractionDigits: 2 })}`;
 const dateRange = (booking) => booking.startDate ? new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(new Date(booking.startDate)) + (booking.endDate ? ` - ${new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(new Date(booking.endDate))}` : "") : "Date to be confirmed";
 export default function SitterDashboard() {
  const [data, setData] = useState(null); const [error, setError] = useState("");

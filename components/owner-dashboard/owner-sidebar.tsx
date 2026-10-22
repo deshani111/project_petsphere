@@ -1,8 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { CalendarIcon, FileIcon, GridIcon, LogOutIcon, MailIcon, PawIcon, SearchIcon, StoreIcon, UserIcon } from "./dashboard-icons";
+import {
+  CalendarIcon,
+  FileIcon,
+  GridIcon,
+  LogOutIcon,
+  MailIcon,
+  PawIcon,
+  SearchIcon,
+  StoreIcon,
+  UserIcon,
+} from "./dashboard-icons";
 
 const navigation = [
   { label: "Dashboard", icon: GridIcon, href: "/owner/dashboard" },
@@ -19,33 +30,75 @@ export function OwnerSidebar() {
   const pathname = usePathname() || "";
 
   return (
-    <aside className="relative z-30 h-auto w-full border-b border-[#EEDFE1] bg-white lg:sticky lg:top-0 lg:h-screen lg:w-56 lg:border-b-0 lg:border-r">
+    <aside className="relative z-30 h-auto w-full border-b border-[#EEDFE1] bg-white lg:sticky lg:top-0 lg:h-screen lg:w-56 lg:shrink-0 lg:border-b-0 lg:border-r">
       <div className="flex h-full flex-col px-3 py-3 lg:px-5 lg:py-6">
-        <Link href="/owner/dashboard" className="mb-2 flex items-center gap-2 px-2 text-[#A63842]">
-          <span className="grid size-7 place-items-center rounded-lg bg-[#FFF1F2]"><PawIcon className="size-4" /></span>
-          <span className="text-lg font-bold tracking-[-0.7px]">PetSphere</span>
+        {/* PetSphere Logo */}
+        <Link
+          href="/owner/dashboard"
+          className="mb-2 flex items-center gap-2 px-2"
+        >
+          <Image
+            src="/petsphere-logo.svg"
+            alt="PetSphere"
+            width={165}
+            height={41}
+            priority
+            className="h-auto max-w-full"
+          />
         </Link>
-        <p className="mb-3 hidden px-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#aa9a9a] lg:block">Pet care platform</p>
-        <nav aria-label="Owner dashboard navigation" className="mt-2 flex gap-1 overflow-x-auto pb-1 lg:mt-3 lg:flex-col lg:space-y-1 lg:overflow-visible lg:pb-0">
+
+        {/* Navigation */}
+        <nav
+          aria-label="Owner dashboard navigation"
+          className="mt-2 flex gap-1 overflow-x-auto pb-1 lg:mt-3 lg:flex-col lg:space-y-1 lg:overflow-visible lg:pb-0"
+        >
           {navigation.map(({ label, icon: Icon, href }) => {
-            const isActive = href.startsWith("/") ? pathname === href || (href === "/owner/pets" && pathname.startsWith("/owner/pets/")) || (href === "/owner/bookings" && pathname.startsWith("/owner/bookings/") && !pathname.startsWith("/owner/bookings/new")) : false;
+            const isMarketplace =
+              label === "Marketplace" &&
+              (pathname.startsWith("/owner/marketplace") ||
+                pathname === "/marketplace/new");
+
+            const isActive =
+              isMarketplace ||
+              (href.startsWith("/") &&
+                (pathname === href ||
+                  (href === "/owner/pets" &&
+                    pathname.startsWith("/owner/pets/")) ||
+                  (href === "/owner/bookings" &&
+                    pathname.startsWith("/owner/bookings/") &&
+                    !pathname.startsWith("/owner/bookings/new")) ||
+                  (href === "/marketplace" &&
+                    pathname.startsWith("/marketplace/"))));
+
             return (
               <Link
                 key={label}
                 href={href}
                 className={`flex h-9 shrink-0 items-center gap-2 rounded-md px-3 text-[10px] font-medium transition-colors lg:h-10 lg:gap-3 lg:text-[12px] ${
-                  isActive ? "!bg-[#A63842] !text-white shadow-sm" : "text-[#252630] hover:bg-[#FFF1F2]"
+                  isActive
+                    ? "!bg-[#A63842] !text-white shadow-sm"
+                    : "text-[#252630] hover:bg-[#FFF1F2]"
                 }`}
               >
-                <Icon className={`size-4 ${isActive ? "!text-white" : "text-[#6f6e78]"}`} />
+                <Icon
+                  className={`size-4 ${
+                    isActive ? "!text-white" : "text-[#6f6e78]"
+                  }`}
+                />
+
                 {label}
               </Link>
             );
           })}
         </nav>
+
+        {/* Logout */}
         <div className="mt-2 border-t border-[#EEDFE1] pt-2 lg:mt-auto lg:pt-5">
           <form action="/api/auth/logout" method="post">
-            <button type="submit" className="flex h-8 w-full items-center gap-2 rounded-md px-3 text-[10px] font-medium text-[#6f6e78] hover:bg-[#FFF1F2] hover:text-[#A63842] lg:h-9 lg:gap-3 lg:text-[12px]">
+            <button
+              type="submit"
+              className="flex h-8 w-full items-center gap-2 rounded-md px-3 text-[10px] font-medium text-[#6f6e78] hover:bg-[#FFF1F2] hover:text-[#A63842] lg:h-9 lg:gap-3 lg:text-[12px]"
+            >
               <LogOutIcon className="size-4" />
               Logout
             </button>
