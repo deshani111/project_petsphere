@@ -30,3 +30,5 @@ tsconfig.tsbuildinfo
 storage/identity-verification/
 
 .next-register-check/
+
+.next-*/
