@@ -23,6 +23,10 @@ npm-debug.log*
 /.claude
 /.windsurf
 
+.next/
+.next-*/
+node_modules/
+
 .next-clean/
 
 tsconfig.tsbuildinfo
@@ -31,4 +35,3 @@ storage/identity-verification/
 
 .next-register-check/
 
-.next-*/
