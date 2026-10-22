@@ -4,8 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { combinePetNotes } from "../../../../lib/pet-notes";
-import { DashboardHeader } from "../../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
 
 type AddPetForm = {
   pet_name: string;
@@ -479,11 +477,7 @@ setIsSaving(false);
 
 
   return (
-    <div className="min-h-screen flex bg-[#fff8f7]">
-      <OwnerSidebar />
-      <div className="flex flex-1 flex-col">
-        <DashboardHeader />
-
+    <div className="min-h-[calc(100vh-60px)] bg-[#fff8f7]">
         <main className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-8">
           <div className="mb-4 w-full max-w-[12500px]">
             <div>
@@ -717,7 +711,6 @@ setIsSaving(false);
             </form>
           </section>
         </main>
-      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
+import OwnerLayoutShell from "../../../components/owner-dashboard/owner-layout-shell";
 import { getCurrentSession } from "../../../lib/session";
 
 export default async function OwnerLayout({ children }: { children: ReactNode }) {
@@ -8,5 +9,5 @@ export default async function OwnerLayout({ children }: { children: ReactNode })
   if (!session) redirect("/login");
   if (session.role !== "pet_owner") redirect("/");
 
-  return children;
+  return <OwnerLayoutShell>{children}</OwnerLayoutShell>;
 }

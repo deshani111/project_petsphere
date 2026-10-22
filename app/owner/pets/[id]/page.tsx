@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
-import { DashboardHeader } from "../../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
 import { type ApiPet, getApiMessage } from "../../../../lib/pet-api";
 import { parsePetNotes } from "../../../../lib/pet-notes";
 
@@ -12,15 +10,7 @@ type Params = {
 };
 
 function OwnerShell({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex min-h-screen bg-[#faf5f5]">
-      <OwnerSidebar />
-      <div className="flex-1">
-        <DashboardHeader />
-        <main className="w-full px-6 py-8">{children}</main>
-      </div>
-    </div>
-  );
+  return <main className="min-h-[calc(100vh-60px)] w-full bg-[#faf5f5] px-6 py-8">{children}</main>;
 }
 
 export default function PetProfilePage({ params }: Params) {

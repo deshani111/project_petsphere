@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { use, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { DashboardHeader } from "../../../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../../../components/owner-dashboard/owner-sidebar";
 import { combinePetNotes, parsePetNotes } from "../../../../../lib/pet-notes";
 
 type RealPet = {
@@ -497,13 +495,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           : "none";
 
   const shell = (content: ReactNode) => (
-    <div className="flex min-h-screen bg-[#fff8f7]">
-      <OwnerSidebar />
-      <div className="flex flex-1 flex-col">
-        <DashboardHeader />
-        {content}
-      </div>
-    </div>
+    <div className="min-h-[calc(100vh-60px)] bg-[#fff8f7]">{content}</div>
   );
 
   if (loading) {

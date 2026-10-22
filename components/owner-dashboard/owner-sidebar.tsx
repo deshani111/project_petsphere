@@ -9,7 +9,7 @@ const navigation = [
   { label: "My Pets", icon: PawIcon, href: "/owner/pets" },
   { label: "Find a Sitter", icon: SearchIcon, href: "/owner/bookings/new" },
   { label: "My Bookings", icon: CalendarIcon, href: "/owner/bookings" },
-  { label: "Messages", icon: MailIcon, href: "#messages" },
+  { label: "Messages", icon: MailIcon, href: "/owner/messages" },
   { label: "Marketplace", icon: StoreIcon, href: "/marketplace" },
   { label: "Blog", icon: FileIcon, href: "/blog" },
   { label: "My Profile", icon: UserIcon, href: "#profile" },
@@ -19,7 +19,7 @@ export function OwnerSidebar() {
   const pathname = usePathname() || "";
 
   return (
-    <aside className="sticky top-0 h-screen w-56 border-r border-[#eadede] bg-white">
+    <aside className="sticky top-0 hidden h-screen w-56 shrink-0 border-r border-[#eadede] bg-white md:flex">
       <div className="flex h-full flex-col px-4 py-6 lg:px-5">
         <Link href="/owner/dashboard" className="mb-2 flex items-center gap-2 px-2 text-[#ab3d42]">
           <span className="grid size-7 place-items-center rounded-lg bg-[#fde8e8]"><PawIcon className="size-4" /></span>
@@ -28,7 +28,9 @@ export function OwnerSidebar() {
         <p className="mb-6 px-2 text-[09px] font-semibold uppercase tracking-[0.16em] text-[#aa9a9a]">Pet care platform</p>
         <nav aria-label="Owner dashboard navigation" className="mt-3 space-y-1">
           {navigation.map(({ label, icon: Icon, href }) => {
-            const isActive = href.startsWith("/") ? pathname === href || pathname.startsWith(href) : false;
+            const isActive = href.startsWith("/")
+              ? pathname === href || (href !== "/owner/bookings" && pathname.startsWith(`${href}/`))
+              : false;
             return (
               <Link
                 key={label}

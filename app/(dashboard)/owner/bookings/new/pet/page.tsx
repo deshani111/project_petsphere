@@ -64,13 +64,13 @@ export default function SelectPetPage() {
   }
 
   return (
-    <div className="mx-auto mt-2.5 grid max-w-[747px] grid-cols-1 gap-[15px] px-[14px] pb-6 sm:px-[18px] md:grid-cols-[minmax(420px,1fr)_170px]">
+    <div className="booking-content-grid">
       <section className="min-w-0">
         <h1 className="text-[21px] font-bold">
           Select your companion
         </h1>
 
-        <p className="mb-5 mt-1 text-sm text-[#7c7071]">
+        <p className="mb-4 mt-1 text-[9px] text-[#7c7071]">
           Choose the pet this booking is for.
         </p>
 
@@ -95,7 +95,7 @@ export default function SelectPetPage() {
                   type="button"
                   aria-pressed={selected}
                   onClick={() => togglePet(String(pet.pet_id))}
-                  className={`rounded-xl border bg-white p-3 text-center transition ${
+                  className={`min-h-[150px] rounded-[11px] border bg-white p-3 text-center transition ${
                     selected
                       ? "border-[#A13D3F] ring-1 ring-[#A13D3F]"
                       : "border-[#f0dfdd] hover:border-[#DCC0BF]"
@@ -113,16 +113,16 @@ export default function SelectPetPage() {
                     </span>
                   )}
 
-                  <strong className="mt-2 block text-sm">
+                  <strong className="mt-2 block text-[12px]">
                     {pet.pet_name}
                   </strong>
 
-                  <span className="text-xs text-[#655a5b]">
+                  <span className="text-[8px] text-[#655a5b]">
                     {pet.breed || pet.species || "Pet"}
                   </span>
 
                   {selected ? (
-                    <span className="mt-1 block text-xs font-semibold text-[#A13D3F]">
+                    <span className="mt-1 block text-[8px] font-semibold text-[#A13D3F]">
                       ✓ Selected
                     </span>
                   ) : null}
@@ -132,7 +132,7 @@ export default function SelectPetPage() {
 
             <Link
               href="/owner/pets/add"
-              className="grid min-h-36 place-items-center rounded-xl border border-dashed border-[#e7b4ad] bg-white p-3 text-center text-sm text-[#A13D3F]"
+              className="grid min-h-[150px] place-items-center rounded-[11px] border border-dashed border-[#e7b4ad] bg-white p-3 text-center text-[9px] text-[#A13D3F]"
             >
               + Add another pet
             </Link>
@@ -141,11 +141,11 @@ export default function SelectPetPage() {
 
         {!isLoading && pets.length === 0 && !error ? (
           <p className="mt-3 text-sm text-[#7c7071]">
-            You haven't added any pets yet. Add a pet before continuing.
+            You haven&apos;t added any pets yet. Add a pet before continuing.
           </p>
         ) : null}
 
-        <div className="mt-6 flex items-center justify-between border-t border-[#efdcda] pt-4">
+        <div className="mt-4 flex items-center justify-between border-t border-[#efdcda] pt-3">
           <Link
             href="/owner/bookings"
             className="text-sm text-[#A13D3F]"

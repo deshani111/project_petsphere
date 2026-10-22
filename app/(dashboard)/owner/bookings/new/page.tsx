@@ -51,7 +51,7 @@ const services: Array<{
 ];
 
 function ServiceIcon({ service }: { service: ServiceId }) {
-  const shared = "h-[15px] w-[15px] fill-none stroke-current";
+  const shared = "h-4 w-4 fill-none stroke-current";
 
   if (service === "boarding") {
     return (
@@ -117,30 +117,18 @@ export default function NewBookingPage() {
     services[0];
 
   return (
-    <div className="booking-service-page mx-auto mt-4 grid max-w-[570px] grid-cols-1 gap-[15px] px-4 pb-6 md:grid-cols-[minmax(0,375px)_180px] md:px-0">
-      <style jsx>{`
-        button[aria-pressed="true"] {
-          border-color: #b23f43 !important;
-          box-shadow: inset 0 0 0 1px #b23f43 !important;
-        }
-
-        @media (min-width: 768px) {
-          button[aria-pressed] {
-            min-height: 172px !important;
-          }
-        }
-      `}</style>
+    <div className="booking-content-grid">
 
       <section className="min-w-0">
         <h1 className="m-0 text-[19px] font-bold tracking-[-.8px] md:text-[21px]">
           What service are you looking for?
         </h1>
 
-        <p className="mb-[18px] mt-1.5 text-[9px] text-[#7c7071]">
+        <p className="mb-4 mt-1.5 text-[12px] text-[#7c7071]">
           Select the best care option for your companion.
         </p>
 
-        <div className="grid grid-cols-1 gap-[13px] sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {services.map((service) => {
             const isSelected = service.id === selectedService;
 
@@ -149,19 +137,19 @@ export default function NewBookingPage() {
                 type="button"
                 key={service.id}
                 onClick={() => setDraft({ service: service.id })}
-                className={`relative min-h-[145px] overflow-hidden rounded-[13px] border bg-white p-[14px] text-left text-[#292323] transition hover:border-[#A13D3F] sm:min-h-[163px] ${
+                className={`relative min-h-[220px] overflow-hidden rounded-[11px] border bg-white p-3.5 text-left text-[#292323] transition hover:border-[#A13D3F] ${
                   isSelected
                     ? "border-[#A13D3F] shadow-[inset_0_0_0_1px_#A13D3F]"
                     : "border-[#e9cfcd]"
                 }`}
                 aria-pressed={isSelected}
               >
-                <span className="absolute left-[14px] top-[14px] grid h-[27px] w-[27px] place-items-center rounded-[9px] bg-[#fae6e3] text-[#b23f43]">
+                <span className="absolute left-3.5 top-3.5 grid h-7 w-7 place-items-center rounded-[7px] bg-[#fae6e3] text-[#b23f43]">
                   <ServiceIcon service={service.id} />
                 </span>
 
                 <span
-                  className={`absolute right-2.5 top-2.5 grid h-[15px] w-[15px] place-items-center rounded-full border text-[9px] ${
+                  className={`absolute right-3 top-3 grid h-4 w-4 place-items-center rounded-full border text-[9px] ${
                     isSelected
                       ? "border-[#b23f43] bg-[#b23f43] text-white"
                       : "border-[#DCC0BF] bg-white text-transparent"
@@ -170,21 +158,21 @@ export default function NewBookingPage() {
                   {isSelected ? "✓" : ""}
                 </span>
 
-                <strong className="mt-3 block text-[11px]">
+                <strong className="mt-10 block text-[14px]">
                   {service.name}
                 </strong>
 
-                <p className="my-[7px] text-[8px] leading-[1.45] text-[#675c5d]">
+                <p className="mb-10 mt-2 text-[12px] leading-[1.45] text-[#675c5d]">
                   {service.description}
                 </p>
 
                 <b
-                  className={`absolute bottom-[13px] text-[10px] ${
+                  className={`absolute bottom-3.5 text-[13px] ${
                     isSelected ? "text-[#b23f43]" : ""
                   }`}
                 >
                   Rs.{service.price}
-                  <em className="ml-[3px] text-[7px] font-normal not-italic text-[#6d6263]">
+                  <em className="ml-1 text-[10px] font-normal not-italic text-[#6d6263]">
                     {service.unit}
                   </em>
                 </b>
@@ -193,7 +181,7 @@ export default function NewBookingPage() {
           })}
         </div>
 
-        <div className="mt-[15px] flex items-center justify-between px-[18px]">
+        <div className="mt-4 flex items-center justify-between px-1">
           <Link
             href="/owner/bookings"
             className="text-[9px] text-[#675c5d]"
@@ -203,7 +191,7 @@ export default function NewBookingPage() {
 
           <Link
             href="/owner/bookings/new/pet"
-            className="rounded-[8px] bg-[#A13D3F] px-4 py-[9px] text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]"
+            className="rounded-[7px] bg-[#A13D3F] px-4 py-2 text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]"
           >
             Next <span className="ml-[5px] text-[13px]">→</span>
           </Link>

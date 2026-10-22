@@ -1,6 +1,4 @@
-import { DashboardHeader } from "../../../components/owner-dashboard/dashboard-header";
 import { DashboardOverview } from "../../../components/owner-dashboard/dashboard-overview";
-import { OwnerSidebar } from "../../../components/owner-dashboard/owner-sidebar";
 import { prisma } from "../../../lib/prisma";
 import { getCurrentSession } from "../../../lib/session";
 
@@ -72,18 +70,12 @@ export default async function OwnerDashboardPage() {
   }));
 
   return (
-    <div className="flex min-h-screen bg-[#FFF8F7]">
-      <OwnerSidebar />
-      <div className="min-w-0 flex-1">
-        <DashboardHeader userName={userName} />
-        <DashboardOverview
-          userName={user?.first_name || "Pet Owner"}
-          activeBookings={activeBookings}
-          unreadMessages={unreadMessages}
-          nextAppointment={formatAppointment(nextBooking?.start_date ?? null)}
-          recentBookings={recentBookings}
-        />
-      </div>
-    </div>
+    <DashboardOverview
+      userName={user?.first_name || "Pet Owner"}
+      activeBookings={activeBookings}
+      unreadMessages={unreadMessages}
+      nextAppointment={formatAppointment(nextBooking?.start_date ?? null)}
+      recentBookings={recentBookings}
+    />
   );
 }

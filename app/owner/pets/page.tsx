@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import PetsGrid from "../../../components/pets-grid";
-import { DashboardHeader } from "../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../components/owner-dashboard/owner-sidebar";
 import { type ApiPet, getApiMessage } from "../../../lib/pet-api";
 
 function toPetCardItem(pet: ApiPet) {
@@ -58,11 +56,7 @@ export default function PetFamilyPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#fff8f7]">
-      <OwnerSidebar />
-      <div className="flex flex-1 flex-col">
-        <DashboardHeader />
-
+    <div className="min-h-[calc(100vh-60px)] bg-[#fff8f7]">
         <div className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-6">
           <header className="mb-6">
             <h1 className="page-title text-[#30272a]">My Pet Family</h1>
@@ -75,7 +69,6 @@ export default function PetFamilyPage() {
             {!isLoading && !error ? <PetsGrid pets={pets.map(toPetCardItem)} onDelete={handleDelete} /> : null}
           </main>
         </div>
-      </div>
     </div>
   );
 }

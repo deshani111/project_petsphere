@@ -104,18 +104,18 @@ export default function BookingDatesPage() {
   }
 
   return (
-    <div className="mx-auto mt-2.5 grid max-w-[747px] grid-cols-1 gap-[15px] px-[14px] pb-6 sm:px-[18px] md:grid-cols-[minmax(420px,1fr)_170px]">
+    <div className="booking-content-grid">
       <section className="min-w-0">
-        <h1 className="m-0 text-[19px] font-bold tracking-[-.8px] md:text-[21px]">
+        <h1 className="m-0 text-[21px] font-bold tracking-[-.8px]">
           When do you need care?
         </h1>
 
-        <p className="mb-[18px] mt-1.5 text-[9px] text-[#7c7071]">
+        <p className="mb-4 mt-1.5 text-[9px] text-[#7c7071]">
           Select the dates and times for your companion&apos;s boarding
           experience.
         </p>
 
-        <div className="rounded-[14px] border border-[#e9cfcd] bg-white p-3 sm:p-[13px]">
+        <div className="rounded-[12px] border border-[#e9cfcd] bg-white p-3.5">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <strong className="text-[11px]">
@@ -254,10 +254,10 @@ export default function BookingDatesPage() {
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-between px-[12px]">
+        <div className="mt-8 flex items-center justify-between px-1">
           <Link
             href="/owner/bookings"
-            className="text-[9px] text-[#A13D3F]"
+            className="text-[13px] text-[#A13D3F]"
           >
             Cancel
           </Link>
@@ -265,7 +265,7 @@ export default function BookingDatesPage() {
           <div className="flex gap-3">
             <Link
               href="/owner/bookings/new/pet"
-              className="rounded-[8px] border border-[#DCC0BF] px-3 py-[8px] text-[9px] text-[#A13D3F]"
+              className="rounded-[9px] border border-[#DCC0BF] px-5 py-3 text-[13px] text-[#A13D3F]"
             >
               ← Previous
             </Link>
@@ -273,12 +273,12 @@ export default function BookingDatesPage() {
             {startDate && endDate ? (
               <Link
                 href="/owner/bookings/new/instructions"
-                className="rounded-[8px] bg-[#A13D3F] px-4 py-[9px] text-[9px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]"
+                className="rounded-[9px] bg-[#A13D3F] px-6 py-3 text-[13px] font-bold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]"
               >
                 Next →
               </Link>
             ) : (
-              <span className="rounded-[8px] bg-[#e8c9c6] px-4 py-[9px] text-[9px] text-white">
+              <span className="rounded-[9px] bg-[#e8c9c6] px-6 py-3 text-[13px] text-white">
                 Select a date
               </span>
             )}

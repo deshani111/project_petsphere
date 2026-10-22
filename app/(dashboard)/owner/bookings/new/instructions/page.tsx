@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import BookingSummary from "../components/booking-summary";
 import { useBooking } from "../components/booking-context";
 
@@ -29,58 +27,16 @@ const fields = [
 
 export default function BookingInstructionsPage() {
   const { draft, setDraft } = useBooking();
-  const router = useRouter();
-
   const notes = draft.notes;
-  const hasNotes = Object.values(notes).some(Boolean);
-
-  const [status, setStatus] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  async function confirmBooking() {
-    setIsSubmitting(true);
-    setStatus("");
-
-    try {
-      const response = await fetch("/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...draft,
-          notes: Object.values(notes).filter(Boolean).join("\n\n"),
-        }),
-      });
-
-      const payload = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          payload.message || "Could not create the booking."
-        );
-      }
-
-      router.replace("/owner/bookings");
-      router.refresh();
-    } catch (error) {
-      setStatus(
-        error instanceof Error
-          ? error.message
-          : "Could not create the booking."
-      );
-      setIsSubmitting(false);
-    }
-  }
 
   return (
-    <div className="mx-auto mt-2.5 grid max-w-[747px] grid-cols-1 gap-[15px] px-[14px] pb-6 sm:px-[18px] md:grid-cols-[minmax(420px,1fr)_170px]">
-      <section className="rounded-[14px] bg-white p-4 sm:p-5">
+    <div className="booking-content-grid">
+      <section className="rounded-[12px] bg-white p-4">
         <h1 className="m-0 text-[17px] font-bold tracking-[-.6px]">
           Anything else the sitter should know?
         </h1>
 
-        <p className="mb-3 mt-1.5 max-w-[375px] text-[8px] leading-[1.45] text-[#7c7071]">
+        <p className="mb-3 mt-1.5 max-w-[500px] text-[8px] leading-[1.45] text-[#7c7071]">
           Provide behavioral notes, allergies, or emergency contact
           information to ensure the best care for your pet.
         </p>
@@ -110,17 +66,11 @@ export default function BookingInstructionsPage() {
                 }
                 placeholder={field.hint}
                 rows={2}
-                className="mt-1.5 block w-full resize-none border-0 bg-transparent p-0 text-[8px] leading-[1.45] text-[#5f5354] outline-none placeholder:text-[#918485]"
+                className="mt-1.5 block min-h-[55px] w-full resize-none border-0 bg-transparent p-0 text-[8px] leading-[1.45] text-[#5f5354] outline-none placeholder:text-[#918485]"
               />
             </label>
           ))}
         </div>
-
-        {status ? (
-          <p role="alert" className="mt-3 text-sm text-red-600">
-            {status}
-          </p>
-        ) : null}
 
         <div className="mt-5 flex items-center justify-between px-1">
           <Link
@@ -133,19 +83,17 @@ export default function BookingInstructionsPage() {
           <div className="flex gap-3">
             <Link
               href="/owner/bookings/new/dates"
-              className="rounded-[8px] border border-[#DCC0BF] px-3 py-[8px] text-[9px] text-[#A13D3F]"
+              className="rounded-[7px] border border-[#DCC0BF] px-3 py-2 text-[9px] text-[#A13D3F]"
             >
               ← Previous
             </Link>
 
-            <button
-              type="button"
-              onClick={confirmBooking}
-              disabled={isSubmitting}
-              className="rounded-[8px] bg-[#A13D3F] px-3 py-[8px] text-[9px] text-white shadow-[0_5px_10px_rgba(161,61,63,.17)] disabled:cursor-not-allowed disabled:bg-[#f8d8d1] disabled:shadow-none"
+            <Link
+              href="/owner/bookings/requested"
+              className="rounded-[7px] bg-[#A13D3F] px-3 py-2 text-[9px] text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]"
             >
-              {isSubmitting ? "Creating..." : "Confirm Booking"}
-            </button>
+              Confirm Booking
+            </Link>
           </div>
         </div>
       </section>
