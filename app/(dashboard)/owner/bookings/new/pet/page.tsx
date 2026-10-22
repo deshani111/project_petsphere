@@ -8,11 +8,10 @@ import { readBookingDraft, updateBookingDraft } from "../../../../../../lib/book
 
 export default function SelectPetPage() {
   const [pets, setPets] = useState<ApiPet[]>([]);
-  const [selectedPet, setSelectedPet] = useState("");
+  const [selectedPet, setSelectedPet] = useState(() => readBookingDraft().petId || "");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setSelectedPet(readBookingDraft().petId || "");
     fetch("/api/pets")
       .then(async (response) => {
         if (!response.ok) throw new Error(await getApiMessage(response));

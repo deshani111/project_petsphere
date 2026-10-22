@@ -159,7 +159,27 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           return;
         }
 
-        if (!cancelled) setPet(data);
+        if (!cancelled) {
+          const notes = parsePetNotes(data.medical_notes);
+          setPet(data);
+          setForm({
+            pet_name: data.pet_name ?? "",
+            species: data.species ?? "",
+            breed: data.breed ?? "",
+            gender: data.gender ? data.gender.charAt(0).toUpperCase() + data.gender.slice(1).toLowerCase() : "",
+            age: data.age != null ? String(data.age) : "",
+            weight_kg: data.weight_kg ?? "",
+            about: notes.about,
+            medications: notes.medications,
+            care_instructions: notes.careInstructions,
+            sterilized: notes.sterilized,
+            last_dental_check: notes.lastDentalVaccination,
+          });
+          setPhotoFile(null);
+          setPhotoPreview(data.photo ?? "");
+          setMedicalReportFile(null);
+          setMedicalReportPreview(data.medical_report ?? "");
+        }
       } catch {
         if (!cancelled) setLoadError("Could not reach the server. Please try again.");
       } finally {
@@ -173,30 +193,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
       cancelled = true;
     };
   }, [petId]);
-
-  useEffect(() => {
-    if (!pet) return;
-
-    const notes = parsePetNotes(pet.medical_notes);
-    setForm({
-      pet_name: pet.pet_name ?? "",
-      species: pet.species ?? "",
-      breed: pet.breed ?? "",
-      gender: pet.gender ? pet.gender.charAt(0).toUpperCase() + pet.gender.slice(1).toLowerCase() : "",
-      age: pet.age != null ? String(pet.age) : "",
-      weight_kg: pet.weight_kg ?? "",
-      about: notes.about,
-      medications: notes.medications,
-      care_instructions: notes.careInstructions,
-      sterilized: notes.sterilized,
-      last_dental_check: notes.lastDentalVaccination,
-    });
-
-    setPhotoFile(null);
-    setPhotoPreview(pet.photo ?? "");
-    setMedicalReportFile(null);
-    setMedicalReportPreview(pet.medical_report ?? "");
-  }, [pet]);
 
   useEffect(() => {
     return () => {
