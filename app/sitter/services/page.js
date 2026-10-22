@@ -31,7 +31,7 @@ export default function MyServicesPage() {
     return icons[iconName];
   };
 
-  const addService = async () => { const name = prompt("Service name:"); if (!name) return; const price = prompt("Price in LKR:", "0"); const unit = prompt("Pricing unit:", "session"); const response = await fetch("/api/sitter/services", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, price, unit }) }); if (response.ok) load(); };
+  const addService = async () => { const name = prompt("Service name:"); if (!name) return; const price = prompt("Price in Rs:", "0"); const unit = prompt("Pricing unit:", "session"); const response = await fetch("/api/sitter/services", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, price, unit }) }); if (response.ok) load(); };
   return (
     <div className={styles.page}>
       <div className={styles.content}>

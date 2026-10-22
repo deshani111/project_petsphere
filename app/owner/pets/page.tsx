@@ -1,74 +1,72 @@
-"use client";
 
-import { useCallback, useEffect, useState } from "react";
-import PetsGrid from "../../../components/pets-grid";
-import { type ApiPet, getApiMessage } from "../../../lib/pet-api";
+import { redirect } from "next/navigation";
+import { PetFamilyPage } from "../../../components/owner-dashboard/pet-family-page";
+import { prisma } from "../../../lib/prisma";
+import { getCurrentSession } from "../../../lib/session";
 
-function toPetCardItem(pet: ApiPet) {
-  return {
-    id: pet.pet_id,
-    name: pet.pet_name,
-    image: pet.photo || undefined,
-    type: pet.species || "Pet",
-    breed: pet.breed || "Unknown",
-    age: pet.age ?? undefined,
-  };
-}
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
-export default function PetFamilyPage() {
-  const [pets, setPets] = useState<ApiPet[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+const UPCOMING_STATUSES = [
+  "pending",
+  "confirmed",
+  "upcoming",
+];
 
-  const loadPets = useCallback(async () => {
-    setIsLoading(true);
-    setError("");
+export default async function OwnerPetsPage() {
+  const session = await getCurrentSession();
 
-    try {
-      const response = await fetch("/api/pets");
+  if (!session) {
+    redirect("/login");
+  }
 
-      if (!response.ok) {
-        throw new Error(await getApiMessage(response));
-      }
+  if (session.role !== "pet_owner") {
+    redirect("/");
+  }
 
-      setPets(await response.json());
-    } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : "Could not load pets. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const userId = BigInt(session.sub);
 
-  useEffect(() => {
-    void loadPets();
-  }, [loadPets]);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  const handleDelete = async (petId: string) => {
-    const response = await fetch(`/api/pets/${encodeURIComponent(petId)}`, {
-      method: "DELETE",
-    });
+  const owner = await prisma.pet_owner.findUnique({
+    where: {
+      user_id: userId,
+    },
+    select: {
+      booking: {
+        where: {
+          start_date: {
+            gte: today,
+          },
+        },
+        orderBy: {
+          start_date: "asc",
+        },
+        select: {
+          status: true,
+          start_date: true,
+        },
+      },
+    },
+  });
 
-    if (!response.ok) {
-      throw new Error(await getApiMessage(response));
-    }
-
-    await loadPets();
-  };
+  const upcomingBookings = (
+    owner?.booking ?? []
+  ).filter((booking) =>
+    UPCOMING_STATUSES.includes(
+      booking.status.toLowerCase()
+    )
+  );
 
   return (
-    <div className="min-h-[calc(100vh-60px)] bg-[#fff8f7]">
-        <div className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-6">
-          <header className="mb-6">
-            <h1 className="page-title text-[#30272a]">My Pet Family</h1>
-            <p className="page-subtitle mt-1 text-[#887c7d]">Meet the family members who fill your home with love.</p>
-          </header>
-
-          <main>
-            {isLoading ? <p className="page-subtitle text-[#887c7d]">Loading pets...</p> : null}
-            {error ? <p className="page-subtitle text-[#c24a50]">{error}</p> : null}
-            {!isLoading && !error ? <PetsGrid pets={pets.map(toPetCardItem)} onDelete={handleDelete} /> : null}
-          </main>
-        </div>
-    </div>
+    <PetFamilyPage
+      upcomingBookingCount={upcomingBookings.length}
+      nextBookingDate={
+        upcomingBookings[0]?.start_date?.toISOString() ??
+        null
+      }
+    />
   );
 }

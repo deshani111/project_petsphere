@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -87,14 +88,17 @@ export default function SelectPetPage() {
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {pets.map((pet) => {
-              const selected = selectedPet === String(pet.pet_id);
+              const selected =
+                selectedPet === String(pet.pet_id);
 
               return (
                 <button
                   key={pet.pet_id}
                   type="button"
                   aria-pressed={selected}
-                  onClick={() => togglePet(String(pet.pet_id))}
+                  onClick={() =>
+                    togglePet(String(pet.pet_id))
+                  }
                   className={`min-h-[150px] rounded-[11px] border bg-white p-3 text-center transition ${
                     selected
                       ? "border-[#A13D3F] ring-1 ring-[#A13D3F]"
@@ -139,11 +143,14 @@ export default function SelectPetPage() {
           </div>
         )}
 
-        {!isLoading && pets.length === 0 && !error ? (
-          <p className="mt-3 text-sm text-[#7c7071]">
-            You haven&apos;t added any pets yet. Add a pet before continuing.
-          </p>
-        ) : null}
+        {!isLoading &&
+          pets.length === 0 &&
+          !error && (
+            <p className="mt-3 text-sm text-[#7c7071]">
+              You haven&apos;t added any pets yet.
+              Add a pet before continuing.
+            </p>
+          )}
 
         <div className="mt-4 flex items-center justify-between border-t border-[#efdcda] pt-3">
           <Link

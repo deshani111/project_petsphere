@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -118,7 +119,6 @@ export default function NewBookingPage() {
 
   return (
     <div className="booking-content-grid">
-
       <section className="min-w-0">
         <h1 className="m-0 text-[19px] font-bold tracking-[-.8px] md:text-[21px]">
           What service are you looking for?

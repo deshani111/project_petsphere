@@ -74,11 +74,7 @@ function getComparisonRange(start, end) {
 }
 
 function formatCurrency(value) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-  }).format(Number(value || 0));
+  return `Rs. ${Number(value || 0).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 function formatShortDate(value) {
@@ -153,9 +149,9 @@ function mapTransaction(payment) {
     amount,
     amountLabel: formatCurrency(amount),
     platformFee,
-    platformFeeLabel: `-$${platformFee.toFixed(2)}`,
+    platformFeeLabel: `-Rs. ${platformFee.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`,
     netAmount,
-    netAmountLabel: `$${netAmount.toFixed(2)}`,
+    netAmountLabel: `Rs. ${netAmount.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`,
     status: status.key,
     statusLabel: status.label,
     bookingStatus: booking?.status || "",
