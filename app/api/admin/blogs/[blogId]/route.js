@@ -8,20 +8,21 @@ import {
 } from "../../../../../modules/admin/blog.service";
 
 export async function GET(_request, { params }) {
+  const { blogId } = await params;
   const admin = await getCurrentAdmin();
 
   if (!admin) {
     return NextResponse.json({ message: "Admin access is required." }, { status: 403 });
   }
 
-  const blogId = parseAdminBlogId(params.blogId);
+  const parsedBlogId = parseAdminBlogId(blogId);
 
-  if (!blogId) {
+  if (!parsedBlogId) {
     return NextResponse.json({ message: "A valid blog ID is required." }, { status: 400 });
   }
 
   try {
-    const blog = await getAdminBlogPostById(blogId);
+    const blog = await getAdminBlogPostById(parsedBlogId);
 
     if (!blog) {
       return NextResponse.json({ message: "Blog post not found." }, { status: 404 });
@@ -38,15 +39,16 @@ export async function GET(_request, { params }) {
 }
 
 export async function PATCH(request, { params }) {
+  const { blogId } = await params;
   const admin = await getCurrentAdmin();
 
   if (!admin) {
     return NextResponse.json({ message: "Admin access is required." }, { status: 403 });
   }
 
-  const blogId = parseAdminBlogId(params.blogId);
+  const parsedBlogId = parseAdminBlogId(blogId);
 
-  if (!blogId) {
+  if (!parsedBlogId) {
     return NextResponse.json({ message: "A valid blog ID is required." }, { status: 400 });
   }
 
@@ -62,7 +64,7 @@ export async function PATCH(request, { params }) {
   }
 
   try {
-    const blog = await updateAdminBlogPost(blogId, body);
+    const blog = await updateAdminBlogPost(parsedBlogId, body);
 
     if (!blog) {
       return NextResponse.json({ message: "Blog post not found." }, { status: 404 });
@@ -79,20 +81,21 @@ export async function PATCH(request, { params }) {
 }
 
 export async function DELETE(_request, { params }) {
+  const { blogId } = await params;
   const admin = await getCurrentAdmin();
 
   if (!admin) {
     return NextResponse.json({ message: "Admin access is required." }, { status: 403 });
   }
 
-  const blogId = parseAdminBlogId(params.blogId);
+  const parsedBlogId = parseAdminBlogId(blogId);
 
-  if (!blogId) {
+  if (!parsedBlogId) {
     return NextResponse.json({ message: "A valid blog ID is required." }, { status: 400 });
   }
 
   try {
-    const deleted = await deleteAdminBlogPost(blogId);
+    const deleted = await deleteAdminBlogPost(parsedBlogId);
 
     if (!deleted) {
       return NextResponse.json({ message: "Blog post not found." }, { status: 404 });

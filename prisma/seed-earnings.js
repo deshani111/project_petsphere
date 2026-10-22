@@ -48,12 +48,12 @@ async function ensureServiceTypes() {
 
 async function ensurePets(owners) {
   const petTemplates = [
-    { pet_name: "Buddy", species: "Dog", breed: "Golden Retriever", gender: null, age: 3, photo: "/marketplace-cooper.jpg" },
-    { pet_name: "Luna", species: "Dog", breed: "Siberian Husky", gender: null, age: 2, photo: "/marketplace-luna.jpg" },
-    { pet_name: "Max", species: "Dog", breed: "Labrador Mix", gender: null, age: 4, photo: "/blog-featured-puppy.jpg" },
-    { pet_name: "Bella", species: "Dog", breed: "French Bulldog", gender: null, age: 1, photo: "/blog-training.jpg" },
-    { pet_name: "Coco", species: "Cat", breed: "Bengal Mix", gender: null, age: 2, photo: "/blog-cat-behavior.jpg" },
-    { pet_name: "Shadow", species: "Dog", breed: "Border Collie", gender: null, age: 5, photo: "/marketplace-snow.jpg" },
+    { pet_name: "Buddy", species: "Dog", breed: "Golden Retriever", gender: null, age: 3, photo: "/marketplace-cooper.webp" },
+    { pet_name: "Luna", species: "Dog", breed: "Siberian Husky", gender: null, age: 2, photo: "/marketplace-luna.webp" },
+    { pet_name: "Max", species: "Dog", breed: "Labrador Mix", gender: null, age: 4, photo: "/blog-featured-puppy.webp" },
+    { pet_name: "Bella", species: "Dog", breed: "French Bulldog", gender: null, age: 1, photo: "/blog-training.webp" },
+    { pet_name: "Coco", species: "Cat", breed: "Bengal Mix", gender: null, age: 2, photo: "/blog-cat-behavior.webp" },
+    { pet_name: "Shadow", species: "Dog", breed: "Border Collie", gender: null, age: 5, photo: "/marketplace-snow.webp" },
   ];
 
   for (let index = 0; index < owners.length; index += 1) {

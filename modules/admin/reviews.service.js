@@ -1,4 +1,4 @@
-import { prisma } from "../../lib/prisma";
+import { loadAdminReviews } from "../reviews/review.service";
 
 const SORTERS = {
   newest: (a, b) => new Date(b.review_date).getTime() - new Date(a.review_date).getTime(),
@@ -60,50 +60,9 @@ function mapReview(review) {
   };
 }
 
-async function loadReviews() {
-  return prisma.review.findMany({
-    orderBy: {
-      review_date: "desc",
-    },
-    include: {
-      booking: {
-        include: {
-          service_type: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      },
-      pet_owner: {
-        include: {
-          users: {
-            select: {
-              first_name: true,
-              last_name: true,
-              full_name: true,
-            },
-          },
-        },
-      },
-      pet_sitter: {
-        include: {
-          users: {
-            select: {
-              first_name: true,
-              last_name: true,
-              full_name: true,
-            },
-          },
-        },
-      },
-    },
-  });
-}
-
 export async function getAdminReviewsData({ search = "", rating = "all", sort = "newest" } = {}) {
   const selectedSort = clampSort(sort);
-  const reviewRows = await loadReviews();
+  const reviewRows = await loadAdminReviews();
   const searchTerm = String(search || "").trim().toLowerCase();
   const minRating = rating === "all" ? 0 : Number(rating || 0);
 

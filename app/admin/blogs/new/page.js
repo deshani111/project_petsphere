@@ -109,10 +109,7 @@ export default function AdminNewArticlePage() {
   const [status, setStatus] = useState("draft");
 
   useEffect(() => {
-    if (!blogId) {
-      setLoadingArticle(false);
-      return;
-    }
+    if (!blogId) return;
 
     let ignore = false;
 

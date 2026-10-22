@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { CalendarIcon, FileIcon, GridIcon, LogOutIcon, MailIcon, PawIcon, SearchIcon, StoreIcon, UserIcon } from "./dashboard-icons";
 
@@ -22,13 +23,12 @@ export function OwnerSidebar() {
     <aside className="sticky top-0 h-screen w-56 border-r border-[#eadede] bg-white">
       <div className="flex h-full flex-col px-4 py-6 lg:px-5">
         <Link href="/owner/dashboard" className="mb-2 flex items-center gap-2 px-2 text-[#ab3d42]">
-          <span className="grid size-7 place-items-center rounded-lg bg-[#fde8e8]"><PawIcon className="size-4" /></span>
-          <span className="text-lg font-bold tracking-[-0.7px]">PetSphere</span>
+          <Image src="/petsphere-logo.svg" alt="PetSphere" width={165} height={41} priority />
         </Link>
-        <p className="mb-6 px-2 text-[09px] font-semibold uppercase tracking-[0.16em] text-[#aa9a9a]">Pet care platform</p>
         <nav aria-label="Owner dashboard navigation" className="mt-3 space-y-1">
           {navigation.map(({ label, icon: Icon, href }) => {
-            const isActive = href.startsWith("/") ? pathname === href || pathname.startsWith(href) : false;
+            const isMarketplace = label === "Marketplace" && (pathname.startsWith("/owner/marketplace") || pathname === "/marketplace/new");
+            const isActive = isMarketplace || (href.startsWith("/") ? pathname === href || pathname.startsWith(href) : false);
             return (
               <Link
                 key={label}

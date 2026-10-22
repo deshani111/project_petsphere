@@ -3,6 +3,11 @@ import { DashboardOverview } from "../../../components/owner-dashboard/dashboard
 import { OwnerSidebar } from "../../../components/owner-dashboard/owner-sidebar";
 import { prisma } from "../../../lib/prisma";
 import { getCurrentSession } from "../../../lib/session";
+import { redirect } from "next/navigation";
+
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
 function formatAppointment(date: Date | null) {
   if (!date) return "None scheduled";
@@ -16,7 +21,10 @@ function formatAppointment(date: Date | null) {
 
 export default async function OwnerDashboardPage() {
   const session = await getCurrentSession();
-  const userId = BigInt(session!.sub);
+  if (!session) redirect("/login");
+  if (session.role !== "pet_owner") redirect("/");
+
+  const userId = BigInt(session.sub);
 
   const [user, owner, unreadMessages] = await Promise.all([
     prisma.users.findUnique({
