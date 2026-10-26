@@ -8,13 +8,13 @@ import styles from "./page.module.css";
 
 const formatNumber = (value) => new Intl.NumberFormat("en-US").format(value || 0);
 
-export default function AdminDashboardClient({ previewData = null }) {
+export default function AdminDashboardClient({ previewData = null, initialError = "" }) {
   const [dashboard, setDashboard] = useState(previewData);
   const [period, setPeriod] = useState("Last 30 Days");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(initialError);
 
   useEffect(() => {
-    if (previewData) return;
+    if (previewData || initialError) return;
     (async () => {
       try {
         const response = await fetch("/api/admin/dashboard");
@@ -25,7 +25,7 @@ export default function AdminDashboardClient({ previewData = null }) {
         setError(loadError.message || "Dashboard data could not be loaded.");
       }
     })();
-  }, [previewData]);
+  }, [previewData, initialError]);
 
   const summary = useMemo(() => {
     if (!dashboard) return [];
@@ -34,7 +34,7 @@ export default function AdminDashboardClient({ previewData = null }) {
     return [
       { label: "Total Users", value: formatNumber(totalUsers), trend: "5.2%", icon: "users" },
       { label: "Active Bookings", value: formatNumber(dashboard.totalBookings), trend: "12.8%", icon: "bookings" },
-      { label: "Monthly Revenue", value: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(revenue), trend: "8.4%", icon: "revenue" },
+      { label: "Monthly Revenue", value: `Rs. ${revenue.toLocaleString("en-LK", { maximumFractionDigits: 0 })}`, trend: "8.4%", icon: "revenue" },
       { label: "Sitter Applications", value: formatNumber(dashboard.pendingSitterVerifications), trend: "2.1%", direction: "down", icon: "applications" },
     ];
   }, [dashboard]);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PetCard from "./pet-card";
@@ -22,25 +22,22 @@ export default function PetsGrid({
   onDelete: (petId: string) => Promise<void>;
 }) {
   const router = useRouter();
-  const [visiblePets, setVisiblePets] = useState(pets);
+
   const [deleteTarget, setDeleteTarget] = useState<PetItem | null>(null);
-
-  useEffect(() => {
-    setVisiblePets(pets);
-  }, [pets]);
-
   const [deleteError, setDeleteError] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleEdit = (petId: string) => {
-    const pet = visiblePets.find((item) => item.id === petId);
+    const pet = pets.find((item) => item.id === petId);
+
     if (pet) {
       router.push(`/owner/pets/${pet.id}/edit`);
     }
   };
 
   const openDeleteDialog = (petId: string) => {
-    const pet = visiblePets.find((item) => item.id === petId) || null;
+    const pet = pets.find((item) => item.id === petId) || null;
+
     setDeleteError("");
     setDeleteTarget(pet);
   };
@@ -55,7 +52,11 @@ export default function PetsGrid({
       await onDelete(deleteTarget.id);
       setDeleteTarget(null);
     } catch (error) {
-      setDeleteError(error instanceof Error ? error.message : "Could not delete pet. Please try again.");
+      setDeleteError(
+        error instanceof Error
+          ? error.message
+          : "Could not delete pet. Please try again."
+      );
     } finally {
       setIsDeleting(false);
     }
@@ -63,8 +64,8 @@ export default function PetsGrid({
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {visiblePets.map((p) => (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {pets.map((p) => (
           <PetCard
             key={p.id}
             image={p.image}
@@ -78,35 +79,54 @@ export default function PetsGrid({
           />
         ))}
 
-       <Link href="/owner/pets/add" className="group block h-full" aria-label="Add another pet">
-  <article className="flex h-full min-h-[392px] flex-col overflow-hidden rounded-[20px] border-2 border-dashed border-[#e6c7c7] bg-[#fffaf9] p-4 shadow-[0_10px_30px_rgba(91,52,51,0.06)] transition hover:border-[#d99a9d] hover:bg-[#fff6f5]">
-    <div className="relative mb-4 h-[220px] w-full overflow-hidden rounded-[18px] bg-[#fffaf9]">
-      <div className="absolute inset-0 rounded-[18px] border border-dashed border-[#e8c7c7]" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full border-[2px] border-[#d69a9e] text-[42px] font-light leading-none text-[#ab3d42]">
-          +
-        </div>
-      </div>
-    </div>
+        <Link
+          href="/owner/pets/add"
+          className="group block h-full min-h-[300px]"
+          aria-label="Add another pet"
+        >
+          <article className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-xl border-2 border-dashed border-[#e6c7c7] bg-[#fffaf9] p-3 shadow-[0_3px_12px_rgba(91,52,51,0.04)] transition hover:border-[#d99a9d] hover:bg-[#fff6f5] sm:p-3.5">
+            <div className="relative mb-3 flex min-h-[175px] flex-1 items-center justify-center overflow-hidden rounded-lg bg-white/40">
+              <div className="absolute inset-0 rounded-lg border border-dashed border-[#e8c7c7]" />
 
-    <div className="mb-4 flex-1 px-1 text-center">
-      <h3 className="text-[18px] font-bold text-[#403537]">Add another pet</h3>
-      <p className="mt-2 text-[14px] leading-5 text-[#7f7072]">
-        Grow your pet family in just a few steps.
-      </p>
-    </div>
-  </article>
-</Link>
+              <div className="relative grid size-16 place-items-center rounded-full border-2 border-[#d69a9e] text-[38px] font-light leading-none text-[#ab3d42] transition group-hover:bg-white">
+                +
+              </div>
+            </div>
+
+            <div className="shrink-0 px-1 pb-1 text-center">
+              <h3 className="text-sm font-bold text-[#403537]">
+                Add another pet
+              </h3>
+
+              <p className="mt-1 text-[11px] leading-relaxed text-[#7f7072]">
+                Grow your pet family in just a few steps.
+              </p>
+            </div>
+          </article>
+        </Link>
       </div>
 
       {deleteTarget ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 px-4 py-6">
           <div className="w-full max-w-md rounded-2xl border border-[#f0e3e3] bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
-            <h3 className="text-[18px] font-semibold text-[#30272a]">Delete pet?</h3>
+            <h3 className="text-[18px] font-semibold text-[#30272a]">
+              Delete pet?
+            </h3>
+
             <p className="mt-2 text-[13px] leading-6 text-[#6f5f5f]">
-              Are you sure you want to delete <span className="font-semibold text-[#b54a50]">{deleteTarget.name}</span>?
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-[#b54a50]">
+                {deleteTarget.name}
+              </span>
+              ?
             </p>
             {deleteError ? <p className="mt-2 text-[11px] text-[#c24a50]">{deleteError}</p> : null}
+
+            {deleteError ? (
+              <p className="mt-2 text-[11px] text-[#c24a50]">
+                {deleteError}
+              </p>
+            ) : null}
 
             <div className="mt-6 flex items-center justify-end gap-3">
               <button
@@ -117,6 +137,7 @@ export default function PetsGrid({
               >
                 Cancel
               </button>
+
               <button
                 type="button"
                 onClick={confirmDelete}

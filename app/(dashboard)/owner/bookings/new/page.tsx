@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import BookingSummary from "./components/booking-summary";
-import { updateBookingDraft } from "../../../../../lib/booking-draft";
+import { readBookingDraft, updateBookingDraft } from "../../../../../lib/booking-draft";
 
 type ServiceId = "boarding" | "walking" | "grooming" | "training";
 
@@ -16,6 +16,19 @@ const services: Array<{ id: ServiceId; name: string; description: string; price:
 
 export default function NewBookingPage() {
   const [selectedService, setSelectedService] = useState<ServiceId>("boarding");
+  useEffect(() => {
+    let active = true;
+    const savedService = readBookingDraft().service;
+    const matchedService = services.find((service) => service.id === savedService);
+    if (matchedService) {
+      queueMicrotask(() => {
+        if (active) setSelectedService(matchedService.id);
+      });
+    }
+    return () => {
+      active = false;
+    };
+  }, []);
   const selected = services.find((service) => service.id === selectedService) ?? services[0];
 
   return (

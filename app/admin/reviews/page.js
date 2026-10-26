@@ -71,35 +71,22 @@ export default function AdminReviewsPage() {
   const [selectedReview, setSelectedReview] = useState(null);
   const [modalMode, setModalMode] = useState("");
 
-  const loadReviews = async (searchTerm = search, ratingFilter = rating, sortOrder = sort) => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const params = new URLSearchParams();
-      if (searchTerm) params.set("search", searchTerm);
-      if (ratingFilter) params.set("rating", ratingFilter);
-      if (sortOrder) params.set("sort", sortOrder);
-
-      const response = await fetch(`/api/admin/reviews?${params.toString()}`, { cache: "no-store" });
-      const payload = await response.json();
-
-      if (!response.ok) {
-        throw new Error(payload.message || "Reviews data could not be loaded.");
-      }
-
-      setData(payload);
-    } catch (loadError) {
-      setError(loadError.message || "Reviews data could not be loaded.");
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadReviews(search, rating, sort);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let cancelled = false;
+    const params = new URLSearchParams();
+    if (search) params.set("search", search);
+    if (rating) params.set("rating", rating);
+    if (sort) params.set("sort", sort);
+    fetch(`/api/admin/reviews?${params.toString()}`, { cache: "no-store" })
+      .then(async (response) => {
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.message || "Reviews data could not be loaded.");
+        return payload;
+      })
+      .then((payload) => { if (!cancelled) setData(payload); })
+      .catch((loadError) => { if (!cancelled) { setError(loadError.message || "Reviews data could not be loaded."); setData(null); } })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [search, rating, sort]);
 
   const reviews = data?.reviews || [];
@@ -109,10 +96,19 @@ export default function AdminReviewsPage() {
 
   const submitSearch = (event) => {
     event.preventDefault();
-    setSearch(draft.trim());
+    const nextSearch = draft.trim();
+    if (nextSearch !== search) {
+      setLoading(true);
+      setError("");
+      setSearch(nextSearch);
+    }
   };
 
   const clearFilters = () => {
+    if (search || rating !== "all" || sort !== "newest") {
+      setLoading(true);
+      setError("");
+    }
     setDraft("");
     setSearch("");
     setRating("all");
@@ -148,7 +144,7 @@ export default function AdminReviewsPage() {
         <div className={styles.filters}>
           <label>
             Rating
-            <select value={rating} onChange={(event) => setRating(event.target.value)}>
+            <select value={rating} onChange={(event) => { if (event.target.value !== rating) { setLoading(true); setError(""); setRating(event.target.value); } }}>
               <option value="all">All ratings</option>
               <option value="5">5 stars</option>
               <option value="4">4 stars & up</option>
@@ -158,7 +154,7 @@ export default function AdminReviewsPage() {
           </label>
           <label>
             Sort
-            <select value={sort} onChange={(event) => setSort(event.target.value)}>
+            <select value={sort} onChange={(event) => { if (event.target.value !== sort) { setLoading(true); setError(""); setSort(event.target.value); } }}>
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
               <option value="rating_high">Highest rating</option>

@@ -479,243 +479,247 @@ setIsSaving(false);
 
 
   return (
-    <div className="min-h-screen flex bg-[#fff8f7]">
+    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
       <OwnerSidebar />
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <DashboardHeader />
 
-        <main className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-8">
-          <div className="mb-4 w-full max-w-[12500px]">
-            <div>
-              <div className="flex items-center gap-2 text-[#4f4143]">
-                <Link href="/owner/pets" className="text-[18px] font-semibold leading-none hover:text-[#ab3d42]">
-                  <span aria-hidden>‹</span>
+        <main className="w-full px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-5">
+              <div>
+                <Link href="/owner/pets" className="mb-1 inline-flex items-center gap-1 text-xs text-[#8b7d7e] hover:text-[#ab3d42]">
+                  My Pets <span aria-hidden="true">&rsaquo;</span> Add New Pet
                 </Link>
-                <h1 className="page-title">Add New Pet</h1>
+                <h1 className="page-title text-[#29252b]">Add New Pet</h1>
               </div>
-              <p className="page-subtitle mt-1 text-[#9f8e8f]">Welcome a new furry family member by sharing their details with us.</p>
-            </div>
-          </div>
-
-          <section className="w-full max-w-[1250px] rounded-[18px] border border-[#f3dede] bg-white px-5 py-7 shadow-[0_1px_0_rgba(255,255,255,0.9)] sm:px-6">
-            <form onSubmit={(event) => {
-              event.preventDefault();
-              handleSave();
-            }}>
-            <div className="mb-7 flex flex-col items-center text-center">
-              <label className="group flex cursor-pointer flex-col items-center gap-3">
-                <div className="grid h-24 w-24 place-items-center rounded-full border-2 border-dashed border-[#e8c7c7] bg-[#fff8f7] text-[#b54a50] transition-colors group-hover:border-[#cf7c7f]">
-                  {photoPreview ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={photoPreview} alt="Pet preview" className="h-full w-full rounded-full object-cover" />
-                  ) : (
-                    <div className="text-center">
-                      <div className="text-[12px] font-semibold">Upload</div>
-                      <div className="text-[10px]">Photo</div>
-                    </div>
-                  )}
-                </div>
-                <div className="text-[11px] text-[#8f7f80]">Recommended Size: 960 x 960 px, Max 5MB</div>
-                <input type="file" accept="image/*" className="hidden" onChange={handlePetPhotoChange} />
-              </label>
-              <div className="mt-1 flex items-center gap-2 text-[11px] text-[#8f7f80]">
-                <span className={`inline-flex h-2 w-2 rounded-full ${form.photo ? "bg-[#3caa88]" : "bg-[#d9b3b3]"}`} />
-                <span>{form.photo ? `Uploaded: ${form.photo}` : "No pet photo uploaded yet"}</span>
-              </div>
-              {errors.photo ? <p className="mt-2 text-[11px] text-[#c24a50]">{errors.photo}</p> : null}
             </div>
 
-            <div className="space-y-6">
-              <div className="rounded-[16px] bg-[#fff6f6] p-4">
-                <h2 className="mb-4 flex items-center gap-2 text-[14px] font-semibold text-[#b54a50]">
-                  <span aria-hidden>◌</span>
-                  Basic Information
-                </h2>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <FieldGroup error={errors.pet_name}>
-                    <FieldLabel>Pet Name *</FieldLabel>
-                    <input value={form.pet_name} onChange={(event) => setValue("pet_name", event.target.value)} onBlur={() => handleFieldBlur("pet_name")} className="h-10 w-full rounded-md border border-[#eedddd] bg-white px-3 text-[13px] text-[#403537] outline-none ring-0 placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. Luna" />
-                  </FieldGroup>
-
-                  <FieldGroup error={errors.species}>
-                    <FieldLabel>Species *</FieldLabel>
-                    <select value={form.species} onChange={(event) => setValue("species", event.target.value)} onBlur={() => handleFieldBlur("species")} className="h-10 w-full rounded-md border border-[#eedddd] bg-white px-3 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]">
-                      <option value="">Select species</option>
-                      <option value="Dog">Dog</option>
-                      <option value="Cat">Cat</option>
-                      <option value="Bird">Bird</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </FieldGroup>
-
-                  <FieldGroup error={errors.breed}>
-                    <FieldLabel>Breed *</FieldLabel>
-                    <input value={form.breed} onChange={(event) => setValue("breed", event.target.value)} onBlur={() => handleFieldBlur("breed")} className="h-10 w-full rounded-md border border-[#eedddd] bg-white px-3 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="e.g. Golden Retriever" />
-                  </FieldGroup>
-
-                  <FieldGroup error={errors.gender}>
-                    <FieldLabel>Gender *</FieldLabel>
-                    <div className="grid grid-cols-2 gap-2" onBlur={() => handleFieldBlur("gender")}>
-                      {[
-                        ["Male", "Male"],
-                        ["Female", "Female"],
-                      ].map(([label, value]) => (
-                        <label key={value} className={`flex h-10 cursor-pointer items-center justify-center rounded-md border px-3 text-[13px] ${form.gender === value ? "border-[#c96f73] bg-[#fff2f2] text-[#b54a50]" : "border-[#eedddd] bg-white text-[#5e5152]"}`}>
-                          <input type="radio" name="gender" className="sr-only" checked={form.gender === value} onChange={() => setValue("gender", value)} />
-                          {label}
-                        </label>
-                      ))}
-                    </div>
-                  </FieldGroup>
-
-                  <FieldGroup error={errors.age}>
-                    <FieldLabel>Age *</FieldLabel>
-                    <input value={form.age} onChange={(event) => setValue("age", event.target.value)} onBlur={() => handleFieldBlur("age")} inputMode="numeric" className="h-10 w-full rounded-md border border-[#eedddd] bg-white px-3 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="e.g. 3" />
-                  </FieldGroup>
-
-                  <FieldGroup error={errors.weight_kg}>
-                    <FieldLabel>Weight (kg) *</FieldLabel>
-                    <input value={form.weight_kg} onChange={(event) => setValue("weight_kg", event.target.value)} onBlur={() => handleFieldBlur("weight_kg")} inputMode="decimal" className="h-10 w-full rounded-md border border-[#eedddd] bg-white px-3 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="e.g. 15.4" />
-                  </FieldGroup>
-
-                </div>
-              </div>
-
-              <div className="rounded-[16px] bg-[#fff6f6] p-4">
-                <h2 className="mb-4 flex items-center gap-2 text-[14px] font-semibold text-[#b54a50]">
-                  <span aria-hidden>◌</span>
-                  Medical Information
-                </h2>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="sm:col-span-2">
-                    <FieldLabel>Sterilization Status *</FieldLabel>
-                    <div className="mt-3 grid gap-3 md:grid-cols-3">
-                      {[
-                        {
-                          value: "yes",
-                          label: "Yes — Neutered/Spayed",
-                          description: "The pet has been sterilized (neutered for male, spayed for female).",
-                        },
-                        {
-                          value: "no",
-                          label: "No — Not sterilized",
-                          description: "The pet has not been sterilized yet.",
-                        },
-                        {
-                          value: "unknown",
-                          label: "Unknown",
-                          description: "Sterilization status is not known.",
-                        },
-                      ].map((option) => {
-                        const isSelected = form.sterilized === option.value;
-
-                        return (
-                          <label
-                            key={option.value}
-                            className={`flex cursor-pointer flex-col rounded-xl border p-3 transition ${
-                              isSelected
-                                ? "border-[#d96a6d] bg-[#fff3f2] shadow-[0_0_0_1px_rgba(217,106,109,0.25)]"
-                                : "border-[#e9d7d7] bg-white hover:border-[#d9b4b4]"
-                            }`}
-                          >
-                            <span className="flex items-center gap-3">
-                              <span
-                                className={`flex size-5 items-center justify-center rounded-full border transition ${
-                                  isSelected ? "border-[#c84e52] bg-[#c84e52]" : "border-[#b9a5a5] bg-white"
-                                }`}
-                              >
-                                {isSelected ? <span className="size-2 rounded-full bg-white" /> : null}
-                              </span>
-                              <span className="text-[13px] font-semibold text-[#2f2a2b]">{option.label}</span>
-                            </span>
-                            <span className="mt-2 pl-8 text-[12px] leading-5 text-[#7d6d6d]">{option.description}</span>
-                            <input
-                              type="radio"
-                              name="sterilized"
-                              value={option.value}
-                              checked={isSelected}
-                              onChange={() => setValue("sterilized", option.value)}
-                              onBlur={() => handleFieldBlur("sterilized")}
-                              className="sr-only"
-                            />
-                          </label>
-                        );
-                      })}
-                    </div>
-                    {errors.sterilized ? <p className="mt-2 text-[11px] text-[#c24a50]">{errors.sterilized}</p> : null}
-                  </div>
-
-                  <FieldGroup error={errors.last_dental_check}>
-                    <FieldLabel>Last Dental / Vaccination</FieldLabel>
-                    <div className="relative">
-                      <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-[#b54a50]">
-                        <CalendarIcon />
+            <form
+              id="add-pet-form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                handleSave();
+              }}
+            >
+              <section className="mb-5 rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_3px_16px_rgba(117,55,59,0.04)] sm:p-5">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                  <label className="group relative flex size-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-[#e8c7c7] bg-[#fff8f7] text-[#a63842] transition hover:border-[#c96f73] sm:size-24">
+                    {photoPreview ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={photoPreview} alt="Pet photo preview" className="size-full object-cover" />
+                    ) : (
+                      <span className="flex flex-col items-center gap-1 text-center text-[11px] font-medium">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-5">
+                          <path d="M4 8.5h3l1.4-2h7.2l1.4 2h3v10H4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                          <circle cx="12" cy="13.5" r="3.2" stroke="currentColor" strokeWidth="1.6" />
+                        </svg>
+                        Upload Photo
                       </span>
-                      <input
-                        type="date"
-                        max={todayDateValue}
-                        value={form.last_dental_check}
-                        onChange={(event) => setValue("last_dental_check", event.target.value)}
-                        onBlur={() => handleFieldBlur("last_dental_check")}
-                        className="h-10 w-full rounded-md border border-[#eedddd] bg-white pl-9 pr-3 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]"
-                      />
-                    </div>
-                  </FieldGroup>
+                    )}
+                    <input type="file" accept="image/*" className="sr-only" onChange={handlePetPhotoChange} />
+                  </label>
 
-                  <FieldGroup error={errors.medications}>
-                    <FieldLabel>Medications</FieldLabel>
-                    <input value={form.medications} onChange={(event) => setValue("medications", event.target.value)} onBlur={() => handleFieldBlur("medications")} className="h-10 w-full rounded-md border border-[#eedddd] bg-white px-3 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="e.g. Daily allergy tablet" />
-                  </FieldGroup>
-
-                  <div className="sm:col-span-2">
-                    <FieldLabel>Upload Medical Record / Documents</FieldLabel>
-                    <label className="mt-2 flex min-h-24 cursor-pointer items-center justify-center rounded-md border border-dashed border-[#e8c7c7] bg-white px-4 py-5 text-center text-[13px] text-[#b54a50]">
-                      <span>Click here or drag and drop files</span>
-                      <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleMedicalReportChange} />
-                    </label>
-                    <div className="mt-3 rounded-md border border-[#f0dede] bg-white p-3 text-[11px] text-[#8f7f80]">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-medium text-[#5d5052]">{form.medical_report ? form.medical_report : "No medical report uploaded yet"}</span>
-                        <span className={`inline-flex h-2 w-2 rounded-full ${form.medical_report ? "bg-[#3caa88]" : "bg-[#d9b3b3]"}`} />
-                      </div>
-                      {medicalReportPreview ? (
-                        <div className="mx-auto mt-3 w-full max-w-[240px] overflow-hidden rounded-md border border-[#f0e3e3] bg-[#fff8f7]">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={medicalReportPreview} alt="Medical report preview" className="h-28 w-full object-cover sm:h-24" />
-                        </div>
-                      ) : null}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h2 className="text-base font-semibold text-[#30272a]">Pet Photo</h2>
+                      <span className="rounded-full bg-[#fff4f3] px-2 py-0.5 text-[11px] font-medium text-[#9a7476]">Optional</span>
                     </div>
-                    {errors.medical_report ? <p className="mt-1 text-[11px] text-[#c24a50]">{errors.medical_report}</p> : null}
+                    <p className="mt-1 text-xs leading-5 text-[#857a7d]">
+                      Recommended size: 960 × 960 px. JPEG, PNG, WEBP, GIF, or BMP; up to 5 MB.
+                    </p>
+                    <p className="mt-1 truncate text-xs text-[#8f7f80]">
+                      {form.photo ? <>Selected: {form.photo}</> : "No photo selected yet."}
+                    </p>
+                    {errors.photo ? <p className="mt-1 text-xs text-[#c24a50]">{errors.photo}</p> : null}
                   </div>
 
-                  <div className="sm:col-span-2 space-y-4">
-                    <FieldGroup error={errors.about}>
-                      <FieldLabel>About Pet *</FieldLabel>
-                      <textarea value={form.about} onChange={(event) => setValue("about", event.target.value)} onBlur={() => handleFieldBlur("about")} rows={4} className="mt-2 w-full rounded-md border border-[#eedddd] bg-white px-3 py-2 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="Tell us about your pet" />
-                    </FieldGroup>
-                    <FieldGroup error={errors.care_instructions}>
-                      <FieldLabel>Care Instructions</FieldLabel>
-                      <textarea value={form.care_instructions} onChange={(event) => setValue("care_instructions", event.target.value)} onBlur={() => handleFieldBlur("care_instructions")} rows={4} className="mt-2 w-full rounded-md border border-[#eedddd] bg-white px-3 py-2 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="Share any care instructions" />
-                    </FieldGroup>
-                  </div>
                 </div>
+              </section>
+
+              <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.85fr)_minmax(300px,1fr)]">
+                <div className="flex min-w-0 flex-col gap-3 lg:h-full">
+                  <section className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
+                    <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-[#a63842]">
+                      <span aria-hidden="true" className="text-sm">●</span>
+                      Basic Information
+                    </h2>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <FieldGroup error={errors.pet_name}>
+                        <FieldLabel>Pet Name *</FieldLabel>
+                        <input value={form.pet_name} onChange={(event) => setValue("pet_name", event.target.value)} onBlur={() => handleFieldBlur("pet_name")} className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. Luna" />
+                      </FieldGroup>
+
+                      <FieldGroup error={errors.species}>
+                        <FieldLabel>Species *</FieldLabel>
+                        <select value={form.species} onChange={(event) => setValue("species", event.target.value)} onBlur={() => handleFieldBlur("species")} className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none focus:border-[#c96f73]">
+                          <option value="">Select species</option>
+                          <option value="Dog">Dog</option>
+                          <option value="Cat">Cat</option>
+                          <option value="Bird">Bird</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </FieldGroup>
+
+                      <FieldGroup error={errors.breed}>
+                        <FieldLabel>Breed *</FieldLabel>
+                        <input value={form.breed} onChange={(event) => setValue("breed", event.target.value)} onBlur={() => handleFieldBlur("breed")} className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. Golden Retriever" />
+                      </FieldGroup>
+
+                      <FieldGroup error={errors.gender}>
+                        <FieldLabel>Gender *</FieldLabel>
+                        <div className="grid grid-cols-2 gap-2" onBlur={() => handleFieldBlur("gender")}>
+                          {[
+                            ["Male", "Male"],
+                            ["Female", "Female"],
+                          ].map(([label, value]) => (
+                            <label key={value} className={form.gender === value ? "flex h-10 cursor-pointer items-center justify-center rounded-lg border border-[#c96f73] bg-[#fff2f2] px-3 text-sm font-semibold text-[#a63842]" : "flex h-10 cursor-pointer items-center justify-center rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#5e5152]"}>
+                              <input type="radio" name="gender" className="sr-only" checked={form.gender === value} onChange={() => setValue("gender", value)} />
+                              {label}
+                            </label>
+                          ))}
+                        </div>
+                      </FieldGroup>
+
+                      <FieldGroup error={errors.age}>
+                        <FieldLabel>Age (Years) *</FieldLabel>
+                        <input value={form.age} onChange={(event) => setValue("age", event.target.value)} onBlur={() => handleFieldBlur("age")} inputMode="numeric" className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. 3" />
+                      </FieldGroup>
+
+                      <FieldGroup error={errors.weight_kg}>
+                        <FieldLabel>Weight (kg) *</FieldLabel>
+                        <input value={form.weight_kg} onChange={(event) => setValue("weight_kg", event.target.value)} onBlur={() => handleFieldBlur("weight_kg")} inputMode="decimal" className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. 15.4" />
+                      </FieldGroup>
+                    </div>
+                  </section>
+
+                  <section className="rounded-2xl border border-[#f0dada] bg-white p-3 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-4">
+                    <h2 className="mb-4 text-lg font-semibold text-[#a63842]">About Pet</h2>
+                    <FieldGroup error={errors.about}>
+                      <textarea aria-label="About Pet" value={form.about} onChange={(event) => setValue("about", event.target.value)} onBlur={() => handleFieldBlur("about")} rows={1} className="w-full rounded-lg border border-[#eedddd] bg-white px-3 py-2 text-sm leading-6 text-[#403537] outline-none focus:border-[#c96f73]" placeholder="Tell us about your pet’s personality, favorite activities, temperament, and daily habits..." />
+                      <div className="flex justify-end text-[11px] text-[#9f8e8f]">{form.about.length} / 2000</div>
+                    </FieldGroup>
+                  </section>
+
+                  <section className="rounded-2xl border border-[#f0dada] bg-white p-3 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-4">
+                    <h2 className="mb-1 flex items-center gap-2 text-lg font-semibold text-[#a63842]">
+                      <span aria-hidden="true">✚</span>
+                      Medications &amp; Health Notes
+                    </h2>
+                    <p className="mb-4 text-xs leading-5 text-[#857a7d]">Record medications, dosages, allergies, or ongoing conditions. Leave this blank if it does not apply.</p>
+                    <FieldGroup error={errors.medications}>
+                      <textarea aria-label="Medications and Health Notes" value={form.medications} onChange={(event) => setValue("medications", event.target.value)} onBlur={() => handleFieldBlur("medications")} rows={1} className="w-full rounded-lg border border-[#eedddd] bg-white px-3 py-2 text-sm leading-6 text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. No chronic medications. Occasional monthly flea and tick preventative..." />
+                      <div className="flex justify-end text-[11px] text-[#9f8e8f]">{form.medications.length} / 500</div>
+                    </FieldGroup>
+                  </section>
+
+                  <section className="flex flex-col rounded-2xl border border-[#f0dada] bg-white p-3 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-4 lg:flex-1">
+                    <h2 className="mb-4 text-lg font-semibold text-[#a63842]">Care Instructions</h2>
+                    <FieldGroup error={errors.care_instructions}>
+                      <textarea aria-label="Care Instructions" value={form.care_instructions} onChange={(event) => setValue("care_instructions", event.target.value)} onBlur={() => handleFieldBlur("care_instructions")} rows={1} className="w-full rounded-lg border border-[#eedddd] bg-white px-3 py-2 text-sm leading-6 text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="Special care instructions, feeding schedules, preferred treats, walking routines, triggers to avoid..." />
+                      <div className="flex justify-end text-[11px] text-[#9f8e8f]">{form.care_instructions.length} / 1000</div>
+                    </FieldGroup>
+                  </section>
+                </div>
+
+                <aside className="flex min-w-0 flex-col gap-4 lg:h-full">
+                  <section className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
+                    <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-[#a63842]">
+                      <span aria-hidden="true" className="text-sm">●</span>
+                      Medical Information
+                    </h2>
+                    <div className="space-y-4">
+                      <FieldGroup error={errors.sterilized}>
+                        <FieldLabel>Sterilization Status *</FieldLabel>
+                        <div className="mt-2 grid gap-2">
+                          {[
+                            { value: "yes", label: "Yes — Neutered/Spayed", description: "The pet has been sterilized." },
+                            { value: "no", label: "No — Not sterilized", description: "The pet has not been sterilized yet." },
+                            { value: "unknown", label: "Unknown", description: "Sterilization status is not known." },
+                          ].map((option) => {
+                            const isSelected = form.sterilized === option.value;
+                            return (
+                              <label key={option.value} className={isSelected ? "flex cursor-pointer items-start gap-3 rounded-xl border border-[#d96a6d] bg-[#fff3f2] p-3 shadow-[0_0_0_1px_rgba(217,106,109,0.18)]" : "flex cursor-pointer items-start gap-3 rounded-xl border border-[#e9d7d7] bg-white p-3 transition hover:border-[#d9b4b4]"}>
+                                <span className={isSelected ? "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border border-[#c84e52] bg-[#c84e52]" : "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border border-[#b9a5a5] bg-white"}>
+                                  {isSelected ? <span className="size-2 rounded-full bg-white" /> : null}
+                                </span>
+                                <span>
+                                  <span className="block text-sm font-medium text-[#30272a]">{option.label}</span>
+                                  <span className="mt-0.5 block text-xs leading-5 text-[#857a7d]">{option.description}</span>
+                                </span>
+                                <input type="radio" name="sterilized" value={option.value} checked={isSelected} onChange={() => setValue("sterilized", option.value)} onBlur={() => handleFieldBlur("sterilized")} className="sr-only" />
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </FieldGroup>
+
+                      <FieldGroup error={errors.last_dental_check}>
+                        <FieldLabel>Last Dental / Vaccination</FieldLabel>
+                        <div className="relative">
+                          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-[#a63842]">
+                            <CalendarIcon />
+                          </span>
+                          <input type="date" max={todayDateValue} value={form.last_dental_check} onChange={(event) => setValue("last_dental_check", event.target.value)} onBlur={() => handleFieldBlur("last_dental_check")} className="h-10 w-full rounded-lg border border-[#eedddd] bg-white pl-9 pr-3 text-sm text-[#403537] outline-none focus:border-[#c96f73]" />
+                        </div>
+                      </FieldGroup>
+                      <div className="flex items-start gap-3 rounded-xl border border-[#f0e5e6] bg-[#fffafa] p-3 text-xs leading-5 text-[#857a7d]">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-[#a63842]">
+                          <path d="M12 3 5.5 5.5v5.3c0 4.3 2.8 8.2 6.5 10.2 3.7-2 6.5-5.9 6.5-10.2V5.5L12 3Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                        </svg>
+                        <p>Medical details help vetted sitters provide safe, personalized care and administer correct medication on schedule.</p>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section className="flex flex-col rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5 lg:flex-1">
+                    <h2 className="mb-1 flex items-center gap-2 text-lg font-semibold text-[#a63842]">
+                      <span aria-hidden="true">✚</span>
+                      Vaccination &amp; Medical Records <span className="ml-auto text-[11px] font-normal text-[#9f8e8f]">Optional</span>
+                    </h2>
+                    <p className="mb-4 text-xs leading-5 text-[#857a7d]">Upload a medical document if you have one. Uploading a file does not verify vaccination status.</p>
+                    <FieldGroup error={errors.medical_report}>
+                      <label className="flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-[#e8c7c7] bg-[#fffafa] px-4 py-5 text-center text-[#a63842] transition hover:border-[#c96f73] hover:bg-[#fff7f7]">
+                        <span className="mb-2 flex size-10 items-center justify-center rounded-full bg-[#fff0ef]">
+                          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-5">
+                            <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 15v4h14v-4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        <span className="text-sm font-semibold">Click to upload a medical record</span>
+                        <span className="mt-1 text-xs text-[#857a7d]">JPEG, PNG, WEBP, GIF, BMP, or PDF up to 10 MB</span>
+                        <input type="file" accept="image/*,.pdf" className="sr-only" onChange={handleMedicalReportChange} />
+                      </label>
+                      {medicalReportFile ? (
+                        <div className="mt-3 flex items-center gap-3 rounded-lg border border-[#f0dede] bg-white p-3">
+                          {medicalReportFile.type.startsWith("image/") && medicalReportPreview ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={medicalReportPreview} alt="Selected medical document preview" className="size-16 shrink-0 rounded-md border border-[#f0dede] object-contain" />
+                          ) : (
+                            <span className="flex size-16 shrink-0 items-center justify-center rounded-md bg-[#fff1f1] text-xs font-semibold text-[#a63842]">PDF</span>
+                          )}
+                          <span className="min-w-0 flex-1 truncate text-xs text-[#5d5052]">{medicalReportFile.name}</span>
+                          <span className="size-2 shrink-0 rounded-full bg-[#3caa88]" aria-label="File selected" />
+                        </div>
+                      ) : (
+                        <p className="mt-3 text-xs text-[#8f7f80]">{form.medical_report ? form.medical_report : "No file selected yet."}</p>
+                      )}
+                    </FieldGroup>
+                  </section>
+                </aside>
               </div>
 
-              <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
-                <Link href="/owner/pets" className="inline-flex h-10 items-center justify-center rounded-md border border-[#eedddd] bg-white px-5 text-[13px] font-medium text-[#7a6768] transition hover:bg-[#fff8f8]">
+              <div className="mt-5 flex flex-col-reverse gap-3 border-t border-[#f3e5e5] pt-4 sm:flex-row sm:justify-end">
+                <Link href="/owner/pets" className="inline-flex h-10 items-center justify-center rounded-lg border border-[#f0dada] bg-white px-5 text-sm font-medium text-[#705f61] transition hover:bg-[#fff7f7]">
                   Cancel
                 </Link>
-                <button type="submit" disabled={isSaving} className="inline-flex h-10 items-center justify-center rounded-md bg-[#b54a50] px-5 text-[13px] font-medium text-white transition hover:bg-[#a94046]">
+                <button type="submit" disabled={isSaving} className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#a63842] px-5 text-sm font-semibold text-white transition hover:bg-[#922f38] disabled:cursor-not-allowed disabled:opacity-60">
                   {isSaving ? "Saving..." : "Add My Pet"}
                 </button>
               </div>
-              {submitError ? <p className="pt-1 text-right text-[11px] font-medium text-[#c24a50]">{submitError}</p> : null}
-              {saveMessage ? <p className="pt-1 text-right text-[11px] font-medium text-[#3caa88]">{saveMessage}</p> : null}
-            </div>
+              {submitError ? <p className="pt-1 text-right text-sm font-medium text-[#c24a50]">{submitError}</p> : null}
+              {saveMessage ? <p className="pt-1 text-right text-sm font-medium text-[#3caa88]">{saveMessage}</p> : null}
             </form>
-          </section>
+          </div>
         </main>
       </div>
     </div>

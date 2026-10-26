@@ -37,10 +37,27 @@ export default function Messages() {
     finally { setLoading(false); }
   }
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/sitter/messages", { cache: "no-store" })
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Unable to load messages.");
+        return data;
+      })
+      .then((data) => {
+        if (!cancelled) {
+          setConversations(data.conversations || []);
+          setActive((current) => current || data.conversations?.[0] || null);
+          setContacts(data.contacts || []);
+        }
+      })
+      .catch((err) => { if (!cancelled) setError(err.message); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
   useEffect(() => {
     if (!active) return;
-    setError("");
     fetch(`/api/sitter/messages/${active.userId}`, { cache: "no-store" })
       .then(async (response) => {
         const data = await response.json();
@@ -53,7 +70,7 @@ export default function Messages() {
   const visible = useMemo(() => conversations.filter((conversation) => conversation.name.toLowerCase().includes(search.toLowerCase())), [conversations, search]);
   const newRecipients = useMemo(() => contacts.filter((contact) => contact.name.toLowerCase().includes(search.toLowerCase())), [contacts, search]);
 
-  function chooseConversation(conversation) { setActive(conversation); setNewMessageOpen(false); setSearch(""); }
+  function chooseConversation(conversation) { setError(""); setActive(conversation); setNewMessageOpen(false); setSearch(""); }
   async function send(event) {
     event.preventDefault();
     if (!text.trim() || !active || sending) return;
