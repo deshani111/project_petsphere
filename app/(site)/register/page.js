@@ -156,6 +156,7 @@ export default function RegisterPage() {
               <span className={styles.roleIcon} aria-hidden="true">♡</span>
               <span className={styles.roleCopy}>
                 <strong>Pet owner</strong>
+                <small>Find loving, reliable care</small>
               </span>
               <span className={styles.roleCheck} aria-hidden="true">✓</span>
             </button>
@@ -168,6 +169,7 @@ export default function RegisterPage() {
               <span className={styles.roleIcon} aria-hidden="true">⌂</span>
               <span className={styles.roleCopy}>
                 <strong>Pet sitter</strong>
+                <small>Offer care to local owners</small>
               </span>
               <span className={styles.roleCheck} aria-hidden="true">✓</span>
             </button>

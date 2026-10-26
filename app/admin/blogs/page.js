@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./page.module.css";
 
 function initials(name) {
@@ -34,10 +34,7 @@ export default function AdminBlogsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const loadBlogs = async () => {
-    setLoading(true);
-    setError("");
-
+  const loadBlogs = useCallback(async () => {
     try {
       const response = await fetch("/api/admin/blogs", {
         cache: "no-store",
@@ -55,32 +52,12 @@ export default function AdminBlogsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    let cancelled = false;
-
-    fetch("/api/admin/blogs", { cache: "no-store" })
-      .then(async (response) => {
-        const payload = await response.json();
-        if (!response.ok) throw new Error(payload.message || "Blog data could not be loaded.");
-        return payload;
-      })
-      .then((payload) => {
-        if (!cancelled) setBlogs(Array.isArray(payload.blogs) ? payload.blogs : []);
-      })
-      .catch((loadError) => {
-        if (!cancelled) {
-          setError(loadError.message || "Blog data could not be loaded.");
-          setBlogs([]);
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => { cancelled = true; };
-  }, []);
+    const timeout = window.setTimeout(() => void loadBlogs(), 0);
+    return () => window.clearTimeout(timeout);
+  }, [loadBlogs]);
 
   const filteredArticles = useMemo(() => {
     const search = query.trim().toLowerCase();
@@ -137,7 +114,7 @@ export default function AdminBlogsPage() {
       <article className={styles.tableCard}>
         <div className={styles.tableWrap}>
           {loading && <div className={styles.emptyState}><strong>Loading blog posts...</strong></div>}
-          {error && !loading && <div className={styles.emptyState}><strong>{error}</strong><span>Try again after checking the admin blog API.</span><button type="button" onClick={loadBlogs}>Retry</button></div>}
+          {error && !loading && <div className={styles.emptyState}><strong>{error}</strong><span>Try again after checking the admin blog API.</span><button type="button" onClick={() => { setLoading(true); setError(""); void loadBlogs(); }}>Retry</button></div>}
           {!loading && !error && (
           <table>
             <thead>

@@ -15,7 +15,7 @@
   color: #9d3e40;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: .14em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -63,13 +63,13 @@
   font-size: 12px;
   font-weight: 800;
   text-decoration: none;
-  transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .postAd {
   background: #9d3e40;
   color: #fff;
-  box-shadow: 0 5px 12px rgba(161, 61, 63, .16);
+  box-shadow: 0 5px 12px rgba(161, 61, 63, 0.16);
 }
 
 .postAd:hover {
@@ -106,8 +106,8 @@
   padding: 22px;
   border: 1px solid #eadfda;
   border-radius: 18px;
-  background: rgba(255, 255, 255, .88);
-  box-shadow: 0 10px 30px rgba(76, 49, 43, .055);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 10px 30px rgba(76, 49, 43, 0.055);
 }
 
 .filterTop {
@@ -164,7 +164,7 @@
 .filterFields input:focus,
 .filterFields select:focus {
   border-color: #b85b5d;
-  box-shadow: 0 0 0 3px rgba(157, 62, 64, .1);
+  box-shadow: 0 0 0 3px rgba(157, 62, 64, 0.1);
 }
 
 .priceFields {
@@ -192,6 +192,7 @@
   font-size: 16px;
 }
 
+/* Listings grid */
 .listingGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -203,13 +204,13 @@
   border: 1px solid #eadfda;
   border-radius: 18px;
   background: #fff;
-  box-shadow: 0 7px 20px rgba(65, 43, 40, .055);
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  box-shadow: 0 7px 20px rgba(65, 43, 40, 0.055);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .petCard:hover {
   border-color: #d8b5b3;
-  box-shadow: 0 15px 30px rgba(65, 43, 40, .11);
+  box-shadow: 0 15px 30px rgba(65, 43, 40, 0.11);
   transform: translateY(-3px);
 }
 
@@ -221,12 +222,48 @@
 }
 
 .petImage img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: transform .35s ease;
+  transition: transform 0.35s ease;
 }
 
 .petCard:hover .petImage img {
   transform: scale(1.03);
+}
+
+.petImage button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #9d3e40;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #087c5b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.popular {
+  background: #f8dadd;
+  color: #813134;
 }
 
 .petDetails {
@@ -240,27 +277,16 @@
   gap: 12px;
 }
 
+.nameRow h2,
 .nameRow h3 {
   margin: 0;
   overflow: hidden;
   color: #302526;
   font-size: 20px;
   font-weight: 700;
-  letter-spacing: -.3px;
+  letter-spacing: -0.3px;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.description {
-  display: -webkit-box;
-  min-height: 36px;
-  margin: 11px 0 0;
-  overflow: hidden;
-  color: #75696a;
-  font-size: 12px;
-  line-height: 1.5;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 .nameRow > strong {
@@ -271,6 +297,23 @@
   color: #9d3e40;
   font-size: 14px;
   white-space: nowrap;
+}
+
+.petDetails > p,
+.description {
+  margin: 11px 0 0;
+  color: #75696a;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.description {
+  display: -webkit-box;
+  min-height: 36px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .location {
@@ -286,6 +329,23 @@
 .location svg {
   flex: 0 0 auto;
   color: #a85557;
+}
+
+.tags {
+  display: flex;
+  min-height: 25px;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0;
+}
+
+.tags span {
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #faf3f0;
+  color: #806e6f;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .cardFooter {
@@ -322,21 +382,48 @@
   color: #762c2f;
 }
 
-.tags {
-  display: flex;
-  min-height: 25px;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 14px 0;
+.petDetails > a {
+  display: grid;
+  min-height: 42px;
+  place-items: center;
+  border: 1px solid #b64b4e;
+  border-radius: 10px;
+  color: #b64b4e;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
 }
 
-.tags span {
-  padding: 5px 8px;
-  border-radius: 5px;
-  background: #faf3f0;
-  color: #806e6f;
-  font-size: 10px;
+.petDetails > a:hover {
+  background: #fff3ef;
+}
+
+.petSummary {
+  margin: 10px 0 0;
+  color: #6f5b5d;
+  font-size: 12px;
   font-weight: 700;
+}
+
+.activeLink {
+  color: #a13d3f !important;
+  font-weight: 700 !important;
+}
+
+.socials {
+  display: flex;
+  gap: 12px;
+}
+
+.socials span {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: #6e5f60;
+  font-size: 14px;
 }
 
 .postAd:focus-visible,
@@ -345,9 +432,10 @@
 .sortButton:focus-visible,
 .petImage button:focus-visible,
 .cardFooter > a:focus-visible,
+.petDetails > a:focus-visible,
 .filterFields input:focus-visible,
 .filterFields select:focus-visible {
-  outline: 3px solid rgba(161, 61, 63, .25);
+  outline: 3px solid rgba(161, 61, 63, 0.25);
   outline-offset: 2px;
 }
 
@@ -395,4 +483,12 @@
     height: 230px;
   }
 }
-.petSummary{margin:10px 0 0;color:#6f5b5d;font-size:12px;font-weight:700}
+
+@media (prefers-reduced-motion: reduce) {
+  .petCard,
+  .petImage img,
+  .postAd,
+  .myAds {
+    transition: none;
+  }
+}

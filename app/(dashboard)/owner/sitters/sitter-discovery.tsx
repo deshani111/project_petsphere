@@ -60,8 +60,6 @@ export default function SitterDiscovery() {
   const loadSitters = useCallback(async () => {
     if (requestInProgress.current) return;
     requestInProgress.current = true;
-    setIsLoading(true);
-    setLoadError("");
     try {
       const response = await fetch("/api/owner/sitters", { headers: { Accept: "application/json" } });
       if (!response.ok) throw new Error("SITTERS_REQUEST_FAILED");
@@ -80,8 +78,11 @@ export default function SitterDiscovery() {
 
   useEffect(() => {
     isMounted.current = true;
-    void loadSitters();
-    return () => { isMounted.current = false; };
+    const timeout = window.setTimeout(() => void loadSitters(), 0);
+    return () => {
+      window.clearTimeout(timeout);
+      isMounted.current = false;
+    };
   }, [loadSitters]);
 
   const views: Array<{ id: ViewMode; label: string }> = [
@@ -108,12 +109,9 @@ export default function SitterDiscovery() {
   }, [sitters, searchTerm, availableOnly, minRating, sortBy]);
 
   const hasApprovedMapLocations = sitters.some((sitter) => sitter.publicMapLocation?.approvalStatus === "approved");
-
-  useEffect(() => {
-    if (selectedSitterId && !filteredSitters.some((sitter) => sitter.id === selectedSitterId)) {
-      setSelectedSitterId(null);
-    }
-  }, [filteredSitters, selectedSitterId]);
+  const activeSelectedSitterId = filteredSitters.some((sitter) => sitter.id === selectedSitterId)
+    ? selectedSitterId
+    : null;
 
   const hasActiveFilters = Boolean(searchDraft.trim() || searchTerm || availableOnly || minRating > 0 || sortBy !== "recommended");
   const mapNotice = isLoading
@@ -176,14 +174,14 @@ export default function SitterDiscovery() {
       {view !== "map" && <div className={`flex min-h-[320px] min-w-0 flex-col overflow-hidden rounded-xl border border-[#EEDFE1] bg-white shadow-[0_2px_12px_rgba(37,38,48,.035)] ${view === "both" ? "h-[min(56vh,520px)] xl:h-auto" : "h-[min(72vh,760px)] min-h-[430px]"}`}>
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain p-3 sm:p-4">
           {isLoading && <div className="space-y-3" role="status" aria-label="Loading sitter profiles" aria-live="polite"><span className="sr-only">Loading sitter profiles...</span>{Array.from({ length: 3 }, (_, index) => <SitterCardSkeleton key={index} />)}</div>}
-          {!isLoading && loadError && <div className="flex min-h-64 flex-col items-center justify-center px-5 text-center" role="alert"><span className="mb-3 grid size-11 place-items-center rounded-full bg-[#FFF1F2] text-[#A63842]"><PawPrint size={20}/></span><h3 className="text-sm font-semibold">Unable to load sitter profiles</h3><p className="mt-1.5 max-w-sm text-xs leading-5 text-[#6f6e78]">{loadError}</p><button type="button" onClick={() => void loadSitters()} disabled={isLoading} className="mt-4 rounded-md bg-[#A63842] px-3 py-2 text-[10px] font-semibold text-white hover:bg-[#8E303A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A63842] disabled:cursor-wait disabled:opacity-60">Retry</button></div>}
+          {!isLoading && loadError && <div className="flex min-h-64 flex-col items-center justify-center px-5 text-center" role="alert"><span className="mb-3 grid size-11 place-items-center rounded-full bg-[#FFF1F2] text-[#A63842]"><PawPrint size={20}/></span><h3 className="text-sm font-semibold">Unable to load sitter profiles</h3><p className="mt-1.5 max-w-sm text-xs leading-5 text-[#6f6e78]">{loadError}</p><button type="button" onClick={() => { setIsLoading(true); setLoadError(""); void loadSitters(); }} disabled={isLoading} className="mt-4 rounded-md bg-[#A63842] px-3 py-2 text-[10px] font-semibold text-white hover:bg-[#8E303A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A63842] disabled:cursor-wait disabled:opacity-60">Retry</button></div>}
           {!isLoading && !loadError && sitters.length === 0 && <div className="flex min-h-64 flex-col items-center justify-center px-5 text-center" role="status" aria-live="polite"><span className="mb-3 grid size-11 place-items-center rounded-full bg-[#FFF1F2] text-[#A63842]"><PawPrint size={20}/></span><h3 className="text-sm font-semibold">No sitters are available yet</h3><p className="mt-1.5 max-w-sm text-xs leading-5 text-[#6f6e78]">Please check back later for available pet sitters.</p></div>}
           {!isLoading && !loadError && sitters.length > 0 && filteredSitters.length === 0 && <div className="flex min-h-64 flex-col items-center justify-center px-5 text-center" role="status" aria-live="polite"><span className="mb-3 grid size-11 place-items-center rounded-full bg-[#FFF1F2] text-[#A63842]"><PawPrint size={20}/></span><h3 className="text-sm font-semibold">No sitters match your search or filters</h3><p className="mt-1.5 max-w-sm text-xs leading-5 text-[#6f6e78]">Try changing your search, or clear your filters to see all available sitters.</p><button type="button" onClick={clearFilters} className="mt-4 rounded-md bg-[#A63842] px-3 py-2 text-[10px] font-semibold text-white hover:bg-[#8E303A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A63842]">Clear Filters</button></div>}
           {!isLoading && !loadError && filteredSitters.map((sitter) => (
             <SitterCard
               key={sitter.id}
               sitter={sitter}
-              isSelected={selectedSitterId === sitter.id}
+              isSelected={activeSelectedSitterId === sitter.id}
               onSelect={() => setSelectedSitterId((current) => current === sitter.id ? null : sitter.id)}
             />
           ))}

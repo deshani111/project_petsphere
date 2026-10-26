@@ -534,6 +534,16 @@ setIsSaving(false);
                     {errors.photo ? <p className="mt-1 text-xs text-[#c24a50]">{errors.photo}</p> : null}
                   </div>
 
+                  <div className="sm:col-span-2 space-y-4">
+                    <FieldGroup error={errors.about}>
+                      <FieldLabel>About Pet *</FieldLabel>
+                      <textarea value={form.about} onChange={(event) => setValue("about", event.target.value)} onBlur={() => handleFieldBlur("about")} rows={4} className="mt-2 w-full rounded-md border border-[#eedddd] bg-white px-3 py-2 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="Tell us about your pet" />
+                    </FieldGroup>
+                    <FieldGroup error={errors.care_instructions}>
+                      <FieldLabel>Care Instructions</FieldLabel>
+                      <textarea value={form.care_instructions} onChange={(event) => setValue("care_instructions", event.target.value)} onBlur={() => handleFieldBlur("care_instructions")} rows={4} className="mt-2 w-full rounded-md border border-[#eedddd] bg-white px-3 py-2 text-[13px] text-[#403537] outline-none focus:border-[#c96f73]" placeholder="Share any care instructions" />
+                    </FieldGroup>
+                  </div>
                 </div>
               </section>
 

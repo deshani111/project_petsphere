@@ -29,7 +29,6 @@ export default function PetsGrid({
 
   const handleEdit = (petId: string) => {
     const pet = pets.find((item) => item.id === petId);
-
     if (pet) {
       router.push(`/owner/pets/${pet.id}/edit`);
     }
@@ -120,7 +119,6 @@ export default function PetsGrid({
               </span>
               ?
             </p>
-
             {deleteError ? (
               <p className="mt-2 text-[11px] text-[#c24a50]">
                 {deleteError}

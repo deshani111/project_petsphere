@@ -211,6 +211,22 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
     };
   }, [medicalReportPreview]);
 
+  useEffect(() => {
+    return () => {
+      if (photoPreview.startsWith("blob:")) {
+        URL.revokeObjectURL(photoPreview);
+      }
+    };
+  }, [photoPreview]);
+
+  useEffect(() => {
+    return () => {
+      if (medicalReportPreview.startsWith("blob:")) {
+        URL.revokeObjectURL(medicalReportPreview);
+      }
+    };
+  }, [medicalReportPreview]);
+
   const validationMessages = useMemo(
     () => ({
       pet_name: "Pet name is required.",

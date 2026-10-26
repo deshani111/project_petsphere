@@ -1,6 +1,10 @@
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAdminBlogPostById, parseAdminBlogId } from "../../../../modules/admin/blog.service";
+import {
+  getAdminBlogPostById,
+  parseAdminBlogId,
+} from "../../../../modules/admin/blog.service";
 import styles from "./page.module.css";
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -17,14 +21,26 @@ function Icon({ name }) {
     strokeWidth: 1.6,
     strokeLinecap: "round",
     strokeLinejoin: "round",
-    "aria-hidden": "true",
+    "aria-hidden": true,
   };
 
   switch (name) {
     case "back":
-      return <svg {...common}><path d="M8.8 2.2 4 7l4.8 4.8" /><path d="M4.5 7h7.3" /></svg>;
+      return (
+        <svg {...common}>
+          <path d="M8.8 2.2 4 7l4.8 4.8" />
+          <path d="M4.5 7h7.3" />
+        </svg>
+      );
+
     case "edit":
-      return <svg {...common}><path d="M2.3 11.7h2.8L11.9 4.9 9.1 2.1 2.3 8.9v2.8Z" /><path d="m8.3 3 2.8 2.8" /></svg>;
+      return (
+        <svg {...common}>
+          <path d="M2.3 11.7h2.8L11.9 4.9 9.1 2.1 2.3 8.9v2.8Z" />
+          <path d="m8.3 3 2.8 2.8" />
+        </svg>
+      );
+
     default:
       return null;
   }
@@ -47,37 +63,62 @@ function splitContent(content) {
     .filter(Boolean);
 
   if (!blocks.length) {
-    return [{ heading: "Article Overview", body: "No article body has been added yet." }];
+    return [
+      {
+        heading: "Article Overview",
+        body: "No article body has been added yet.",
+      },
+    ];
   }
 
   return blocks.flatMap((block, index) => {
-    const lines = block.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-    const headingMatch = lines[0]?.match(/^(\d+)\.\s*(.+)$/);
+    const lines = block
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    const headingMatch = lines[0]?.match(/^\d+\.\s*(.+)$/);
 
     if (headingMatch) {
-      return [{
-        heading: headingMatch[2],
-        body: lines.slice(1).join(" ") || "This section has not been expanded yet.",
-      }];
+      return [
+        {
+          heading: headingMatch[1],
+          body:
+            lines.slice(1).join(" ") ||
+            "This section has not been expanded yet.",
+        },
+      ];
     }
 
     if (index === 0 && blocks.length > 1) {
       return [{ heading: null, body: block }];
     }
 
-    return [{
-      heading: index === 0 ? "Article Overview" : null,
-      body: block,
-    }];
+    return [
+      {
+        heading: index === 0 ? "Article Overview" : null,
+        body: block,
+      },
+    ];
   });
 }
 
 function formatLongDate(value) {
+  if (!value) {
+    return "—";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "2-digit",
     year: "numeric",
-  }).format(new Date(value));
+  }).format(date);
 }
 
 export default async function AdminBlogDetailPage({ params }) {
@@ -97,28 +138,46 @@ export default async function AdminBlogDetailPage({ params }) {
   const sections = splitContent(blog.content);
   const authorName = blog.author || "Unknown Author";
   const authorRole = blog.primaryTag || blog.category || "Blog Author";
+  const status = String(blog.status || "draft").toLowerCase();
 
   return (
     <section className={styles.page}>
       <div className={styles.topLine}>
         <div className={styles.metaRow}>
-          <span className={`${styles.status} ${styles[blog.status] || ""}`}>{blog.status}</span>
-          <span>{blog.date}</span>
+          <span
+            className={`${styles.status} ${styles[status] || ""}`}
+          >
+            {status}
+          </span>
+          <span>{blog.date || "—"}</span>
         </div>
-        <Link href={`/admin/blogs/new?blogId=${blog.id}`} className={styles.editButton}>
+
+        <Link
+          href={`/admin/blogs/new?blogId=${blog.id}`}
+          className={styles.editButton}
+        >
           <Icon name="edit" />
           Edit Article
         </Link>
       </div>
 
       <header className={styles.header}>
-        <Link href="/admin/blogs" className={styles.backButton} aria-label="Back to blog management">
+        <Link
+          href="/admin/blogs"
+          className={styles.backButton}
+          aria-label="Back to blog management"
+        >
           <Icon name="back" />
         </Link>
+
         <div>
           <h1>{blog.title}</h1>
+
           <div className={styles.authorRow}>
-            <span className={styles.authorAvatar}>{initials(authorName)}</span>
+            <span className={styles.authorAvatar}>
+              {initials(authorName)}
+            </span>
+
             <div>
               <strong>{authorName}</strong>
               <small>{authorRole}</small>
@@ -128,13 +187,25 @@ export default async function AdminBlogDetailPage({ params }) {
       </header>
 
       <article className={styles.heroCard}>
-        <img src={blog.image} alt={blog.title} />
+        {blog.image ? (
+          <img src={blog.image} alt={blog.title || "Blog article"} />
+        ) : (
+          <div role="img" aria-label="No article image available">
+            No article image available
+          </div>
+        )}
       </article>
 
       <article className={styles.contentCard}>
-        {blog.excerpt && <p className={styles.lead}>{blog.excerpt}</p>}
+        {blog.excerpt && (
+          <p className={styles.lead}>{blog.excerpt}</p>
+        )}
+
         {sections.map((section, index) => (
-          <section key={`${blog.id}-${index}`} className={styles.sectionBlock}>
+          <section
+            key={`${blog.id}-${index}`}
+            className={styles.sectionBlock}
+          >
             {section.heading && <h2>{section.heading}</h2>}
             <p>{section.body}</p>
           </section>
@@ -146,13 +217,15 @@ export default async function AdminBlogDetailPage({ params }) {
           <strong>Published on</strong>
           <span>{formatLongDate(blog.createdAt)}</span>
         </div>
+
         <div>
           <strong>Category</strong>
-          <span>{blog.category}</span>
+          <span>{blog.category || "General"}</span>
         </div>
+
         <div>
           <strong>Read time</strong>
-          <span>{blog.readTimeLabel}</span>
+          <span>{blog.readTimeLabel || "Not specified"}</span>
         </div>
       </footer>
     </section>

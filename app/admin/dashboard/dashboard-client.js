@@ -88,7 +88,6 @@ export default function AdminDashboardClient({ previewData = null }) {
   useEffect(() => {
     if (previewData) return;
     let cancelled = false;
-    setIsLoading(true);
     (async () => {
       try {
         const response = await fetch("/api/admin/dashboard");
@@ -121,8 +120,8 @@ export default function AdminDashboardClient({ previewData = null }) {
     return () => { cancelled = true; };
   }, [previewData, refresh, router]);
 
-  const retry = () => { setError(""); setDashboard(null); setRefresh((value) => value + 1); };
-  const refreshDashboard = () => { setError(""); setRefresh((value) => value + 1); };
+  const retry = () => { setError(""); setDashboard(null); setIsLoading(true); setRefresh((value) => value + 1); };
+  const refreshDashboard = () => { setError(""); setIsLoading(true); setRefresh((value) => value + 1); };
 
   if (error) return <section className={styles.dashboard}><div className={styles.statePanel} role="alert"><h1>Dashboard unavailable</h1><p>{error}</p><button type="button" onClick={retry}>Try again</button></div></section>;
   if (!dashboard) return <section className={styles.dashboard} aria-busy="true"><div className={styles.loadingState}><span className={styles.loadingMark} />Loading platform data</div></section>;

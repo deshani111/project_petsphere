@@ -2,10 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import ReviewGallery from "../../components/shared/review-gallery";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-
 const ShieldIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <path
@@ -105,8 +101,6 @@ export default function Home() {
             height={1260}
             sizes="100vw"
             quality={85}
-            loading="eager"
-            fetchPriority="high"
             priority
           />
         </div>
@@ -114,7 +108,9 @@ export default function Home() {
         <div className="hero-overlay" aria-hidden="true" />
 
         <div className="hero-content">
-          <p className="hero-pill">Premium pet care, wherever life takes you</p>
+          <p className="hero-pill">
+            Premium pet care, wherever life takes you
+          </p>
 
           <h1>
             The right care for <span>every pet.</span>
@@ -223,10 +219,12 @@ export default function Home() {
                   sizes="(max-width: 700px) 100vw, 50vw"
                 />
               </div>
+
               <div className="service-body">
                 <span className="service-index-num">
                   {String(i + 1).padStart(2, "0")}
                 </span>
+
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
                 <Link href="#services">Explore</Link>
@@ -252,7 +250,13 @@ export default function Home() {
               <blockquote>{review.quote}</blockquote>
 
               <div className="review-author">
-                <Image src={review.avatar} alt={review.name} width={80} height={80} sizes="80px" />
+                <Image
+                  src={review.avatar}
+                  alt={review.name}
+                  width={80}
+                  height={80}
+                  sizes="80px"
+                />
 
                 <div>
                   <strong>{review.name}</strong>

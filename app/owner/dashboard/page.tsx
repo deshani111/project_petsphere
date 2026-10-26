@@ -34,6 +34,7 @@ export default async function OwnerDashboardPage() {
       select: {
         booking: {
           orderBy: { booking_date: "desc" },
+          take: 5,
           select: {
             booking_id: true,
             status: true,
@@ -109,7 +110,6 @@ export default async function OwnerDashboardPage() {
       ? `Rs. ${booking.total_amount.toString()}`
       : "Pending",
   }));
-
   return (
     <div className="flex min-h-screen flex-col bg-[#f6f7f9] lg:flex-row">
       <OwnerSidebar />

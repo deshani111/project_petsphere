@@ -3,7 +3,10 @@ import "./globals.css";
 import { Inter, Playfair_Display } from "next/font/google";
 import { cookies } from "next/headers";
 import LayoutShell from "../components/shared/layout-shell";
-import { SESSION_COOKIE_NAME, getCachedSessionAccount } from "../modules/auth/auth.service";
+import {
+  SESSION_COOKIE_NAME,
+  getCachedSessionAccount,
+} from "../modules/auth/auth.service";
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -26,7 +29,8 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata = {
   title: "PetSphere | Trusted Pet Care",
-  description: "Find a trusted pet sitter who treats your pet like family.",
+  description:
+    "Find a trusted pet sitter who treats your pet like family.",
   icons: {
     icon: "/petsphere-mark.svg",
   },

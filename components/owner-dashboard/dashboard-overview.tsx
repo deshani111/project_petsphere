@@ -67,6 +67,12 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
   const [deleteError, setDeleteError] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [bookingTab, setBookingTab] = useState<"Upcoming" | "Recent" | "Completed">("Upcoming");
+  const [currentTime, setCurrentTime] = useState<number | null>(null);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setCurrentTime(Date.now()), 0);
+    return () => window.clearTimeout(timeout);
+  }, []);
 
   // Keep using the existing owner-scoped pets API for both initial data and CRUD refreshes.
   useEffect(() => {
@@ -86,16 +92,15 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
     return () => { active = false; };
   }, []);
 
-  const now = Date.now();
   const filteredBookings = bookings.filter((booking) => {
     const status = booking.status.toLowerCase();
     if (bookingTab === "Completed") return status === "completed";
-    if (bookingTab === "Upcoming") return isUpcomingDate(booking.date, now) && !["completed", "cancelled", "canceled", "declined", "rejected"].includes(status);
-    return status !== "completed" && (!booking.date || !isUpcomingDate(booking.date, now));
+    if (bookingTab === "Upcoming") return currentTime !== null && isUpcomingDate(booking.date, currentTime) && !["completed", "cancelled", "canceled", "declined", "rejected"].includes(status);
+    return status !== "completed" && (currentTime === null || !booking.date || !isUpcomingDate(booking.date, currentTime));
   }).slice(0, 3);
-  const nextBooking = useMemo(() => bookings
-    .filter((booking) => isUpcomingDate(booking.date, now) && !["completed", "cancelled", "canceled", "declined", "rejected"].includes(booking.status.toLowerCase()))
-    .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime())[0], [bookings, now]);
+  const nextBooking = useMemo(() => currentTime === null ? undefined : bookings
+    .filter((booking) => isUpcomingDate(booking.date, currentTime) && !["completed", "cancelled", "canceled", "declined", "rejected"].includes(booking.status.toLowerCase()))
+    .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime())[0], [bookings, currentTime]);
 
   async function confirmDeletePet() {
     if (!deleteTarget) return;
