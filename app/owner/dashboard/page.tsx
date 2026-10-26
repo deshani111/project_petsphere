@@ -34,7 +34,6 @@ export default async function OwnerDashboardPage() {
       select: {
         booking: {
           orderBy: { booking_date: "desc" },
-          take: 5,
           select: {
             booking_id: true,
             status: true,

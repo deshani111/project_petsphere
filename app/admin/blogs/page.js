@@ -55,9 +55,29 @@ export default function AdminBlogsPage() {
   }, []);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => void loadBlogs(), 0);
-    return () => window.clearTimeout(timeout);
-  }, [loadBlogs]);
+    let cancelled = false;
+
+    fetch("/api/admin/blogs", { cache: "no-store" })
+      .then(async (response) => {
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.message || "Blog data could not be loaded.");
+        return payload;
+      })
+      .then((payload) => {
+        if (!cancelled) setBlogs(Array.isArray(payload.blogs) ? payload.blogs : []);
+      })
+      .catch((loadError) => {
+        if (!cancelled) {
+          setError(loadError.message || "Blog data could not be loaded.");
+          setBlogs([]);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, []);
 
   const filteredArticles = useMemo(() => {
     const search = query.trim().toLowerCase();

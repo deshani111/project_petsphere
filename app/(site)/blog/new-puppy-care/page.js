@@ -2,6 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+
 export default function NewPuppyCareArticle() {
   return (
     <main className={styles.articlePage}>

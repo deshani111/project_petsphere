@@ -69,11 +69,6 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
   const [bookingTab, setBookingTab] = useState<"Upcoming" | "Recent" | "Completed">("Upcoming");
   const [currentTime, setCurrentTime] = useState<number | null>(null);
 
-  useEffect(() => {
-    const timeout = window.setTimeout(() => setCurrentTime(Date.now()), 0);
-    return () => window.clearTimeout(timeout);
-  }, []);
-
   // Keep using the existing owner-scoped pets API for both initial data and CRUD refreshes.
   useEffect(() => {
     let active = true;
@@ -90,6 +85,11 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
       }
     })();
     return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setCurrentTime(Date.now()), 0);
+    return () => window.clearTimeout(timeout);
   }, []);
 
   const filteredBookings = bookings.filter((booking) => {

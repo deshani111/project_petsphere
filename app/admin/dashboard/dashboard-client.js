@@ -77,16 +77,16 @@ function formatDate(value) {
   return new Intl.DateTimeFormat("en-US", { day: "numeric", month: "short" }).format(new Date(value));
 }
 
-export default function AdminDashboardClient({ previewData = null }) {
+export default function AdminDashboardClient({ previewData = null, initialError = "" }) {
   const router = useRouter();
   const [dashboard, setDashboard] = useState(previewData);
   const [period, setPeriod] = useState("90");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(initialError);
   const [refresh, setRefresh] = useState(0);
-  const [isLoading, setIsLoading] = useState(!previewData);
+  const [isLoading, setIsLoading] = useState(!previewData && !initialError);
 
   useEffect(() => {
-    if (previewData) return;
+    if (previewData || initialError) return;
     let cancelled = false;
     (async () => {
       try {
@@ -118,7 +118,7 @@ export default function AdminDashboardClient({ previewData = null }) {
       }
     })();
     return () => { cancelled = true; };
-  }, [previewData, refresh, router]);
+  }, [previewData, initialError, refresh, router]);
 
   const retry = () => { setError(""); setDashboard(null); setIsLoading(true); setRefresh((value) => value + 1); };
   const refreshDashboard = () => { setError(""); setIsLoading(true); setRefresh((value) => value + 1); };
@@ -140,14 +140,6 @@ export default function AdminDashboardClient({ previewData = null }) {
   const monthlyRevenue = payments
     .filter((payment) => new Date(payment.date) >= monthStart && new Date(payment.date) <= now)
     .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
-  const totalUsers = (dashboard.totalPetOwners || 0) + (dashboard.totalPetSitters || 0);
-  const summary = [
-    { label: "Total users", value: numberFormat.format(totalUsers), detail: `${numberFormat.format(dashboard.totalPetOwners || 0)} owners · ${numberFormat.format(dashboard.totalPetSitters || 0)} sitters`, icon: UsersRound },
-    { label: "Active bookings", value: numberFormat.format(dashboard.activeBookings || 0), detail: "Pending, confirmed and in progress", icon: CalendarDays },
-    { label: "Monthly revenue", value: currencyFormat.format(monthlyRevenue), detail: "Completed payments this month", icon: Banknote, featured: true },
-    { label: "Sitter applications", value: numberFormat.format(dashboard.pendingSitterVerifications || 0), detail: "Awaiting verification", icon: BadgeCheck, alert: dashboard.pendingSitterVerifications > 0 },
-  ];
-
   return (
     <section className={styles.dashboard}>
       <header className={styles.pageHeading}>

@@ -2,11 +2,12 @@
 import Link from "next/link";
 import { DashboardHeader } from "../../../../components/owner-dashboard/dashboard-header";
 import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
-import {
-  getCurrentOwnerId,
-  getCurrentSession,
-} from "../../../../lib/session";
+import { getCurrentOwnerId, getCurrentSession } from "../../../../lib/session";
 import { listOwnerBookings } from "../../../../modules/bookings/booking.service";
+
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
 function formatDate(date: Date | null) {
   return date
@@ -21,11 +22,7 @@ function formatDate(date: Date | null) {
 export default async function OwnerBookingsPage() {
   const session = await getCurrentSession();
   const ownerId = await getCurrentOwnerId();
-
-  const userName = `${session?.firstName || "Pet"} ${
-    session?.lastName || "Owner"
-  }`.trim();
-
+  const userName = `${session?.firstName || "Pet"} ${session?.lastName || "Owner"}`.trim();
   const bookings = ownerId ? await listOwnerBookings(ownerId) : [];
 
   return (
@@ -36,19 +33,10 @@ export default async function OwnerBookingsPage() {
         <DashboardHeader userName={userName} />
 
         <main className="mx-auto max-w-6xl px-5 py-9">
-          <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#ab3d42]">
-                Owner dashboard
-              </p>
-
-              <h1 className="mt-2 text-3xl font-bold text-[#30272a]">
-                My Bookings
-              </h1>
-
-              <p className="mt-2 text-sm text-[#887c7d]">
-                View and manage your pet-care bookings.
-              </p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#ab3d42]">Owner dashboard</p>
+              <h1 className="mt-2 text-3xl font-bold text-[#30272a]">My Bookings</h1>
             </div>
 
             <Link

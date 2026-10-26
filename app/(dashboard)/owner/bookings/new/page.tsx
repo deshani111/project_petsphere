@@ -4,10 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import BookingSummary from "./components/booking-summary";
-import {
-  readBookingDraft,
-  updateBookingDraft,
-} from "../../../../../lib/booking-draft";
+import { readBookingDraft, updateBookingDraft } from "../../../../../lib/booking-draft";
 
 type ServiceId = "boarding" | "walking" | "grooming" | "training";
 
@@ -58,29 +55,21 @@ const services: Array<{
 ];
 
 export default function NewBookingPage() {
-  const [selectedService, setSelectedService] =
-    useState<ServiceId>("boarding");
-
+  const [selectedService, setSelectedService] = useState<ServiceId>("boarding");
   useEffect(() => {
-      let active = true;
-      const savedService = readBookingDraft().service;
-      const matchedService = services.find(
-        (service) => service.id === savedService
-      );
-
-      if (matchedService) {
-        queueMicrotask(() => {
-          if (active) setSelectedService(matchedService.id);
-        });
-      }
-
-      return () => {
-        active = false;
-      };
-    }, []);
-
-  const selected =
-    services.find((service) => service.id === selectedService) ?? services[0];
+    let active = true;
+    const savedService = readBookingDraft().service;
+    const matchedService = services.find((service) => service.id === savedService);
+    if (matchedService) {
+      queueMicrotask(() => {
+        if (active) setSelectedService(matchedService.id);
+      });
+    }
+    return () => {
+      active = false;
+    };
+  }, []);
+  const selected = services.find((service) => service.id === selectedService) ?? services[0];
 
   return (
     <div className="mx-auto mt-2.5 grid max-w-[747px] grid-cols-1 gap-[15px] px-[14px] pb-6 sm:px-[18px] md:grid-cols-[minmax(420px,1fr)_170px]">

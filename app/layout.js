@@ -3,10 +3,7 @@ import "./globals.css";
 import { Inter, Playfair_Display } from "next/font/google";
 import { cookies } from "next/headers";
 import LayoutShell from "../components/shared/layout-shell";
-import {
-  SESSION_COOKIE_NAME,
-  getCachedSessionAccount,
-} from "../modules/auth/auth.service";
+import { SESSION_COOKIE_NAME, getCachedSessionAccount } from "../modules/auth/auth.service";
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
