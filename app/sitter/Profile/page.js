@@ -210,12 +210,5 @@ function Detail({ label, value, icon, fullWidth }) {
 }
 
 function labelFromType(type) {
-<<<<<<< HEAD
-  return documentTypes.find(([value]) => value === type)?.[1] || "Document";
-=======
-  if (type === "nic_front") return "NIC Front";
-  if (type === "nic_back") return "NIC Back";
-  if (type === "selfie_with_nic") return "Selfie with NIC";
-  return type || "Document";
->>>>>>> origin/main
+  return documentTypes.find(([value]) => value === type)?.[1] || type || "Document";
 }
