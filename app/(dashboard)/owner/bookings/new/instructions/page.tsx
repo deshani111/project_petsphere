@@ -39,15 +39,15 @@ export default function BookingInstructionsPage() {
   }
 
   return (
-    <div className="mx-auto mt-2.5 grid max-w-[747px] grid-cols-1 gap-[15px] px-[14px] pb-6 sm:px-[18px] md:grid-cols-[minmax(420px,1fr)_170px]">
+    <div className="mx-auto mt-2.5 grid max-w-186.75 grid-cols-1 gap-3.75 px-3.5 pb-6 sm:px-4.5 md:grid-cols-[minmax(420px,1fr)_170px]">
       <section className="rounded-[14px] bg-white p-4 sm:p-5">
         <h1 className="m-0 text-[17px] font-bold tracking-[-.6px]">Anything else the sitter should know?</h1>
-        <p className="mb-3 mt-1.5 max-w-[375px] text-[8px] leading-[1.45] text-[#7c7071]">Provide behavioral notes, allergies, or emergency contact information to ensure the best care for your pet.</p>
+        <p className="mb-3 mt-1.5 max-w-93.75 text-[8px] leading-[1.45] text-[#7c7071]">Provide behavioral notes, allergies, or emergency contact information to ensure the best care for your pet.</p>
         <div className="grid gap-3">
           {fields.map((field) => <label key={field.id} className="block rounded-[10px] border border-[#ead1cf] p-3 transition focus-within:border-[#A13D3F] focus-within:ring-1 focus-within:ring-[#f5d8d5]"><span className="flex items-center gap-1 text-[8px] font-bold text-[#413637]"><i className="text-[11px] not-italic text-[#A13D3F]">{field.icon}</i>{field.title}</span><textarea value={notes[field.id] ?? ""} onChange={(event) => setNotes((current) => ({ ...current, [field.id]: event.target.value }))} placeholder={field.hint} rows={2} className="mt-1.5 block w-full resize-none border-0 bg-transparent p-0 text-[8px] leading-[1.45] text-[#5f5354] outline-none placeholder:text-[#918485]" /></label>)}
         </div>
         {status ? <p className="mt-3 text-sm text-red-600">{status}</p> : null}
-        <div className="mt-5 flex items-center justify-between px-1"><Link href="/owner/bookings" className="text-[9px] text-[#A13D3F]">Cancel</Link><div className="flex gap-3"><Link href="/owner/bookings/new/dates" className="rounded-[8px] border border-[#DCC0BF] px-3 py-[8px] text-[9px] text-[#A13D3F]">← Previous</Link><button type="button" onClick={confirmBooking} disabled={isSubmitting} className="rounded-[8px] bg-[#A13D3F] px-3 py-[8px] text-[9px] text-white shadow-[0_5px_10px_rgba(161,61,63,.17)] disabled:cursor-not-allowed disabled:bg-[#f8d8d1] disabled:shadow-none">{isSubmitting ? "Creating..." : "Confirm Booking"}</button></div></div>
+        <div className="mt-5 flex items-center justify-between px-1"><Link href="/owner/bookings" className="text-[9px] text-[#A13D3F]">Cancel</Link><div className="flex gap-3"><Link href="/owner/bookings/new/dates" className="rounded-lg border border-[#DCC0BF] px-3 py-2 text-[9px] text-[#A13D3F]">← Previous</Link><button type="button" onClick={confirmBooking} disabled={isSubmitting} className="rounded-lg bg-[#A13D3F] px-3 py-2 text-[9px] text-white shadow-[0_5px_10px_rgba(161,61,63,.17)] disabled:cursor-not-allowed disabled:bg-[#f8d8d1] disabled:shadow-none">{isSubmitting ? "Creating..." : "Confirm Booking"}</button></div></div>
       </section>
       <BookingSummary service="Boarding" price="8,500.00" unit="/ night" />
     </div>
