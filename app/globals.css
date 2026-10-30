@@ -20,6 +20,41 @@
   --rule: #e6d6ce;
   --service-brown: #6b4f47;
   --service-brown-dark: #5b413a;
+  --sidebar-bg: #C23B35;
+  --sidebar-text: #FFFFFF;
+  --sidebar-text-muted: rgba(255,255,255,0.85);
+  --sidebar-hover: rgba(255,255,255,0.10);
+  --sidebar-active: rgba(255,255,255,0.18);
+  --bg-page: #FFF9F5;
+  --bg-card: #FFFFFF;
+  --border: #F3E8E1;
+  --text-primary: #2B1F1A;
+  --text-muted-app: #6B5B53;
+  --btn-primary: #2B1F1A;
+  --btn-primary-hover: #463229;
+  --btn-cta: #F59E4B;
+  --btn-cta-hover: #E58A2D;
+  --btn-secondary-border: #E4D5CC;
+  --success: #2E9F6B;
+  --danger: #B42318;}
+@theme {
+  --color-sidebar: var(--sidebar-bg);
+  --color-sidebar-text: var(--sidebar-text);
+  --color-sidebar-text-muted: var(--sidebar-text-muted);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-sidebar-active: var(--sidebar-active);
+  --color-page: var(--bg-page);
+  --color-card: var(--bg-card);
+  --color-border: var(--border);
+  --color-text-primary: var(--text-primary);
+  --color-muted: var(--text-muted-app);
+  --color-btn-primary: var(--btn-primary);
+  --color-btn-primary-hover: var(--btn-primary-hover);
+  --color-cta: var(--btn-cta);
+  --color-cta-hover: var(--btn-cta-hover);
+  --color-btn-secondary-border: var(--btn-secondary-border);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
 }
 
 * {
