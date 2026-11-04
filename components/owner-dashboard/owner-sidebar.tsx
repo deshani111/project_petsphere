@@ -81,6 +81,7 @@ export function OwnerSidebar({
       isMarketplace ||
       (href.startsWith("/") &&
         (pathname === href ||
+          (href !== homeHref && pathname.startsWith(`${href}/`)) ||
           (href === "/owner/pets" && pathname.startsWith("/owner/pets/")) ||
           (href === "/owner/bookings" &&
             pathname.startsWith("/owner/bookings/")) ||
@@ -198,17 +199,17 @@ export function OwnerSidebar({
                             collapsed ? "justify-center" : ""
                           } ${
                             active
-                              ? "bg-[#FFF1F2] text-[#A13D3F]"
+                              ? "bg-[#A13D3F] text-white! shadow-sm"
                               : "text-[#403537] hover:bg-[#FFF1F2] hover:text-[#A13D3F]"
                           }`}
                         >
                           {active && (
                             <span
-                              className="absolute inset-y-2 left-0 w-0.5 rounded-r-full bg-[#A13D3F]"
+                              className="absolute inset-y-2 left-0 w-0.5 rounded-r-full bg-white"
                               aria-hidden="true"
                             />
                           )}
-                          <Icon className={`size-4.5 shrink-0 transition-colors duration-200 ${active ? "text-[#A13D3F]" : "text-[#75686A] group-hover:text-[#A13D3F]"}`} />
+                          <Icon className={`size-4.5 shrink-0 transition-colors duration-200 ${active ? "text-white" : "text-[#75686A] group-hover:text-[#A13D3F]"}`} />
                           {!collapsed && <span>{label}</span>}
                         </Link>
                       );
@@ -224,11 +225,13 @@ export function OwnerSidebar({
                 type="submit"
                 aria-label={collapsed ? "Log out" : undefined}
                 title={collapsed ? "Log out" : undefined}
-                className={`group flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-[12px] font-semibold text-[#75686A] transition-colors duration-200 hover:bg-[#FFF1F2] hover:text-[#A13D3F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A13D3F] ${
+                className={`group flex min-h-11 w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 text-left text-[12px] font-semibold text-[#403537] transition-colors duration-200 hover:bg-[#FFF1F2] hover:text-[#A13D3F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A13D3F] ${
                   collapsed ? "justify-center" : ""
                 }`}
               >
-                <LogOutIcon className="size-4.5 shrink-0 transition-colors duration-200 group-hover:text-[#A13D3F]" />
+                <span className="grid size-4.5 shrink-0 place-items-center text-[#75686A] transition-colors duration-200 group-hover:text-[#A13D3F]">
+                  <LogOutIcon className="size-4.5" />
+                </span>
                 {!collapsed && "Logout"}
               </button>
             </form>

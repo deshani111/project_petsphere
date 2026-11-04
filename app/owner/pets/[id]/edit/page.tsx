@@ -493,7 +493,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           : "none";
 
   const shell = (content: ReactNode) => (
-    <div className="flex min-h-screen bg-[#fff8f7]">
+    <div className="flex min-h-screen bg-(--ps-dashboard-page)">
       <OwnerSidebar />
       <div className="flex flex-1 flex-col">
         <DashboardHeader />
@@ -574,7 +574,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
         >
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_340px]">
             <div className="space-y-4">
-              <div className="rounded-[16px] bg-[#fff6f6] p-4">
+              <div className="rounded-2xl bg-[#fff6f6] p-4">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   Basic information
@@ -667,7 +667,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                 </div>
               </div>
 
-              <div className="rounded-[16px] bg-[#fff6f6] p-4">
+              <div className="rounded-2xl bg-[#fff6f6] p-4">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   About Pet
@@ -683,7 +683,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                   />
                 </FieldGroup>
 
-                <div className="mt-4 rounded-[16px] bg-[#fff6f6]">
+                <div className="mt-4 rounded-2xl bg-[#fff6f6]">
                   <h3 className="mb-4 flex items-center gap-2 text-[14px] font-semibold text-[#b54a50]">
                     <span aria-hidden>◌</span>
                     Medications
@@ -703,7 +703,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                 </div>
               </div>
 
-              <div className="rounded-[16px] bg-[#fff6f6] p-4">
+              <div className="rounded-2xl bg-[#fff6f6] p-4">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   Care Instructions
@@ -722,7 +722,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
             </div>
 
             <aside className="space-y-4">
-              <section className="rounded-[16px] bg-[#fff6f6] p-4">
+              <section className="rounded-2xl bg-[#fff6f6] p-4">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   Medical Information
@@ -778,7 +778,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                 </div>
               </section>
 
-              <section className="rounded-[16px] bg-[#fff6f6] p-4">
+              <section className="rounded-2xl bg-[#fff6f6] p-4">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   Vaccination Records
@@ -800,7 +800,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                         <div className="rounded-full bg-[#fff1f1] px-3 py-2 text-[12px] font-semibold text-[#b54a50]">
                           Vaccination document
                         </div>
-                        <p className="mt-3 max-w-[220px]">
+                        <p className="mt-3 max-w-55">
                           {medicalReportFile?.name || "Current certificate uploaded"}
                         </p>
                       </div>

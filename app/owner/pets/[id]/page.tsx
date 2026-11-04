@@ -13,7 +13,7 @@ type Params = {
 
 function OwnerShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-[#faf5f5]">
+    <div className="flex min-h-screen bg-(--ps-dashboard-page)">
       <OwnerSidebar />
       <div className="flex-1">
         <DashboardHeader />
@@ -109,13 +109,13 @@ export default function PetProfilePage({ params }: Params) {
 
           <Link
             href={`/owner/pets/${petId}/edit`}
-            className="inline-flex items-center justify-center rounded-xl bg-[#b8454a] px-5 py-3 text-sm font-medium !text-white hover:bg-[#a13d43] hover:!text-white"
+            className="inline-flex items-center justify-center rounded-xl bg-[#b8454a] px-5 py-3 text-sm font-medium text-white! hover:bg-[#a13d43] hover:text-white!"
           >
             Edit Profile
           </Link>
         </div>
 
-        <section className="min-h-[180px] rounded-[28px] border border-[#f1d6d6] bg-white p-7 shadow-sm">
+        <section className="min-h-45 rounded-[28px] border border-[#f1d6d6] bg-white p-7 shadow-sm">
           <div className="flex flex-col gap-6 md:flex-row md:items-center">
             <div className="h-28 w-28 overflow-hidden rounded-full border-2 border-[#f1d6d6] bg-[#f7f0ef]">
               {pet.photo ? (

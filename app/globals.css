@@ -15,6 +15,7 @@
   --ps-color-success-soft: #eaf7f0;
   --ps-color-warning-soft: #fff5df;
   --ps-color-page: #fff9f8;
+  --ps-dashboard-page: #f6f7f9;
   --ps-color-surface: #ffffff;
   --ps-color-surface-muted: #fff3f1;
   --ps-color-text: #2a2021;
@@ -81,7 +82,7 @@
 
 button, input, select, textarea { font: inherit; }
 
-.ps-page { min-height: 100%; background: var(--ps-color-page); color: var(--ps-color-text); font-family: var(--ps-font-sans); }
+.ps-page { min-height: 100%; background: var(--ps-dashboard-page); color: var(--ps-color-text); font-family: var(--ps-font-sans); }
 .ps-container { width: min(100% - 2rem, 1180px); margin-inline: auto; }
 .ps-card { border: 1px solid var(--ps-color-border); border-radius: var(--ps-radius-md); background: var(--ps-color-surface); box-shadow: var(--ps-shadow-sm); }
 .ps-panel { border: 1px solid var(--ps-color-border); border-radius: var(--ps-radius-lg); background: var(--ps-color-surface); box-shadow: var(--ps-shadow-md); }
@@ -2109,5 +2110,4 @@ a {
     transform: none;
   }
 }
-
 

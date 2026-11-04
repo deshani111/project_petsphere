@@ -123,53 +123,53 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
   const tabs = ["Upcoming", "Recent", "Completed"] as const;
 
   return (
-    <main className="min-w-0 bg-[#f6f7f9] px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
-      <section className="mx-auto max-w-[1480px]">
-        <div className="relative isolate mb-5 overflow-hidden rounded-[24px] bg-gradient-to-br from-[#B7434E] via-[#A63842] to-[#7D202B] px-5 py-6 text-white shadow-[0_18px_45px_rgba(125,32,43,0.2)] sm:px-8 sm:py-8 lg:py-9">
+    <main className="min-w-0 bg-(--ps-dashboard-page) px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
+      <section className="mx-auto max-w-370">
+        <div className="relative isolate mb-5 overflow-hidden rounded-3xl bg-linear-to-br from-[#B7434E] via-[#A63842] to-[#7D202B] px-5 py-6 text-white shadow-[0_18px_45px_rgba(125,32,43,0.2)] sm:px-8 sm:py-8 lg:py-9">
           <div aria-hidden="true" className="pointer-events-none absolute -right-12 -top-24 hidden size-80 rounded-full bg-[#F4B4BC]/20 blur-3xl sm:block" />
           <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 right-[28%] hidden size-64 rounded-full bg-[#F4B4BC]/15 blur-3xl sm:block" />
           <div aria-hidden="true" className="pointer-events-none absolute -right-12 top-4 hidden size-64 rounded-full border-2 border-dotted border-white/20 sm:block" />
           <div aria-hidden="true" className="pointer-events-none absolute right-[40%] top-7 hidden text-white/25 sm:block"><PawPrint size={23} /></div>
           <div aria-hidden="true" className="pointer-events-none absolute right-[36%] bottom-8 hidden text-[#ffd9de]/50 sm:block"><Heart size={16} fill="currentColor" /></div>
           <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 hidden w-[54%] sm:block lg:w-[51%]">
-            <Image src="/petcare.webp" alt="" fill sizes="(min-width: 1280px) 48vw, (min-width: 640px) 54vw, 0px" className="object-cover object-center" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#A63842] via-[#A63842]/35 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#7D202B]/10 via-transparent to-[#B7434E]/10" />
+            <Image src="/petcare.webp" alt="" fill sizes="(min-width: 1280px) 48vw, (min-width: 640px) 54vw, 0px" className="object-cover object-center" loading="eager" />
+            <div className="absolute inset-0 bg-linear-to-r from-[#A63842] via-[#A63842]/35 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#7D202B]/10 via-transparent to-[#B7434E]/10" />
           </div>
           <div className="relative z-10 sm:max-w-[67%] lg:max-w-[61%]">
             <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-3.5 py-1.5 text-[11px] font-semibold shadow-sm backdrop-blur-sm"><ShieldCheck size={14} /> Trusted Care Platform</span>
             <h1 className="text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">Welcome back, {userName}!</h1>
             <div className="mt-4 flex flex-wrap gap-3">
-              <Link href="/owner/sitters" className="inline-flex h-10 items-center gap-2 rounded-lg bg-white px-4 text-xs font-bold !text-[#852c36] shadow-md transition duration-200 hover:-translate-y-0.5 hover:bg-rose-50 hover:shadow-lg"><Search size={15} className="!text-[#852c36]" /> Explore Services</Link>
+              <Link href="/owner/sitters" className="inline-flex h-10 items-center gap-2 rounded-lg bg-white px-4 text-xs font-bold text-[#852c36]! shadow-md transition duration-200 hover:-translate-y-0.5 hover:bg-rose-50 hover:shadow-lg"><Search size={15} className="text-[#852c36]!" /> Explore Services</Link>
               <Link href="/owner/bookings" className="inline-flex h-10 items-center gap-2 rounded-lg border border-white/40 bg-white/10 px-4 text-xs font-semibold text-white shadow-sm backdrop-blur-sm transition duration-200 hover:-translate-y-0.5 hover:bg-white/20"><CalendarDays size={15} /> Manage Bookings</Link>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
           {[
             { title: "My Pets", value: petsLoading ? "—" : pets.length, subtitle: "Total registered pets", icon: PawPrint, color: "text-rose-600 bg-rose-50" },
             { title: "Active Bookings", value: activeBookings, subtitle: "Currently active", icon: CalendarDays, color: "text-sky-700 bg-sky-50" },
             { title: "Total Bookings", value: totalBookings, subtitle: "All bookings made", icon: Clock3, color: "text-amber-700 bg-amber-50" },
             { title: "Unread Messages", value: unreadMessages, subtitle: "Need your attention", icon: Mail, color: "text-orange-700 bg-orange-50" },
-          ].map(({ title, value, subtitle, icon: Icon, color }) => <article key={title} className="min-h-[96px] rounded-2xl border border-rose-100/80 bg-white p-3.5 shadow-[0_8px_24px_rgba(91,52,51,.06)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(91,52,51,.1)] sm:flex sm:items-center sm:gap-3.5 sm:p-4">
-            <span className={`mb-2 grid size-10 shrink-0 place-items-center rounded-xl sm:mb-0 sm:size-12 ${color}`}><Icon size={19} strokeWidth={2.1} /></span>
-            <div><p className="text-[10px] font-bold uppercase tracking-[.11em] text-slate-500">{title}</p><p className="mt-1 text-xl font-bold leading-none tracking-tight text-slate-900">{value}</p><p className="mt-1.5 text-[10px] text-slate-500">{subtitle}</p></div>
+          ].map(({ title, value, subtitle, icon: Icon, color }) => <article key={title} className="min-h-28 rounded-3xl border border-slate-200/80 bg-white p-4 shadow-[0_10px_30px_rgba(45,34,36,.06)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(45,34,36,.1)] sm:flex sm:items-center sm:gap-4 sm:p-5">
+            <span className={`mb-3 grid size-11 shrink-0 place-items-center rounded-2xl sm:mb-0 sm:size-12 ${color}`}><Icon size={19} strokeWidth={2.1} /></span>
+            <div><p className="text-[10px] font-bold uppercase tracking-[.12em] text-slate-500">{title}</p><p className="mt-1.5 text-2xl font-bold leading-none tracking-tight text-slate-900">{value}</p><p className="mt-2 text-[10px] text-slate-500">{subtitle}</p></div>
           </article>)}
         </div>
 
         <div className="mt-6 grid items-start gap-4 xl:grid-cols-[minmax(0,1.8fr)_minmax(250px,.9fr)]">
           <section className="xl:col-span-2">
             <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
-              <div><h2 className="text-base font-bold text-slate-800">My Pet Family</h2><p className="mt-1 text-[11px] text-slate-500">Your companions are always in good hands.</p></div>
+              <div><h2 className="text-lg font-bold tracking-tight text-slate-800">My Pet Family</h2><p className="mt-1 text-[11px] text-slate-500">Your companions are always in good hands.</p></div>
               <div className="flex items-center gap-2">
-                <Link href="/owner/pets" className="text-[10px] font-semibold text-[#a32e34] hover:underline">View All Pets</Link>
-                {!petsLoading && !petsError && pets.length >= 4 && <Link href="/owner/pets/add" className="inline-flex h-8 items-center rounded-md border border-[#a32e34] bg-white px-3 text-[10px] font-semibold text-[#a32e34] transition hover:bg-rose-50">+ Add Pet</Link>}
+                <Link href="/owner/pets" className="text-[11px] font-semibold text-[#a32e34] hover:underline">View All Pets</Link>
+                {!petsLoading && !petsError && pets.length >= 4 && <Link href="/owner/pets/add" className="inline-flex h-9 items-center rounded-full bg-[#a13d3f] px-4 text-[10px] font-bold text-white transition hover:bg-[#8f3335]">Add Pet</Link>}
               </div>
             </div>
             {petsLoading ? <div className="rounded-lg border border-slate-200 bg-white p-6 text-center text-sm text-slate-500">Loading your pets…</div> : petsError ? <div role="alert" className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{petsError}</div> : <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {displayedPets.map((pet) => <PetCard key={pet.pet_id} image={pet.photo || undefined} name={pet.pet_name} type={pet.species || "Pet"} breed={pet.breed || "Unknown"} href={`/owner/pets/${pet.pet_id}`} onEdit={() => router.push(`/owner/pets/${pet.pet_id}/edit`)} onDelete={() => { setDeleteError(""); setDeleteTarget(pet); }} />)}
-              {pets.length < 4 && <Link href="/owner/pets/add" className="group block min-h-[300px]" aria-label="Add another pet">
+              {pets.length < 4 && <Link href="/owner/pets/add" className="group block min-h-75" aria-label="Add another pet">
                   <article className="flex h-full flex-col rounded-2xl border-2 border-dashed border-[#e6c7c7] bg-[#fffaf9] p-3 shadow-[0_10px_30px_rgba(91,52,51,0.04)] transition hover:border-[#d99a9d] hover:bg-[#fff6f5] sm:p-4">
                     <div className="relative mb-3 flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[18px] bg-white/40">
                       <div className="absolute inset-0 rounded-[18px] border border-dashed border-[#e8c7c7]" />
@@ -185,10 +185,10 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
           </section>
 
           <div className="min-w-0 space-y-5">
-            <section id="bookings" className="scroll-mt-5 rounded-lg border border-slate-200 bg-white p-4 shadow-[0_1px_3px_rgba(15,23,42,.04)] sm:p-5">
-              <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-base font-bold text-slate-800">Your Bookings</h2><p className="mt-1 text-[10px] text-slate-500">Active reservations and service history</p></div><div className="flex gap-1 rounded-md bg-slate-50 p-1" role="tablist" aria-label="Filter bookings">{tabs.map((tab) => <button key={tab} type="button" role="tab" aria-selected={bookingTab === tab} onClick={() => setBookingTab(tab)} className={`rounded px-2 py-1 text-[9px] font-medium ${bookingTab === tab ? "bg-white text-[#a33237] shadow-sm" : "text-slate-500 hover:text-slate-800"}`}>{tab}</button>)}</div></div>
+            <section id="bookings" className="scroll-mt-5 rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_10px_30px_rgba(45,34,36,.06)] sm:p-6">
+              <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-lg font-bold tracking-tight text-slate-800">Your Bookings</h2><p className="mt-1 text-[10px] text-slate-500">Active reservations and service history</p></div><div className="flex gap-1 rounded-full bg-slate-100 p-1" role="tablist" aria-label="Filter bookings">{tabs.map((tab) => <button key={tab} type="button" role="tab" aria-selected={bookingTab === tab} onClick={() => setBookingTab(tab)} className={`rounded-full px-3 py-1.5 text-[9px] font-semibold ${bookingTab === tab ? "bg-[#a13d3f] text-white shadow-sm" : "text-slate-500 hover:text-slate-800"}`}>{tab}</button>)}</div></div>
               <div className="mt-4 space-y-2.5">
-                {filteredBookings.map((booking) => <article key={booking.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-3">
+                {filteredBookings.map((booking) => <article key={booking.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4 transition hover:border-rose-100 hover:bg-rose-50/30">
                   <div className="flex min-w-0 items-center gap-3"><div className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-full bg-rose-50 text-[#a33237]">{booking.sitterImage ? <Image src={booking.sitterImage} alt="" fill unoptimized sizes="36px" className="object-cover" /> : <PawPrint size={15} />}</div><div className="min-w-0"><p className="truncate text-[11px] font-semibold text-slate-800">{booking.sitter}</p><p className="mt-0.5 truncate text-[9px] text-slate-500">{booking.service} · {booking.pet}</p><p className="mt-1 flex items-center gap-1 text-[9px] text-slate-400"><CalendarDays size={11} />{formatDate(booking.date)}</p></div></div>
                   <div className="flex items-center gap-2"><span className="text-[11px] font-bold text-slate-800">{booking.amount}</span><span className={`rounded-full px-2 py-1 text-[8px] font-semibold capitalize ${statusTone(booking.status)}`}>{booking.status.replace(/_/g, " ")}</span></div>
                 </article>)}
@@ -198,8 +198,8 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
             </section>
 
             <section>
-              <div className="mb-3"><h2 className="text-base font-bold text-slate-800">Explore Pet Care Services</h2><p className="mt-1 text-[10px] text-slate-500">Professional care for every pet&apos;s needs</p></div>
-              <div className="grid gap-3 sm:grid-cols-3">{serviceCards.map(({ title, detail, icon: Icon }) => <article key={title} className="flex min-h-[152px] flex-col rounded-lg border border-slate-200 bg-white p-3.5 shadow-[0_1px_3px_rgba(15,23,42,.04)]"><span className="mb-3 grid size-8 place-items-center rounded-lg bg-rose-50 text-[#a33237]"><Icon size={16} /></span><h3 className="text-[11px] font-bold text-slate-800">{title}</h3><p className="mt-1.5 flex-1 text-[9px] leading-relaxed text-slate-500">{detail}</p><Link href="/owner/sitters" className="mt-3 inline-flex w-fit rounded-full border border-rose-200 px-2.5 py-1 text-[9px] font-semibold text-[#a33237] hover:bg-rose-50">Explore {title.split(" ").at(-1)}</Link></article>)}</div>
+              <div className="mb-3"><h2 className="text-lg font-bold tracking-tight text-slate-800">Explore Pet Care Services</h2><p className="mt-1 text-[10px] text-slate-500">Professional care for every pet&apos;s needs</p></div>
+              <div className="grid gap-3 sm:grid-cols-3">{serviceCards.map(({ title, detail, icon: Icon }) => <article key={title} className="flex min-h-40 flex-col rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_10px_30px_rgba(45,34,36,.05)] transition hover:-translate-y-1 hover:shadow-[0_16px_30px_rgba(45,34,36,.09)]"><span className="mb-4 grid size-10 place-items-center rounded-2xl bg-rose-50 text-[#a33237]"><Icon size={18} /></span><h3 className="text-xs font-bold text-slate-800">{title}</h3><p className="mt-2 flex-1 text-[10px] leading-relaxed text-slate-500">{detail}</p><Link href="/owner/sitters" className="mt-4 inline-flex w-fit rounded-full bg-[#fff1ef] px-3 py-1.5 text-[9px] font-bold text-[#a33237] transition hover:bg-[#ffe4df]">Explore {title.split(" ").at(-1)}</Link></article>)}</div>
             </section>
           </div>
 
@@ -209,9 +209,9 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
               {nextBooking ? <div className="mt-4"><p className="text-[12px] font-bold text-slate-800">{nextBooking.service}</p><p className="mt-1 text-[10px] text-slate-500">For {nextBooking.pet} with {nextBooking.sitter}</p><p className="mt-3 flex items-center gap-1.5 text-[10px] text-slate-600"><Clock3 size={12} className="text-[#a33237]" />{formatDate(nextBooking.date)}</p><div className="mt-3 flex items-center justify-between"><span className={`rounded-full px-2 py-1 text-[8px] font-semibold capitalize ${statusTone(nextBooking.status)}`}>{nextBooking.status.replace(/_/g, " ")}</span><Link href="/owner/bookings" className="text-[9px] font-semibold text-[#a33237] hover:underline">View bookings</Link></div></div> : <div className="mt-4 rounded-md bg-slate-50 p-3 text-center"><p className="text-[10px] text-slate-600">No upcoming care sessions yet.</p><Link href="/owner/sitters" className="mt-2 inline-flex text-[9px] font-semibold text-[#a33237]">Find a sitter <ArrowRight size={11} className="ml-1" /></Link></div>}
             </section>
 
-            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-[0_1px_3px_rgba(15,23,42,.04)]"><h2 className="text-[11px] font-bold text-slate-800">Quick Actions</h2><div className="mt-3 grid grid-cols-2 gap-2"><Link href="/owner/pets/add" className="flex min-h-14 flex-col justify-center rounded-md border border-slate-100 bg-slate-50 px-2.5 text-[9px] font-semibold text-slate-700 hover:border-rose-200 hover:bg-rose-50"><PawPrint size={14} className="mb-1 text-[#a33237]" />Add a Pet</Link><Link href="/owner/sitters" className="flex min-h-14 flex-col justify-center rounded-md border border-slate-100 bg-slate-50 px-2.5 text-[9px] font-semibold text-slate-700 hover:border-rose-200 hover:bg-rose-50"><CalendarDays size={14} className="mb-1 text-[#a33237]" />Book Care</Link><button type="button" disabled title="Owner messaging is not implemented yet" className="flex min-h-14 cursor-not-allowed flex-col justify-center rounded-md border border-slate-100 bg-slate-50 px-2.5 text-left text-[9px] font-semibold text-slate-400"><MessageCircle size={14} className="mb-1 text-slate-400" />Message Sitter</button><button type="button" disabled title="Owner receipts are not implemented yet" className="flex min-h-14 cursor-not-allowed flex-col justify-center rounded-md border border-slate-100 bg-slate-50 px-2.5 text-left text-[9px] font-semibold text-slate-400"><Wallet size={14} className="mb-1 text-slate-400" />Past Receipts</button></div><p className="mt-2 text-[9px] leading-relaxed text-slate-400">Messaging and owner receipt pages are not available in the current application.</p></section>
+            <section className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_10px_30px_rgba(45,34,36,.06)]"><h2 className="text-sm font-bold tracking-tight text-slate-800">Quick Actions</h2><div className="mt-4 grid grid-cols-2 gap-3"><Link href="/owner/pets/add" className="flex min-h-16 flex-col justify-center rounded-2xl border border-slate-100 bg-slate-50 px-3 text-[10px] font-semibold text-slate-700 transition hover:border-rose-200 hover:bg-rose-50"><PawPrint size={16} className="mb-1.5 text-[#a33237]" />Add a Pet</Link><Link href="/owner/sitters" className="flex min-h-16 flex-col justify-center rounded-2xl border border-slate-100 bg-slate-50 px-3 text-[10px] font-semibold text-slate-700 transition hover:border-rose-200 hover:bg-rose-50"><CalendarDays size={16} className="mb-1.5 text-[#a33237]" />Book Care</Link><button type="button" disabled title="Owner messaging is not implemented yet" className="flex min-h-16 cursor-not-allowed flex-col justify-center rounded-2xl border border-slate-100 bg-slate-50 px-3 text-left text-[10px] font-semibold text-slate-400"><MessageCircle size={16} className="mb-1.5 text-slate-400" />Message Sitter</button><button type="button" disabled title="Owner receipts are not implemented yet" className="flex min-h-16 cursor-not-allowed flex-col justify-center rounded-2xl border border-slate-100 bg-slate-50 px-3 text-left text-[10px] font-semibold text-slate-400"><Wallet size={16} className="mb-1.5 text-slate-400" />Past Receipts</button></div><p className="mt-3 text-[9px] leading-relaxed text-slate-400">Messaging and owner receipt pages are not available in the current application.</p></section>
 
-            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-[0_1px_3px_rgba(15,23,42,.04)]"><div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-wide text-slate-600"><FileText size={12} className="text-[#a33237]" /> Pet Care Tip</div><h2 className="mt-3 text-[12px] font-bold leading-snug text-slate-800">Paw Pad Care for Crisp Weather</h2><p className="mt-2 text-[9px] leading-relaxed text-slate-500">Cold, dry weather can leave paws rough. Check between the toes after walks, rinse away salt, and use a pet-safe balm to keep pads comfortable.</p><Link href="/blog" className="mt-3 inline-flex items-center gap-1 text-[9px] font-semibold text-[#a33237] hover:underline">Read more <ArrowRight size={11} /></Link></section>
+            <section className="rounded-3xl border border-rose-100 bg-linear-to-br from-white to-rose-50/60 p-5 shadow-[0_10px_30px_rgba(45,34,36,.06)]"><div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-wide text-slate-600"><FileText size={13} className="text-[#a33237]" /> Pet Care Tip</div><h2 className="mt-3 text-sm font-bold leading-snug text-slate-800">Paw Pad Care for Crisp Weather</h2><p className="mt-2 text-[10px] leading-relaxed text-slate-500">Cold, dry weather can leave paws rough. Check between the toes after walks, rinse away salt, and use a pet-safe balm to keep pads comfortable.</p><Link href="/blog" className="mt-4 inline-flex items-center gap-1 rounded-full bg-[#a13d3f] px-3 py-1.5 text-[9px] font-bold text-white transition hover:bg-[#8f3335]">Read more <ArrowRight size={11} /></Link></section>
           </aside>
         </div>
       </section>

@@ -61,11 +61,6 @@ export default function LoginPage() {
     <aside className={styles.welcomePanel}>
       <Image src="/login-pet-companion.webp" alt="A pet owner holding her happy dog" className={styles.welcomeImage} fill sizes="(max-width: 760px) 0px, 46vw" priority />
       <div className={styles.imageOverlay} />
-      <div className={styles.welcomeContent}>
-        <div className={styles.brand}><span className={styles.brandMark}><Image src="/petsphere-mark.svg" alt="" width={21} height={21} /></span>Pet<span>Sphere</span></div>
-        <div className={styles.welcomeCopy}><span>Care that feels like home</span><h2>Good care starts with a trusted connection.</h2><p>From everyday walks to overnight stays, find people who care for your pet like family.</p></div>
-        <div className={styles.trustLine}><b>Pet parents</b><i /> <b>Caring sitters</b></div>
-      </div>
     </aside>
 
     <section className={styles.formPanel}><div className={styles.formInner}>

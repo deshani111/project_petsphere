@@ -1,6 +1,6 @@
-.shell{display:flex;height:100vh;overflow:hidden;background:var(--ps-color-page);font-family:var(--ps-font-sans)}
-.main{min-width:0;flex:1;height:100vh;overflow-y:auto;background:var(--ps-color-page)}
-.main > main{min-height:100%;background:var(--ps-color-page)}
+.shell{--ps-color-page:var(--ps-dashboard-page);--bg-page:var(--ps-dashboard-page);display:flex;height:100vh;overflow:hidden;background:var(--ps-dashboard-page);font-family:var(--ps-font-sans)}
+.main{min-width:0;flex:1;height:100vh;overflow-y:auto;background:var(--ps-dashboard-page)}
+.main > main{min-height:100%;background:var(--ps-dashboard-page)}
 .header{position:sticky;top:0;z-index:40;min-height:64px;background:rgba(255,255,255,.95);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid color-mix(in srgb, var(--ps-color-primary) 12%, transparent);box-shadow:0 8px 30px rgba(56,35,31,.05);display:flex;align-items:center;justify-content:flex-end;padding:0 clamp(16px,4vw,32px)}
 .notification{position:relative;display:grid;width:40px;height:40px;place-items:center;border:0;border-radius:10px;background:transparent;color:var(--ps-color-text-muted);margin-right:14px;cursor:pointer}
 .notification:hover{background:var(--ps-color-primary-soft);color:var(--ps-color-primary)}
@@ -8,7 +8,7 @@
 .user{height:36px;border-left:1px solid var(--ps-color-border);padding-left:14px;display:flex;align-items:center;gap:9px;color:var(--ps-color-text);font-size:var(--ps-text-sm);font-weight:600}
 .avatar{width:40px;height:40px;border-radius:50%;background:var(--ps-color-primary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;box-shadow:0 0 0 4px var(--ps-color-primary-soft)}
 
-.page{position:relative;min-height:calc(100vh - 64px);background:var(--ps-color-page);overflow:hidden}
+.page{position:relative;min-height:calc(100vh - 64px);background:var(--ps-dashboard-page);overflow:hidden}
 .page:before,.page:after{content:"";position:absolute;pointer-events:none;filter:blur(2px);opacity:.65}
 .page:before{width:390px;height:390px;left:-170px;top:-140px;background:radial-gradient(circle,rgba(150,54,58,.13) 0,rgba(150,54,58,0) 70%)}
 .page:after{width:320px;height:320px;right:-140px;top:50px;background:radial-gradient(circle,rgba(201,152,128,.18) 0,rgba(201,152,128,0) 68%)}
