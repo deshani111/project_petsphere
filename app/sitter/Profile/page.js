@@ -16,9 +16,9 @@ import {
   Sparkles,
   Star,
   UserRound,
-  X,
 } from "lucide-react";
 import styles from "./profile.module.css";
+import { ModalDialog } from "../../../components/shared/modal-dialog";
 
 const fallbackProfile = {
   fullName: "Your profile",
@@ -347,23 +347,9 @@ export default function SitterProfilePage() {
         </section>
       </div>
 
-      {selectedDocument && (
-        <div className={styles.modalBg} onClick={() => setSelectedDocument(null)}>
-          <div className={styles.modal} onClick={(event) => event.stopPropagation()}>
-            <button className={styles.close} onClick={() => setSelectedDocument(null)} aria-label="Close preview">
-              <X size={15} />
-            </button>
-            <h3>{labelFromType(selectedDocument.type)}</h3>
-            <p>{selectedDocument.submittedAt ? `Submitted ${new Date(selectedDocument.submittedAt).toLocaleDateString()}` : "Document preview"}</p>
-            <div className={styles.modalPreview}>
-              {selectedDocument.url ? <img src={selectedDocument.url} alt={`${selectedDocument.type} preview`} /> : <ShieldCheck size={30} />}
-            </div>
-            <button className={styles.modalButton} onClick={() => setSelectedDocument(null)}>
-              Close preview
-            </button>
-          </div>
-        </div>
-      )}
+      <ModalDialog open={Boolean(selectedDocument)} title={selectedDocument ? labelFromType(selectedDocument.type) : "Document preview"} onClose={() => setSelectedDocument(null)}>
+        {selectedDocument ? <><p>{selectedDocument.submittedAt ? `Submitted ${new Date(selectedDocument.submittedAt).toLocaleDateString()}` : "Document preview"}</p><div className={styles.modalPreview}>{selectedDocument.url ? <img src={selectedDocument.url} alt={`${selectedDocument.type} preview`} /> : <ShieldCheck size={30} />}</div></> : null}
+      </ModalDialog>
     </div>
   );
 }

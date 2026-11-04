@@ -1,17 +1,17 @@
 .admin-shell {
-  --admin-font-family: var(--font-inter), Arial, sans-serif;
-  --admin-page-title-size: 30px;
-  --admin-section-title-size: 16px;
-  --admin-card-title-size: 14px;
-  --admin-body-size: 14px;
-  --admin-meta-size: 11px;
-  --admin-label-size: 11px;
-  --admin-line-height: 1.5;
+  --admin-font-family: var(--ps-font-sans);
+  --admin-page-title-size: var(--ps-text-xl);
+  --admin-section-title-size: var(--ps-text-lg);
+  --admin-card-title-size: var(--ps-text-md);
+  --admin-body-size: var(--ps-text-sm);
+  --admin-meta-size: var(--ps-text-xs);
+  --admin-label-size: var(--ps-text-xs);
+  --admin-line-height: var(--ps-leading-body);
 }
 
 .admin-shell .admin-page-content {
   font-family: var(--admin-font-family);
-  color: #2e2020;
+  color: var(--ps-color-text);
   font-size: var(--admin-body-size);
   line-height: var(--admin-line-height);
 }

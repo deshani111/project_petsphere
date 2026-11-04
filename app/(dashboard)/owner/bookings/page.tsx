@@ -21,7 +21,7 @@ export default async function OwnerBookingsPage() {
   const bookings = ownerId ? await listOwnerBookings(ownerId) : [];
 
   return (
-    <div className="flex min-h-screen bg-[#fff8f7]">
+    <div className="ps-page flex min-h-screen">
       <OwnerSidebar />
       <div className="min-w-0 flex-1">
         <DashboardHeader userName={userName} />
@@ -35,7 +35,7 @@ export default async function OwnerBookingsPage() {
             <Link href="/owner/bookings/new" className="rounded-lg bg-[#ab3d42] px-5 py-3 text-sm font-semibold text-white">New booking</Link>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-[#efdddd] bg-white">
+          <div className="booking-table overflow-x-auto rounded-xl border border-[#efdddd] bg-white">
             <table className="w-full min-w-[760px] border-collapse text-left text-sm">
               <thead className="bg-[#fff5f4] text-xs uppercase tracking-wider text-[#705e60]">
                 <tr><th className="px-4 py-3">Sitter</th><th className="px-4 py-3">Pet</th><th className="px-4 py-3">Service</th><th className="px-4 py-3">Dates</th><th className="px-4 py-3">Status</th><th className="px-4 py-3 text-right">Amount</th></tr>

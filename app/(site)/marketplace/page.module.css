@@ -1,6 +1,6 @@
 .marketplacePage {
   min-height: 100vh;
-  background: linear-gradient(180deg, #fffaf7 0, #f8f8fa 360px, #f7f8fa 100%);
+  background: var(--bg-page);
   color: #302526;
 }
 
@@ -80,8 +80,7 @@
 
 .myAds {
   border: 1px solid #e2d7d3;
-  background: #fff;
-  color: #514344;
+  background: var(--surface); color: #514344;
 }
 
 .myAds:hover {
@@ -156,8 +155,7 @@
   border: 1px solid #e4d9d5;
   border-radius: 10px;
   outline: none;
-  background: #fff;
-  color: #443738;
+  background: var(--surface); color: #443738;
   font: inherit;
   font-size: 13px;
 }
@@ -204,8 +202,7 @@
   padding: 0 24px 0 7px;
   border: 1px solid #e4d9d5;
   border-radius: 7px;
-  background: #fff;
-  cursor: pointer;
+  background: var(--surface); cursor: pointer;
 }
 
 .sortButton span {
@@ -224,8 +221,7 @@
   overflow: hidden;
   border: 1px solid #eadfda;
   border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 7px 20px rgba(65, 43, 40, .055);
+  background: var(--surface); box-shadow: 0 7px 20px rgba(65, 43, 40, .055);
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 

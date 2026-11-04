@@ -13,7 +13,7 @@
 .cover { width: min(1320px, 91.5%); height: 540px; margin: 0 auto; overflow: hidden; border-radius: 30px 30px 64px 30px; box-shadow: 0 18px 38px rgba(82,49,45,.16); }
 .cover img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .articleLayout { width: min(960px, 90%); display: grid; grid-template-columns: 200px minmax(0, 700px); justify-content: center; gap: 60px; margin: 0 auto; padding: 76px 0 95px; }
-.contents { position: sticky; top: 30px; align-self: start; display: flex; flex-direction: column; gap: 13px; padding: 20px 17px; border: 1px solid #f0dedb; border-radius: 14px; background: #fff; box-shadow: 0 8px 20px rgba(82,49,45,.05); }
+.contents { position: sticky; top: 30px; align-self: start; display: flex; flex-direction: column; gap: 13px; padding: 20px 17px; border: 1px solid #f0dedb; border-radius: 14px; background: var(--surface); box-shadow: 0 8px 20px rgba(82,49,45,.05); }
 .contents strong { margin-bottom: 4px; color: #403536; font-size: 12px; text-transform: uppercase; letter-spacing: .7px; }
 .contents a { color: #8b7a7b; font-size: 12px; }
 .contents a:hover { color: #ad4141; }

@@ -20,7 +20,7 @@
 .avatar { width: 44px; height: 44px; }
 .articleSection { padding: 0 3.1% 70px; background: #fffaf9; }
 .articleGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 25px; }
-.articleCard { overflow: hidden; border: 1px solid #eadedc; border-radius: 24px; background: #fff; box-shadow: 0 5px 12px rgba(82,49,45,.04); }
+.articleCard { overflow: hidden; border: 1px solid #eadedc; border-radius: 24px; background: var(--surface); box-shadow: 0 5px 12px rgba(82,49,45,.04); }
 .articleImage { position: relative; height: 250px; background: #f0ddd6; }
 .articleImage img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .articleBody { min-height: 252px; padding: 22px 25px 24px; }

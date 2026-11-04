@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./admin-shell.module.css";
@@ -168,7 +169,7 @@ export default function AdminShell({ admin, children }) {
       <aside className={`${styles.sidebar} ${menuOpen ? styles.menuOpen : ""}`}>
         <Link href="/admin/dashboard" className={styles.brand} onClick={() => setMenuOpen(false)}>
           <span aria-hidden="true">♟</span>
-          PetSphere
+          <Image src="/petsphere-logo.svg" alt="PetSphere" width={180} height={45} priority className={styles.brandLogo} />
           <small>Pet Care Platform</small>
         </Link>
         {navigation}

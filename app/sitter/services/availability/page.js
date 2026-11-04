@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Home, Footprints, Scissors, Dumbbell, X, Plus, Minus, Calendar, AlertCircle } from "lucide-react";
 import styles from "./availability.module.css";
+import { AsyncState } from "../../../../components/shared/async-state";
+import { ModalDialog } from "../../../../components/shared/modal-dialog";
 
 export default function ManageAvailabilityPage() {
   const [selectedService, setSelectedService] = useState("Boarding");
@@ -26,8 +28,12 @@ export default function ManageAvailabilityPage() {
   const [newBlockedReason, setNewBlockedReason] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-  useEffect(() => { fetch("/api/sitter/availability").then((r) => r.json()).then((data) => { if (data.days) { const keys = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; const next = {}; keys.forEach((key, weekday) => { next[key] = data.days.find((day) => day.weekday === weekday)?.is_available ?? true; }); setAvailableDays(next); } }); }, []);
-  const saveAvailability = async () => { setSaving(true); const keys = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; const response = await fetch("/api/sitter/availability", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ days: keys.map((key, weekday) => ({ weekday, isAvailable: availableDays[key], startTime: "09:00", endTime: "17:00" })) }) }); const data = await response.json(); setMessage(data.message); setSaving(false); };
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const load = () => { setLoading(true); setError(""); fetch("/api/sitter/availability").then(async (r) => { const data = await r.json(); if (!r.ok) throw new Error(data.message || "Unable to load availability."); return data; }).then((data) => { if (data.days) { const keys = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; const next = {}; keys.forEach((key, weekday) => { next[key] = data.days.find((day) => day.weekday === weekday)?.is_available ?? true; }); setAvailableDays(next); } }).catch((reason) => setError(reason.message || "Unable to load availability.")).finally(() => setLoading(false)); };
+  useEffect(() => { const timer = window.setTimeout(load, 0); return () => window.clearTimeout(timer); }, []);
+  const saveAvailability = async () => { setSaving(true); setMessage(""); setError(""); try { const keys = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; const response = await fetch("/api/sitter/availability", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ days: keys.map((key, weekday) => ({ weekday, isAvailable: availableDays[key], startTime: "09:00", endTime: "17:00" })) }) }); const data = await response.json(); if (!response.ok) throw new Error(data.message || "Unable to save availability."); setMessage(data.message); } catch (reason) { setError(reason.message || "Unable to save availability."); } finally { setSaving(false); } };
 
   const services = [
     { name: "Boarding", icon: <Home size={18} /> },
@@ -45,6 +51,7 @@ export default function ManageAvailabilityPage() {
       setBlockedDates([...blockedDates, { date: newBlockedDate, reason: newBlockedReason }]);
       setNewBlockedDate("");
       setNewBlockedReason("");
+      setDialogOpen(false);
     }
   };
 
@@ -88,7 +95,7 @@ export default function ManageAvailabilityPage() {
           </select>
         </div>
 
-        <div className={styles.sections}>
+        {loading ? <AsyncState status="loading" title="Loading availability" message="Getting your current weekly schedule…" /> : error ? <AsyncState status="error" title="Availability could not load" message={error} onRetry={load} /> : <div className={styles.sections}>
           <section className={styles.section}>
             <div className={styles.sectionHeader}>
               <h2>1. Set Available Days</h2>
@@ -97,17 +104,13 @@ export default function ManageAvailabilityPage() {
 
             <div className={styles.dayGrid}>
               {Object.entries(availableDays).map(([day, isAvailable]) => (
-                <button
+                <button type="button"
                   key={day}
                   className={`${styles.dayBtn} ${isAvailable ? styles.selected : ""}`}
                   onClick={() => toggleDay(day)}
+                  aria-pressed={isAvailable}
                 >
-                  <input
-                    type="checkbox"
-                    checked={isAvailable}
-                    onChange={() => toggleDay(day)}
-                    className={styles.dayCheckbox}
-                  />
+                  <span className={styles.dayIndicator} aria-hidden="true">{isAvailable ? "✓" : ""}</span>
                   <span>{day}</span>
                 </button>
               ))}
@@ -149,15 +152,7 @@ export default function ManageAvailabilityPage() {
               <p>Add dates you are unavailable (vacations, personal events, etc.).</p>
             </div>
 
-            <button className={styles.addBlockedDateBtn} onClick={() => {
-              const dateInput = prompt("Enter date (e.g., 15 Aug 2026):");
-              const reasonInput = prompt("Enter reason (e.g., Vacation):");
-              if (dateInput && reasonInput) {
-                setNewBlockedDate(dateInput);
-                setNewBlockedReason(reasonInput);
-                setBlockedDates([...blockedDates, { date: dateInput, reason: reasonInput }]);
-              }
-            }}>
+            <button type="button" className={styles.addBlockedDateBtn} onClick={() => setDialogOpen(true)}>
               <Plus size={13} /> Add Blocked Date
             </button>
 
@@ -186,9 +181,9 @@ export default function ManageAvailabilityPage() {
               Blocked dates will not be shown to customers.
             </p>
           </section>
-        </div>
+        </div>}
 
-        <div className={styles.footer}>
+        {!loading && !error && <div className={styles.footer}>
           <div className={styles.warning}>
             <AlertCircle size={13} />
             <span>Changes you make will reflect on your service page immediately.</span>
@@ -196,8 +191,16 @@ export default function ManageAvailabilityPage() {
           <button className={styles.saveBtn} onClick={saveAvailability} disabled={saving}>
             💾 Save Availability
           </button>
-        </div>
+        </div>}
+        {message ? <p className={styles.success} role="status">{message}</p> : null}
       </div>
+      <ModalDialog open={dialogOpen} title="Block a date" onClose={() => setDialogOpen(false)}>
+        <form className={styles.blockedDateForm} onSubmit={(event) => { event.preventDefault(); addBlockedDate(); }}>
+          <label htmlFor="blocked-date">Date<input id="blocked-date" type="date" value={newBlockedDate} min={new Date().toISOString().slice(0, 10)} onChange={(event) => setNewBlockedDate(event.target.value)} required /></label>
+          <label htmlFor="blocked-reason">Reason<input id="blocked-reason" value={newBlockedReason} maxLength="120" onChange={(event) => setNewBlockedReason(event.target.value)} required /></label>
+          <div><button type="button" onClick={() => setDialogOpen(false)}>Cancel</button><button type="submit">Block date</button></div>
+        </form>
+      </ModalDialog>
     </div>
   );
 }
