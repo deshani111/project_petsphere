@@ -98,7 +98,7 @@ export default function LayoutShell({
 
       {children}
 
-      
+
 <SiteFooter
   isAuthenticated={isAuthenticated}
   userRole={userRole}

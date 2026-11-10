@@ -17,9 +17,17 @@ const services: Array<{ id: ServiceId; name: string; description: string; price:
 export default function NewBookingPage() {
   const [selectedService, setSelectedService] = useState<ServiceId>("boarding");
   useEffect(() => {
+    let active = true;
     const savedService = readBookingDraft().service;
     const matchedService = services.find((service) => service.id === savedService);
-    if (matchedService) setSelectedService(matchedService.id);
+    if (matchedService) {
+      queueMicrotask(() => {
+        if (active) setSelectedService(matchedService.id);
+      });
+    }
+    return () => {
+      active = false;
+    };
   }, []);
   const selected = services.find((service) => service.id === selectedService) ?? services[0];
 
