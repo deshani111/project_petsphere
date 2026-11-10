@@ -479,7 +479,7 @@ setIsSaving(false);
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
+    <div className="flex flex-col min-h-screen bg-[#FAF8F6] lg:flex-row">
       <OwnerSidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <DashboardHeader />

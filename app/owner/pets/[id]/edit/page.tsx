@@ -221,7 +221,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
       weight_kg: "Weight must be between 0.1 and 200 kg.",
       about: "About pet is required.",
       medications: "Medications must be 500 characters or less.",
-      care_instructions: "Care instructions must be 500 characters or less.",
+      care_instructions: "Care instructions must be 1000 characters or less.",
       sterilized: "Sterilization status is required.",
       last_dental_check: "Please choose today or an earlier date.",
     }),
@@ -260,7 +260,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
       }
       case "about": {
         if (!nextForm.about.trim()) return validationMessages.about;
-        if (nextForm.about.trim().length > 500) return "About pet must be 500 characters or less.";
+        if (nextForm.about.trim().length > 2000) return "About pet must be 2000 characters or less.";
         return undefined;
       }
       case "medications": {
@@ -268,7 +268,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
         return undefined;
       }
       case "care_instructions": {
-        if (nextForm.care_instructions.trim().length > 500) return validationMessages.care_instructions;
+        if (nextForm.care_instructions.trim().length > 1000) return validationMessages.care_instructions;
         return undefined;
       }
       case "sterilized": {
@@ -343,15 +343,15 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
 
     if (!form.about.trim()) {
       nextErrors.about = validationMessages.about;
-    } else if (form.about.trim().length > 500) {
-      nextErrors.about = "About pet must be 500 characters or less.";
+    } else if (form.about.trim().length > 2000) {
+      nextErrors.about = "About pet must be 2000 characters or less.";
     }
 
     if (form.medications.trim().length > 500) {
       nextErrors.medications = validationMessages.medications;
     }
 
-    if (form.care_instructions.trim().length > 500) {
+    if (form.care_instructions.trim().length > 1000) {
       nextErrors.care_instructions = validationMessages.care_instructions;
     }
 
@@ -494,7 +494,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           : "none";
 
   const shell = (content: ReactNode) => (
-    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
+    <div className="flex flex-col min-h-screen bg-[#FAF8F6] lg:flex-row">
       <OwnerSidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <DashboardHeader />

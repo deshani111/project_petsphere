@@ -110,7 +110,7 @@ export function PetFamilyPage({
   };
 
   return (
-    <main className="min-w-0 bg-[#f8f8fa] px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
+    <main className="min-w-0 bg-[#FAF8F6] px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
       <div className="mx-auto max-w-[1480px]">
         <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>

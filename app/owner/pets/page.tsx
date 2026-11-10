@@ -39,7 +39,7 @@ export default async function OwnerPetsPage() {
   const userName = `${user?.first_name || "Pet"} ${user?.last_name || "Owner"}`.trim();
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f6f7f9] lg:flex-row">
+    <div className="flex min-h-screen flex-col bg-[#FAF8F6] lg:flex-row">
       <OwnerSidebar />
       <div className="min-w-0 flex-1">
         <DashboardHeader userName={userName} userImage={null} unreadMessages={unreadMessages} />
