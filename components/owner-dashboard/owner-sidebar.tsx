@@ -23,7 +23,7 @@ const navigation = [
   { label: "Messages", icon: MailIcon, href: "#messages" },
   { label: "Marketplace", icon: StoreIcon, href: "/marketplace" },
   { label: "Blog", icon: FileIcon, href: "/blog" },
-  { label: "My Profile", icon: UserIcon, href: "#profile" },
+  { label: "My Profile", icon: UserIcon, href: "/owner/profile" },
 ];
 
 export function OwnerSidebar() {
@@ -67,6 +67,8 @@ export function OwnerSidebar() {
                   (href === "/owner/bookings" &&
                     pathname.startsWith("/owner/bookings/") &&
                     !pathname.startsWith("/owner/bookings/new")) ||
+                  (href === "/owner/profile" &&
+                    pathname.startsWith("/owner/profile")) ||
                   (href === "/marketplace" &&
                     pathname.startsWith("/marketplace/"))));
 
