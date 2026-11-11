@@ -120,6 +120,7 @@ export default function PetsGrid({
               </span>
               ?
             </p>
+            {deleteError ? <p className="mt-2 text-[11px] text-[#c24a50]">{deleteError}</p> : null}
 
             {deleteError ? (
               <p className="mt-2 text-[11px] text-[#c24a50]">

@@ -4,7 +4,7 @@ import SitterDiscovery from "./sitter-discovery";
 
 export default function FindSitterPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F9FB] lg:flex-row">
+    <div className="flex flex-col min-h-screen bg-[#FAF8F6] lg:flex-row">
       <OwnerSidebar />
       <div className="min-w-0 flex-1">
         <DashboardHeader />

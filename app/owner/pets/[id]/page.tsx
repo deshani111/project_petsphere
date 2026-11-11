@@ -1,7 +1,9 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
+import { type ApiPet, getApiMessage } from "../../../../lib/pet-api";
+import { parsePetNotes } from "../../../../lib/pet-notes";
 import {
   Activity,
   ArrowLeft,
@@ -13,25 +15,13 @@ import {
   ShieldCheck,
   Weight,
 } from "lucide-react";
-import { DashboardHeader } from "../../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
-import { type ApiPet, getApiMessage } from "../../../../lib/pet-api";
-import { parsePetNotes } from "../../../../lib/pet-notes";
 
 type Params = {
   params: Promise<{ id: string }>;
 };
 
 function OwnerShell({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex flex-col min-h-screen bg-[#fbf7f7] lg:flex-row">
-      <OwnerSidebar />
-      <div className="min-w-0 flex-1">
-        <DashboardHeader />
-        <main className="w-full px-4 py-5 sm:px-6 sm:py-7 lg:px-8">{children}</main>
-      </div>
-    </div>
-  );
+  return <main className="min-h-[calc(100vh-60px)] w-full bg-[#faf5f5] px-6 py-8">{children}</main>;
 }
 
 function formatDate(value: string | null | undefined) {

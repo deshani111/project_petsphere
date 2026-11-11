@@ -57,8 +57,6 @@ export function PetFamilyPage({
   const [sort, setSort] = useState<"recent" | "name">("recent");
 
   const loadPets = useCallback(async () => {
-    setIsLoading(true);
-    setError("");
     try {
       const response = await fetch("/api/pets", { cache: "no-store" });
       if (!response.ok) throw new Error(await getApiMessage(response));
@@ -70,7 +68,10 @@ export function PetFamilyPage({
     }
   }, []);
 
-  useEffect(() => { void loadPets(); }, [loadPets]);
+  useEffect(() => {
+    const timeout = window.setTimeout(() => void loadPets(), 0);
+    return () => window.clearTimeout(timeout);
+  }, [loadPets]);
 
   const species = useMemo(() => Array.from(new Set(
     pets.map((pet) => pet.species?.trim()).filter((value): value is string => Boolean(value))
@@ -110,7 +111,7 @@ export function PetFamilyPage({
   };
 
   return (
-    <main className="min-w-0 bg-[#f8f8fa] px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
+    <main className="min-w-0 bg-[#FAF8F6] px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
       <div className="mx-auto max-w-[1480px]">
         <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -161,7 +162,7 @@ export function PetFamilyPage({
           </div>
         </section>
 
-        {error && <div role="alert" className="mb-4 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}<button type="button" onClick={() => void loadPets()} className="ml-3 font-semibold underline underline-offset-2">Try again</button></div>}
+        {error && <div role="alert" className="mb-4 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}<button type="button" onClick={() => { setIsLoading(true); setError(""); void loadPets(); }} className="ml-3 font-semibold underline underline-offset-2">Try again</button></div>}
         {isLoading && <div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">Loading your pet family…</div>}
         {!isLoading && !error && pets.length === 0 && <div className="mb-4 rounded-lg border border-rose-100 bg-white p-4 text-sm text-slate-600">Your pet family is ready to grow. <Link href="/owner/pets/add" className="font-semibold text-[#a33237] underline underline-offset-2">Add your first pet.</Link></div>}
         {!isLoading && !error && visiblePets.length === 0 && pets.length > 0 && <div className="rounded-lg border border-slate-200 bg-white p-10 text-center">
