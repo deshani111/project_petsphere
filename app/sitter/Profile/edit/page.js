@@ -15,7 +15,19 @@ import {
 } from "lucide-react";
 import styles from "./edit.module.css";
 
-const empty = { fullName: "", email: "", phone: "", city: "", address: "", bio: "" };
+const empty = {
+  fullName: "",
+  email: "",
+  phone: "",
+  city: "",
+  address: "",
+  bio: "",
+  professionalTitle: "",
+  notificationsEnabled: true,
+  profileImage: "",
+};
+const DEFAULT_BIO =
+  "Professional pet sitter with over 8 years of experience. Certified in pet first aid and CPR. I provide a safe, loving environment for animals of all sizes and temperaments. Specializing in long walks, senior pet care, and high-energy dogs.";
 const documentTypes = [
   {
     type: "nic_front",
@@ -47,11 +59,20 @@ export default function EditProfile() {
   const [documents, setDocuments] = useState({});
   const [documentFiles, setDocumentFiles] = useState({});
   const [documentErrors, setDocumentErrors] = useState({});
+  const [profileImageFile, setProfileImageFile] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState("");
   const inputs = useRef({});
+  const profileImageInput = useRef(null);
 
   useEffect(() => {
-    fetch("/api/sitter/profile")
-      .then((r) => r.json())
+    fetch("/api/sitter/profile", { cache: "no-store" })
+      .then(async (response) => {
+        const body = await response.json();
+        if (!response.ok) {
+          throw new Error(body.error || body.message || "Unable to load your profile.");
+        }
+        return body;
+      })
       .then((d) => {
         if (d.profile) {
           setData({
@@ -60,8 +81,12 @@ export default function EditProfile() {
             phone: d.profile.phone,
             city: d.profile.serviceArea,
             address: d.profile.address,
-            bio: d.profile.bio,
+            bio: d.profile.bio || DEFAULT_BIO,
+            professionalTitle: d.profile.professionalTitle || "Pet Sitter",
+            notificationsEnabled: d.profile.notificationsEnabled !== false,
+            profileImage: d.profile.profileImage || "",
           });
+          setProfileImagePreview(d.profile.profileImage || "/register-pet-care.jpg");
           setServices(d.profile.services || []);
           setVerificationStatus(d.profile.verificationStatus || "Not Submitted");
           setDocuments(
@@ -107,6 +132,21 @@ export default function EditProfile() {
     }));
   }
 
+  function selectProfileImage(file) {
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setError("Please upload a JPG, PNG, or WEBP profile image.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Profile image must be less than 5MB.");
+      return;
+    }
+    setError("");
+    setProfileImageFile(file);
+    setProfileImagePreview(URL.createObjectURL(file));
+  }
+
   async function save() {
     const names = data.fullName.trim().split(/\s+/);
 
@@ -144,17 +184,27 @@ export default function EditProfile() {
     form.append("address", data.address);
     form.append("serviceArea", data.city);
     form.append("bio", data.bio);
+    form.append("professionalTitle", data.professionalTitle);
+    form.append("notificationsEnabled", String(data.notificationsEnabled));
+    if (profileImageFile) form.append("profileImage", profileImageFile);
 
     documentTypes.forEach(({ type }) => {
       if (documentFiles[type]) form.append(type, documentFiles[type]);
     });
 
-    const response = await fetch("/api/sitter/profile", { method: "PATCH", body: form });
-    const result = await response.json();
-    setSaving(false);
-
-    if (response.ok) location.assign("/sitter/Profile");
-    else setError(result.error || result.message || "Unable to save your profile.");
+    try {
+      const response = await fetch("/api/sitter/profile", { method: "PATCH", body: form });
+      const result = await response.json();
+      if (!response.ok) {
+        setError(result.error || result.message || "Unable to save your profile.");
+        return;
+      }
+      location.assign("/sitter/Profile");
+    } catch {
+      setError("Unable to save your profile. Please check your connection and try again.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -165,17 +215,21 @@ export default function EditProfile() {
             <h1>Edit Profile</h1>
             <p>Manage your professional identity and pet care preferences.</p>
           </div>
-          <span className={styles.verified}><Check size={11}/> Verified Sitter</span>
+          <span className={`${styles.verified} ${verificationStatus === "Verified" ? styles.verified : styles.pending}`}>
+            <Check size={11}/> {verificationStatus === "Verified" ? "Verified Sitter" : verificationStatus}
+          </span>
         </header>
 
         <section className={styles.identity}>
-          <div className={styles.avatar}>
-            {data.fullName.split(" ").filter(Boolean).map((x) => x[0]).join("").slice(0, 2) || "PS"}
-          </div>
+          <button type="button" className={styles.avatarButton} onClick={() => profileImageInput.current?.click()} aria-label="Add or change profile picture">
+            <img src={profileImagePreview || "/register-pet-care.jpg"} alt="Profile preview" className={styles.avatarImage}/>
+            <span><Upload size={10}/> Change photo</span>
+          </button>
+          <input ref={profileImageInput} className={styles.fileInput} type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => selectProfileImage(event.target.files?.[0])}/>
           <div className={styles.formGrid}>
             <Field label="Full Name" value={data.fullName} onChange={(v) => change("fullName", v)} required/>
-            <Field label="Professional Title" value="Pet Sitter & Dog Walker" readOnly/>
-            <Field label="Email Address" type="email" autoComplete="email" value={data.email} onChange={(v) => change("email", v)} icon={<Mail size={11}/>} required/>
+            <Field label="Professional Title" value={data.professionalTitle} onChange={(v) => change("professionalTitle", v)} required/>
+            <Field label="Email Address" value={data.email} onChange={(v) => change("email", v)} icon={<Mail size={11}/>} required/>
             <span className={styles.emailOk}><Check size={13}/></span>
           </div>
         </section>
@@ -184,7 +238,7 @@ export default function EditProfile() {
           <section className={styles.card}>
             <h2><UserRound size={13}/> Professional Details</h2>
             <div className={styles.two}>
-              <Field label="Phone Number" type="tel" inputMode="tel" autoComplete="tel" value={data.phone} onChange={(v) => change("phone", v)} icon={<Phone size={11}/>}/>
+              <Field label="Phone Number" value={data.phone} onChange={(v) => change("phone", v)} icon={<Phone size={11}/>}/>
               <Field label="City" value={data.city} onChange={(v) => change("city", v)} icon={<MapPin size={11}/>}/>
             </div>
             <Field label="Address" value={data.address} onChange={(v) => change("address", v)}/>
@@ -196,16 +250,24 @@ export default function EditProfile() {
           </section>
 
           <aside className={styles.card}>
-            <h2>âš™ Preferences</h2>
-            <div className={styles.notice}><b>Notifications</b><small>Alerts for new bookings</small><i><em/></i></div>
+            <h2><Check size={13}/> Preferences</h2>
+            <button
+              type="button"
+              className={styles.notice}
+              onClick={() => change("notificationsEnabled", !data.notificationsEnabled)}
+              aria-pressed={data.notificationsEnabled}
+            >
+              <span><b>Notifications</b><small>Alerts for new bookings</small></span>
+              <i className={data.notificationsEnabled ? styles.noticeOn : styles.noticeOff}><em /></i>
+            </button>
             <div className={styles.trust}><ShieldCheck size={18}/><b>Trust & Safety</b><span>Your professional details were last verified securely.</span></div>
           </aside>
         </div>
 
         <section className={styles.card}>
-          <h2>âœŽ Bio / About</h2>
-            <label className={styles.label} htmlFor="sitter-bio">Tell pet owners about your experience</label>
-            <textarea id="sitter-bio" value={data.bio} maxLength="2000" onChange={(e) => change("bio", e.target.value)} placeholder="Share your pet-care experience..."/>
+          <h2><UserRound size={13}/> Bio / About</h2>
+          <label className={styles.label}>Tell pet owners about your experience</label>
+          <textarea value={data.bio} maxLength="2000" onChange={(e) => change("bio", e.target.value)} placeholder="Share your pet-care experience..."/>
           <small className={styles.count}>{data.bio.length}/2000</small>
         </section>
 
@@ -236,7 +298,7 @@ export default function EditProfile() {
           </div>
         </section>
 
-        {error && <p className={styles.error} role="alert">{error}</p>}
+        {error && <p className={styles.error}>{error}</p>}
 
         <footer>
           <Link href="/sitter/Profile">Cancel</Link>
@@ -247,11 +309,11 @@ export default function EditProfile() {
   );
 }
 
-function Field({ label, value, onChange, icon, readOnly, required, type = "text", inputMode, autoComplete }) {
+function Field({ label, value, onChange, icon, readOnly, required }) {
   return (
     <label className={styles.field}>
       <span>{icon}{label}{required && <b>*</b>}</span>
-      <input type={type} inputMode={inputMode} autoComplete={autoComplete} value={value} onChange={(e) => onChange?.(e.target.value)} readOnly={readOnly}/>
+      <input value={value} onChange={(e) => onChange?.(e.target.value)} readOnly={readOnly}/>
     </label>
   );
 }

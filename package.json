@@ -7,9 +7,11 @@
     "node": ">=22.0.0"
   },
   "scripts": {
+    "predev": "prisma generate",
     "dev": "next dev",
     "prebuild": "prisma generate",
     "build": "next build",
+    "prestart": "prisma generate",
     "start": "next start",
     "lint": "eslint .",
     "db:seed-admin": "node --env-file=.env prisma/seed-admin.js",
@@ -39,6 +41,7 @@
     "ws": "^8.22.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/leaflet": "^1.9.22",
     "@types/node": "26.1.2",

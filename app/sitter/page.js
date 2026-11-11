@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import { CalendarDays, Check, ChevronRight, ClipboardList, MessageSquare, PawPrint, Star, UserRound, WalletCards, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CalendarDays, Check, CheckCircle2, ChevronRight, ClipboardList, MessageSquare, PawPrint, Search, Star, UserRound, WalletCards, X } from "lucide-react";
 import { ModalDialog } from "../../components/shared/modal-dialog";
 import { Skeleton, SkeletonCard, SkeletonTable } from "../../components/shared/skeleton";
 import styles from "./page.module.css";
@@ -27,23 +27,34 @@ export default function SitterDashboard() {
   const [processingId, setProcessingId] = useState("");
   const [declining, setDeclining] = useState(null);
   const [feedback, setFeedback] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
 
-  const loadDashboard = useCallback(async () => {
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/sitter/dashboard", { cache: "no-store", signal: controller.signal })
+      .then(async (response) => {
+        const body = await response.json();
+        if (!response.ok) throw new Error(body.message || "Unable to load your dashboard.");
+        return body;
+      })
+      .then((body) => {
+        setData(body);
+        setError("");
+      })
+      .catch((cause) => {
+        if (cause.name !== "AbortError") setError(cause.message || "Unable to load your dashboard.");
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [reloadKey]);
+
+  function retryDashboard() {
     setLoading(true);
     setError("");
-    try {
-      const response = await fetch("/api/sitter/dashboard", { cache: "no-store" });
-      const body = await response.json();
-      if (!response.ok) throw new Error(body.message || "Unable to load your dashboard.");
-      setData(body);
-    } catch (loadError) {
-      setError(loadError.message || "Unable to load your dashboard.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { loadDashboard(); }, [loadDashboard]);
+    setReloadKey((key) => key + 1);
+  }
 
   async function decideRequest(booking, status) {
     if (!booking || processingId) return;
@@ -60,7 +71,8 @@ export default function SitterDashboard() {
       if (!response.ok) throw new Error(body.message || "This request could not be updated.");
       setFeedback(status === "confirmed" ? "Booking request accepted." : "Booking request declined.");
       setDeclining(null);
-      await loadDashboard();
+      setLoading(true);
+      setReloadKey((key) => key + 1);
     } catch (actionError) {
       setError(actionError.message || "This request could not be updated. Please try again.");
     } finally {
@@ -69,16 +81,25 @@ export default function SitterDashboard() {
   }
 
   if (loading && !data) return <DashboardSkeleton />;
-  if (!data) return <div className={styles.page}><div className={styles.content}><section className={styles.errorState} role="alert"><h1>Dashboard unavailable</h1><p>{error || "We could not load your dashboard."}</p><button type="button" onClick={loadDashboard} disabled={loading}>{loading ? "Retrying…" : "Retry"}</button></section></div></div>;
+  if (!data) return <div className={styles.page}><div className={styles.content}><section className={styles.errorState} role="alert"><h1>Dashboard unavailable</h1><p>{error || "We could not load your dashboard."}</p><button type="button" onClick={retryDashboard} disabled={loading}>{loading ? "Retrying…" : "Retry"}</button></section></div></div>;
 
   const stats = data.stats;
   const pendingRequest = data.pending?.find((booking) => booking.id === declining) || null;
 
   return <div className={styles.page}><div className={styles.content} aria-busy={loading}>
-    <h1 className={styles.title}>Welcome back {data.sitter?.name || ""}!</h1>
-    {data.sitter?.verified && <div className={styles.verified}><span>✓</span>Verified Professional</div>}
+    <section className={styles.welcomeHero}>
+      <div>
+        <span className={styles.welcomeBadge}><CheckCircle2 size={13} />{data.sitter?.verified ? "Verified Professional" : "Sitter Dashboard"}</span>
+        <h1>Welcome back, {data.sitter?.name || "Pet Sitter"}!</h1>
+        <p>Keep your bookings, services, and client care up to date.</p>
+        <div className={styles.welcomeActions}>
+          <Link href="/sitter/services" className={styles.heroPrimary}><Search size={14} />Manage Services</Link>
+          <Link href="/sitter/bookings" className={styles.heroSecondary}><CalendarDays size={14} />Manage Bookings</Link>
+        </div>
+      </div>
+    </section>
     {feedback && <p className={styles.feedback} role="status">{feedback}</p>}
-    {error && <div className={styles.inlineError} role="alert"><span>{error}</span><button type="button" onClick={loadDashboard} disabled={loading}>Retry</button></div>}
+    {error && <div className={styles.inlineError} role="alert"><span>{error}</span><button type="button" onClick={retryDashboard} disabled={loading}>Retry</button></div>}
 
     <section className={styles.stats} aria-label="Dashboard statistics">
       <Stat icon={<WalletCards size={18} />} label="This Month's Earnings"><div className={styles.earning}><strong>{money(stats.monthEarnings)}</strong><em>Total: {money(stats.totalEarnings)}</em></div></Stat>

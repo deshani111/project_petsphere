@@ -54,11 +54,13 @@ export default function SitterProfilePage() {
   const [savingPreference, setSavingPreference] = useState(false);
   const [error, setError] = useState("");
   const [selectedDocument, setSelectedDocument] = useState(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
     let mounted = true;
 
-    fetch("/api/sitter/profile")
+    fetch("/api/sitter/profile", { signal: controller.signal, cache: "no-store" })
       .then(async (response) => {
         const body = await response.json();
         if (!response.ok) {
@@ -73,7 +75,7 @@ export default function SitterProfilePage() {
         }
       })
       .catch((err) => {
-        if (mounted) setError(err.message || "Unable to load your profile.");
+        if (mounted && err.name !== "AbortError") setError(err.message || "Unable to load your profile.");
       })
       .finally(() => {
         if (mounted) setLoading(false);
@@ -81,8 +83,15 @@ export default function SitterProfilePage() {
 
     return () => {
       mounted = false;
+      controller.abort();
     };
-  }, []);
+  }, [reloadKey]);
+
+  function retryProfile() {
+    setLoading(true);
+    setError("");
+    setReloadKey((key) => key + 1);
+  }
 
   async function toggleNotifications() {
     if (savingPreference) return;
@@ -135,12 +144,12 @@ export default function SitterProfilePage() {
         <section className={styles.hero}>
           <div className={styles.heroMain}>
             <div className={styles.avatarShell}>
-              <div className={styles.avatar}>
-                <span>{initials(profile.fullName)}</span>
+              <Link href="/sitter/Profile/edit" className={styles.avatar} aria-label="Add or change profile picture">
+                {profile.profileImage ? <img className={styles.avatarImage} src={profile.profileImage} alt="" /> : <span>{initials(profile.fullName)}</span>}
                 <i>
                   <Camera size={10} />
                 </i>
-              </div>
+              </Link>
             </div>
 
             <div className={styles.heroBody}>
@@ -239,7 +248,7 @@ export default function SitterProfilePage() {
           </aside>
         </section>
 
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <div className={styles.error} role="alert"><span>{error}</span><button type="button" onClick={retryProfile}>Try again</button></div>}
 
         <section className={styles.columns}>
           <div className={styles.leftColumn}>
