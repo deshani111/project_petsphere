@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SkeletonPage } from "./skeleton";
 
 type AsyncStateProps = {
   status: "loading" | "empty" | "error";
@@ -10,6 +11,9 @@ type AsyncStateProps = {
 
 /** A consistent, announced state for data-backed dashboard panels. */
 export function AsyncState({ status, title, message, onRetry, action }: AsyncStateProps) {
+  if (status === "loading") {
+    return <SkeletonPage variant="form" title={false} />;
+  }
   const isError = status === "error";
   return (
     <div className={`async-state async-state--${status}`} role={isError ? "alert" : "status"} aria-live={isError ? "assertive" : "polite"}>

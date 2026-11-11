@@ -7,6 +7,7 @@ import {
   Sparkles, Tags,
 } from "lucide-react";
 import PetsGrid from "../pets-grid";
+import { SkeletonCard } from "../shared/skeleton";
 import { type ApiPet, getApiMessage } from "../../lib/pet-api";
 
 type PetCategory = "all" | "dogs" | "cats" | "birds" | "other";
@@ -163,7 +164,7 @@ export function PetFamilyPage({
         </section>
 
         {error && <div role="alert" className="mb-4 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}<button type="button" onClick={() => { setIsLoading(true); setError(""); void loadPets(); }} className="ml-3 font-semibold underline underline-offset-2">Try again</button></div>}
-        {isLoading && <div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">Loading your pet family…</div>}
+        {isLoading && <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3" role="status" aria-label="Loading pets">{Array.from({ length: 3 }, (_, index) => <SkeletonCard image={false} key={index} />)}</div>}
         {!isLoading && !error && pets.length === 0 && <div className="mb-4 rounded-lg border border-rose-100 bg-white p-4 text-sm text-slate-600">Your pet family is ready to grow. <Link href="/owner/pets/add" className="font-semibold text-[#a33237] underline underline-offset-2">Add your first pet.</Link></div>}
         {!isLoading && !error && visiblePets.length === 0 && pets.length > 0 && <div className="rounded-lg border border-slate-200 bg-white p-10 text-center">
           <Search className="mx-auto text-slate-400" size={24} />

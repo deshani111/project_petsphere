@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { DashboardHeader } from "../../../../../components/owner-dashboard/dashboard-header";
 import { OwnerSidebar } from "../../../../../components/owner-dashboard/owner-sidebar";
 import { combinePetNotes, parsePetNotes } from "../../../../../lib/pet-notes";
+import { SkeletonPage } from "../../../../../components/shared/skeleton";
 
 type RealPet = {
   pet_id: string;
@@ -503,7 +504,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
   );
 
   if (loading) {
-    return shell(<div className="p-6">Loading pet...</div>);
+    return shell(<SkeletonPage variant="form" />);
   }
 
   if (loadError) {

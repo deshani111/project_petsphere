@@ -1,4 +1,3 @@
-
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -6,8 +5,9 @@ import { SiteFooter, SiteHeader } from "./site-chrome";
 import SitterSidebar from "../../app/sitter/Sidebar";
 import { OwnerSidebar } from "../owner-dashboard/owner-sidebar";
 import { DashboardTopbar } from "../dashboard/dashboard-topbar";
+import { ThemeProvider } from "./theme-provider";
 
-export default function LayoutShell({
+function LayoutShellContent({
   children,
   isAuthenticated,
   userRole,
@@ -29,6 +29,32 @@ export default function LayoutShell({
     pathname === "/marketplace/new" ||
     pathname === "/marketplace/my-ads" ||
     /^\/marketplace\/\d+$/.test(pathname);
+
+  const isBlogRoute = pathname === "/blog" || pathname.startsWith("/blog/");
+
+  if (isBlogRoute && userRole === "pet_sitter") {
+    return (
+      <div className="marketplace-sitter-shell">
+        <SitterSidebar />
+        <div className="marketplace-dashboard-main marketplace-sitter-content">
+          <DashboardTopbar userName={userName} variant="marketplace" />
+          <main>{children}</main>
+        </div>
+      </div>
+    );
+  }
+
+  if (isBlogRoute && userRole === "pet_owner") {
+    return (
+      <div className="marketplace-owner-shell">
+        <OwnerSidebar />
+        <div className="marketplace-dashboard-main marketplace-owner-content">
+          <DashboardTopbar userName={userName} variant="marketplace" />
+          <main>{children}</main>
+        </div>
+      </div>
+    );
+  }
 
   if (isMarketplaceRoute && userRole === "pet_sitter") {
     return (
@@ -98,12 +124,18 @@ export default function LayoutShell({
 
       {children}
 
-      
-<SiteFooter
-  isAuthenticated={isAuthenticated}
-  userRole={userRole}
-/>
-
+      <SiteFooter
+        isAuthenticated={isAuthenticated}
+        userRole={userRole}
+      />
     </>
+  );
+}
+
+export default function LayoutShell(props) {
+  return (
+    <ThemeProvider>
+      <LayoutShellContent {...props} />
+    </ThemeProvider>
   );
 }

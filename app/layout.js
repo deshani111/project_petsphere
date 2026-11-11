@@ -48,7 +48,7 @@ export default async function RootLayout({ children }) {
   const userRole = account?.role ?? null;
 
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className={`${inter.variable} ${playfairDisplay.variable} ${manrope.variable}`}>
         <LayoutShell
           isAuthenticated={isAuthenticated}

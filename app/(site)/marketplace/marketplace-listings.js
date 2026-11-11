@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowUpRight, CalendarDays, MapPin } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import styles from "./page.module.css";
+import { SkeletonCard } from "../../../components/shared/skeleton";
 
 function formatPrice(price) {
   if (!price) return "Contact seller";
@@ -78,7 +79,7 @@ export default function MarketplaceListings() {
     setFilters({ category: "all", minPrice: "", maxPrice: "", location: "" });
   }
 
-  if (state === "loading") return <p>Loading reviewed listings…</p>;
+  if (state === "loading") return <section className={styles.listingGrid} aria-busy="true" aria-label="Loading marketplace listings">{Array.from({ length: 6 }, (_, index) => <SkeletonCard key={index} />)}</section>;
   if (state === "error") return <p role="alert">Reviewed listings could not be loaded. Please try again.</p>;
 
   return (

@@ -16,11 +16,14 @@ async function loadSitterRecord(sitterId) {
 }
 
 export async function getCurrentSitterProfile() {
-  const sitter = await getCurrentSitter();
-  if (!sitter) return null;
-
-  const record = await loadSitterRecord(sitter.sitter_id);
-  return record ? toSitterProfileDTO(record) : null;
+  const sitter = await getCurrentSitter({
+    include: {
+      users: true,
+      pet_sitter_service: { include: { service_type: true } },
+      verification_documents: true,
+    },
+  });
+  return sitter ? toSitterProfileDTO(sitter) : null;
 }
 
 export async function updateCurrentSitterProfile(body, files = []) {

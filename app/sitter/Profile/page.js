@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import styles from "./profile.module.css";
 import { ModalDialog } from "../../../components/shared/modal-dialog";
+import { SkeletonPage } from "../../../components/shared/skeleton";
 
 const fallbackProfile = {
   fullName: "Your profile",
@@ -115,6 +116,8 @@ export default function SitterProfilePage() {
   }
 
   const completion = Math.max(0, Math.min(100, profile.stats?.profileCompleteness ?? 0));
+
+  if (loading) return <SkeletonPage variant="profile" />;
 
   return (
     <div className={styles.page}>

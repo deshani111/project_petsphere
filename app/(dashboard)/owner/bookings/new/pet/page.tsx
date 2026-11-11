@@ -5,11 +5,13 @@ import Link from "next/link";
 import BookingSummary from "../components/booking-summary";
 import { type ApiPet, getApiMessage } from "../../../../../../lib/pet-api";
 import { readBookingDraft, updateBookingDraft } from "../../../../../../lib/booking-draft";
+import { SkeletonCard } from "../../../../../../components/shared/skeleton";
 
 export default function SelectPetPage() {
   const [pets, setPets] = useState<ApiPet[]>([]);
   const [selectedPet, setSelectedPet] = useState(() => readBookingDraft().petId || "");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/pets")
@@ -18,7 +20,8 @@ export default function SelectPetPage() {
         return response.json();
       })
       .then((data: ApiPet[]) => setPets(data))
-      .catch((reason) => setError(reason instanceof Error ? reason.message : "Could not load your pets."));
+      .catch((reason) => setError(reason instanceof Error ? reason.message : "Could not load your pets."))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -28,7 +31,7 @@ export default function SelectPetPage() {
         <p className="mb-5 mt-1 text-sm text-[#7c7071]">Choose the pet this booking is for.</p>
         {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {pets.map((pet) => {
+          {loading ? Array.from({ length: 3 }, (_, index) => <SkeletonCard image={false} key={index} />) : pets.map((pet) => {
             const selected = selectedPet === pet.pet_id;
             return (
               <button key={pet.pet_id} type="button" onClick={() => setSelectedPet(pet.pet_id)} className={`rounded-xl border bg-white p-3 text-center ${selected ? "border-[#A13D3F] ring-1 ring-[#A13D3F]" : "border-[#f0dfdd]"}`}>

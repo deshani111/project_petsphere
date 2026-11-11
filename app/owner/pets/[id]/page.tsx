@@ -6,6 +6,7 @@ import { DashboardHeader } from "../../../../components/owner-dashboard/dashboar
 import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
 import { type ApiPet, getApiMessage } from "../../../../lib/pet-api";
 import { parsePetNotes } from "../../../../lib/pet-notes";
+import { SkeletonPage } from "../../../../components/shared/skeleton";
 
 type Params = {
   params: Promise<{ id: string }>;
@@ -70,7 +71,7 @@ export default function PetProfilePage({ params }: Params) {
   }, [params]);
 
   if (isLoading) {
-    return <OwnerShell>Loading pet...</OwnerShell>;
+    return <OwnerShell><SkeletonPage variant="cards" /></OwnerShell>;
   }
 
   if (error) {

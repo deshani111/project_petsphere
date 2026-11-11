@@ -1,6 +1,10 @@
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = (phase) => ({
+  distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
   compress: true,
   images: {
     formats: ["image/avif", "image/webp"],
@@ -9,6 +13,6 @@ const nextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
-};
+});
 
 module.exports = nextConfig;
