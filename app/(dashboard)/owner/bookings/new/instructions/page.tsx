@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -23,11 +24,40 @@ const fields = [
     title: "Emergency Contact Info",
     hint: "Who should we call if you're unreachable? Include veterinarian details.",
   },
-];
+] as const;
+
+const services = {
+  boarding: {
+    name: "Boarding",
+    price: "8,500.00",
+    unit: "/ night",
+  },
+  walking: {
+    name: "Walking",
+    price: "4,000.00",
+    unit: "/ hour",
+  },
+  grooming: {
+    name: "Grooming",
+    price: "6,000.00",
+    unit: "/ session",
+  },
+  training: {
+    name: "Training",
+    price: "5,000.00",
+    unit: "/ hour",
+  },
+};
 
 export default function BookingInstructionsPage() {
   const { draft, setDraft } = useBooking();
-  const notes = draft.notes;
+
+  const notes = draft.notes ?? {};
+
+  const selectedService =
+    draft.service && draft.service in services
+      ? services[draft.service as keyof typeof services]
+      : services.boarding;
 
   return (
     <div className="booking-content-grid">
@@ -45,7 +75,7 @@ export default function BookingInstructionsPage() {
           {fields.map((field) => (
             <label
               key={field.id}
-              className="block rounded-[10px] border border-[#ead1cf] p-4 sm:p-5 transition focus-within:border-[#A13D3F] focus-within:ring-1 focus-within:ring-[#f5d8d5]"
+              className="block rounded-[10px] border border-[#ead1cf] p-4 transition focus-within:border-[#A13D3F] focus-within:ring-1 focus-within:ring-[#f5d8d5] sm:p-5"
             >
               <span className="flex items-center gap-2 text-[13px] font-bold text-[#413637]">
                 <i className="text-[15px] not-italic text-[#A13D3F]">
@@ -75,7 +105,7 @@ export default function BookingInstructionsPage() {
         <div className="mt-7 flex flex-wrap items-center justify-between gap-4">
           <Link
             href="/owner/bookings"
-            className="text-[13px] text-[#A13D3F]"
+            className="text-[13px] text-[#A13D3F] transition hover:underline"
           >
             Cancel
           </Link>
@@ -83,14 +113,14 @@ export default function BookingInstructionsPage() {
           <div className="flex gap-3">
             <Link
               href="/owner/bookings/new/dates"
-              className="rounded-[7px] border border-[#DCC0BF] px-4 py-2.5 text-[13px] text-[#A13D3F]"
+              className="rounded-[7px] border border-[#DCC0BF] px-4 py-2.5 text-[13px] text-[#A13D3F] transition hover:bg-[#fff4f2]"
             >
               ← Previous
             </Link>
 
             <Link
               href="/owner/bookings/requested"
-              className="rounded-[7px] bg-[#A13D3F] px-4 py-2.5 text-[13px] text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]"
+              className="rounded-[7px] bg-[#A13D3F] px-4 py-2.5 text-[13px] font-semibold text-white shadow-[0_5px_10px_rgba(161,61,63,.17)] transition hover:bg-[#8f3539]"
             >
               Confirm Booking
             </Link>
@@ -99,9 +129,9 @@ export default function BookingInstructionsPage() {
       </section>
 
       <BookingSummary
-        service="Boarding"
-        price="8,500.00"
-        unit="/ night"
+        service={selectedService.name}
+        price={selectedService.price}
+        unit={selectedService.unit}
       />
     </div>
   );

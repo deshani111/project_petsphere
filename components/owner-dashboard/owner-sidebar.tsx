@@ -56,7 +56,7 @@ const navigation = [
   {
     label: "My Profile",
     icon: UserIcon,
-    href: "#profile",
+    href: "/owner/profile",
   },
 ];
 
@@ -89,13 +89,18 @@ export function OwnerSidebar() {
         >
           {navigation.map(({ label, icon: Icon, href }) => {
 
+            // Marketplace active state
             const isMarketplace =
               label === "Marketplace" &&
               (
-                pathname.startsWith("/owner/marketplace") ||
-                pathname === "/marketplace/new"
+                pathname === "/marketplace" ||
+                pathname.startsWith("/marketplace/") ||
+                pathname === "/owner/marketplace" ||
+                pathname.startsWith("/owner/marketplace/")
               );
 
+            // Booking active state
+            // Exclude the new booking flow.
             const isBookings =
               href === "/owner/bookings" &&
               (
@@ -106,17 +111,19 @@ export function OwnerSidebar() {
                 )
               );
 
+            // General navigation active state
+            const isGeneralActive =
+              href !== "/owner/bookings" &&
+              href !== "/marketplace" &&
+              (
+                pathname === href ||
+                pathname.startsWith(`${href}/`)
+              );
+
             const isActive =
               isMarketplace ||
               isBookings ||
-              (
-                href.startsWith("/") &&
-                href !== "/owner/bookings" &&
-                (
-                  pathname === href ||
-                  pathname.startsWith(`${href}/`)
-                )
-              );
+              isGeneralActive;
 
             return (
               <Link

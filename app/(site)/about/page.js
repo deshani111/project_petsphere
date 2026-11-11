@@ -6,58 +6,112 @@ import styles from "./page.module.css";
 // Remove this opt-out after verifying the segment passes validation without it.
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
-const values = [
-  { number: "01", title: "Care with intention", text: "Good care respects the routines, quirks, and comforts that make every pet unique." },
-  { number: "02", title: "Trust through clarity", text: "Thoughtful details and open communication help pet parents feel at ease." },
-  { number: "03", title: "Better together", text: "We connect pet parents with people who bring patience, warmth, and experience." },
+const careNotes = [
+  {
+    label: "Before the handover",
+    title: "Your routine comes with them.",
+    text: "Share feeding times, walk routes, favourite toys, and the small signals only you notice.",
+  },
+  {
+    label: "During the stay",
+    title: "Clear updates, no guessing.",
+    text: "Keep the thread open with messages and photo check-ins that show how the day is going.",
+  },
+  {
+    label: "When you return",
+    title: "A familiar welcome home.",
+    text: "Find care that respects your pet's pace, so the handover feels calm for everyone.",
+  },
 ];
 
 export default function AboutPage() {
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
-        <div className={styles.heroCopy}>
-          <p className={styles.eyebrow}><span /> A little about us</p>
-          <h1>Because they&apos;re <em>family.</em></h1>
-          <p className={styles.heroText}>
-            PetSphere brings pet parents and caring sitters together, so finding
-            the right care feels a little more like finding a friend.
-          </p>
-          <div className={styles.heroActions}>
-            <Link href="/register" className={styles.primaryButton}>Find your sitter <span aria-hidden="true">&rarr;</span></Link>
-            <Link href="/#services" className={styles.secondaryLink}>Explore PetSphere</Link>
-          </div>
-          <div className={styles.heroFootnote}><span className={styles.footnoteMark}>P</span><p>Made for the love<br />we share with pets.</p></div>
+        <div className={styles.heroImage}>
+          <Image
+            src="/about-hero-dog.webp"
+            alt="A woman sharing a quiet, happy moment with her dog"
+            fill
+            priority
+            sizes="(max-width: 760px) 100vw, 48vw"
+          />
+          <span className={styles.imageCaption}>The kind of care we look for.</span>
         </div>
 
-        <div className={styles.photoComposition}>
-          <div className={styles.mainPhoto}>
-            <Image src="/about-hero-dog.webp" alt="A woman sharing a quiet, happy moment with her dog" fill priority sizes="(max-width: 820px) 100vw, 48vw" />
+        <div className={styles.handover}>
+          <div className={styles.handoverTop}>
+            <p className={styles.kicker}>About PetSphere</p>
+            <span className={styles.noteNumber}>Care note 01</span>
           </div>
-          <div className={styles.smallPhoto}>
-            <Image src="/about-cat-care.webp" alt="A cat being cared for at home" fill sizes="(max-width: 820px) 38vw, 18vw" />
+          <h1>Good care leaves room for peace of mind.</h1>
+          <p className={styles.heroText}>
+            PetSphere connects pet parents with sitters who notice the details:
+            the familiar walk, the full bowl, the update you were waiting for.
+          </p>
+          <div className={styles.handoverRule} />
+          <dl className={styles.handoverFacts}>
+            <div>
+              <dt>What matters</dt>
+              <dd>Routine, trust, and a clear line home.</dd>
+            </div>
+            <div>
+              <dt>Who it is for</dt>
+              <dd>Pets, their people, and the sitters who get it.</dd>
+            </div>
+          </dl>
+          <div className={styles.heroActions}>
+            <Link href="/register" className={styles.primaryButton}>Find your sitter</Link>
+            <Link href="/#services" className={styles.secondaryLink}>See how it works</Link>
           </div>
-          <div className={styles.photoLabel}><span>Care that feels familiar</span><b>For every kind of pet.</b></div>
-          <span className={styles.photoSpark} aria-hidden="true">*</span>
         </div>
       </section>
 
+      <section className={styles.trustLedger} aria-label="What PetSphere makes clearer">
+        <div><strong>01</strong><span>Vetted people</span></div>
+        <div><strong>02</strong><span>Open updates</span></div>
+        <div><strong>03</strong><span>Care that follows the routine</span></div>
+      </section>
+
       <section className={styles.purpose}>
-        <div className={styles.purposeLabel}><span className={styles.eyebrow}><span /> Why PetSphere</span><span className={styles.purposeIndex}>01 / 02</span></div>
+        <div className={styles.sectionMarker}>Why PetSphere</div>
         <div className={styles.purposeContent}>
-          <h2>Finding care should feel <em>good.</em></h2>
-          <div><p>Leaving your pet with someone new is personal. We understand that the little details matter: the familiar walk, the favourite toy, the update that lets you relax.</p><p>PetSphere is here to make those connections easier, and to help every pet feel safe, seen, and right at home.</p></div>
+          <h2>Care is a conversation, not a handoff.</h2>
+          <div>
+            <p>Leaving your pet with someone new is personal. The right sitter does more than follow instructions; they learn the rhythm of a home and keep you close to it.</p>
+            <p>We built PetSphere around that exchange, giving owners clarity and giving sitters the context to do their best work.</p>
+          </div>
         </div>
       </section>
 
       <section className={styles.values}>
-        <div className={styles.valuesHeading}><p className={styles.eyebrow}><span /> What matters to us</p><h2>Good care has a few things in common.</h2></div>
-        <div className={styles.valueList}>{values.map((value) => <article key={value.number}><span className={styles.valueNumber}>{value.number}</span><div><h3>{value.title}</h3><p>{value.text}</p></div></article>)}</div>
+        <div className={styles.valuesHeading}>
+          <div className={styles.sectionMarker}>The care record</div>
+          <h2>Three moments that should feel simple.</h2>
+        </div>
+        <div className={styles.valueList}>
+          {careNotes.map((note, index) => (
+            <article key={note.label}>
+              <span className={styles.valueNumber}>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <p className={styles.valueLabel}>{note.label}</p>
+                <h3>{note.title}</h3>
+                <p>{note.text}</p>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className={styles.cta}>
-        <div><p className={styles.eyebrow}><span /> Come on in</p><h2>There&apos;s room in our circle for you.</h2></div>
-        <div className={styles.ctaAction}><p>Find someone who gets your pet, or share your own love of animals with a family nearby.</p><Link href="/register" className={styles.primaryButton}>Join PetSphere <span aria-hidden="true">&rarr;</span></Link></div>
+        <div>
+          <div className={styles.sectionMarker}>Your next handover</div>
+          <h2>Find care that already speaks your language.</h2>
+        </div>
+        <div className={styles.ctaAction}>
+          <p>Tell us what your pet needs. We will help you find someone who listens.</p>
+          <Link href="/register" className={styles.primaryButton}>Find a sitter</Link>
+        </div>
       </section>
     </main>
   );

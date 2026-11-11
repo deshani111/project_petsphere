@@ -1,9 +1,20 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { type ApiPet, getApiMessage } from "../../../../lib/pet-api";
 import { parsePetNotes } from "../../../../lib/pet-notes";
+import {
+  Activity,
+  ArrowLeft,
+  CalendarDays,
+  FileText,
+  HeartPulse,
+  PawPrint,
+  Pencil,
+  ShieldCheck,
+  Weight,
+} from "lucide-react";
 
 type Params = {
   params: Promise<{ id: string }>;

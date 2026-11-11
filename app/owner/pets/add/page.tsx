@@ -1,10 +1,8 @@
 "use client";
-
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { combinePetNotes } from "../../../../lib/pet-notes";
-
 type AddPetForm = {
   pet_name: string;
   species: string;
@@ -20,7 +18,6 @@ type AddPetForm = {
   medications: string;
   care_instructions: string;
 };
-
 const initialForm: AddPetForm = {
   pet_name: "",
   species: "",
@@ -36,14 +33,11 @@ const initialForm: AddPetForm = {
   medications: "",
   care_instructions: "",
 };
-
 type FormErrors = Partial<Record<keyof AddPetForm, string>>;
 type TouchedFields = Partial<Record<keyof AddPetForm, boolean>>;
-
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return <span className="block text-[12px] font-semibold text-[#8b7072]">{children}</span>;
 }
-
 function FieldGroup({ error, children }: { error?: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
@@ -52,33 +46,27 @@ function FieldGroup({ error, children }: { error?: string; children: React.React
     </div>
   );
 }
-
 function getTodayDateValue() {
   const now = new Date();
   const localTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
   return localTime.toISOString().split("T")[0];
 }
-
 const allowedSpecies = ["Dog", "Cat", "Bird", "Other"] as const;
-
 function normalizeText(value: string) {
   return value.trim();
 }
-
 function validatePetAge(value: string) {
   const trimmed = normalizeText(value);
   if (!/^\d{1,2}$/.test(trimmed)) return false;
   const age = Number(trimmed);
   return age > 0 && age <= 100;
 }
-
 function validatePetWeight(value: string) {
   const trimmed = normalizeText(value);
   if (!/^\d{1,3}(\.\d{1,2})?$/.test(trimmed)) return false;
   const weight = Number(trimmed);
   return weight > 0 && weight <= 200;
 }
-
 function validatePetFile(file: File | null, maxSizeMB = 5) {
   if (!file) return "";
   if (!["image/jpeg", "image/png", "image/webp", "image/gif", "image/bmp", "application/pdf"].includes(file.type)) {
@@ -89,7 +77,6 @@ function validatePetFile(file: File | null, maxSizeMB = 5) {
   }
   return "";
 }
-
 function CalendarIcon() {
   return (
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="size-4">
@@ -99,7 +86,6 @@ function CalendarIcon() {
     </svg>
   );
 }
-
 export default function AddPetPage() {
   const router = useRouter();
   const [form, setForm] = useState<AddPetForm>(initialForm);
@@ -113,7 +99,6 @@ export default function AddPetPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [touched, setTouched] = useState<TouchedFields>({});
   const todayDateValue = getTodayDateValue();
-
   useEffect(() => {
     return () => {
       if (photoPreview) {
@@ -124,7 +109,6 @@ export default function AddPetPage() {
       }
     };
   }, [photoPreview, medicalReportPreview]);
-
   const validationMessages = useMemo(
     () => ({
       pet_name: "Pet name is required.",
@@ -141,10 +125,8 @@ export default function AddPetPage() {
     }),
     [],
   );
-
   const validateFieldValue = (key: keyof AddPetForm, nextForm: AddPetForm = form) => {
     const value = nextForm[key];
-
     switch (key) {
       case "pet_name": {
         if (!normalizeText(value)) return validationMessages.pet_name;
@@ -200,28 +182,23 @@ export default function AddPetPage() {
         return undefined;
     }
   };
-
   const setValue = (key: keyof AddPetForm, value: string) => {
     const nextForm = { ...form, [key]: value };
     setForm(nextForm);
-
     if (touched[key]) {
       const nextMessage = validateFieldValue(key, nextForm);
       setErrors((current) => ({ ...current, [key]: nextMessage || undefined }));
     } else {
       setErrors((current) => ({ ...current, [key]: undefined }));
     }
-
     setSaveMessage("");
     setSubmitError("");
   };
-
   const handleFieldBlur = (key: keyof AddPetForm) => {
     setTouched((current) => ({ ...current, [key]: true }));
     const nextMessage = validateFieldValue(key, form);
     setErrors((current) => ({ ...current, [key]: nextMessage || undefined }));
   };
-
   const setFileValue = (
     key: "photo" | "medical_report",
     file: File,
@@ -232,7 +209,6 @@ export default function AddPetPage() {
       ...current,
       [key]: fileError || undefined,
     }));
-
     if (fileError) {
       setPreview("");
       if (key === "photo") {
@@ -243,266 +219,175 @@ export default function AddPetPage() {
       }
       return;
     }
-
     const nextPreview = URL.createObjectURL(file);
     setPreview(nextPreview);
-
     if (key === "photo") {
       setPhotoFile(file);
     }
-
     if (key === "medical_report") {
       setMedicalReportFile(file);
     }
-
     setValue(key, file.name);
   };
-
   const handlePetPhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     setFileValue("photo", file, setPhotoPreview);
   };
-
   const handleMedicalReportChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     setFileValue("medical_report", file, setMedicalReportPreview);
   };
-
   const validateForm = () => {
     const nextErrors: FormErrors = {};
-
     if (!normalizeText(form.pet_name)) {
       nextErrors.pet_name = validationMessages.pet_name;
     } else if (normalizeText(form.pet_name).length < 2 || normalizeText(form.pet_name).length > 60) {
       nextErrors.pet_name = "Pet name must be between 2 and 60 characters.";
     }
-
     if (!normalizeText(form.species)) {
       nextErrors.species = validationMessages.species;
     } else if (!allowedSpecies.includes(form.species as (typeof allowedSpecies)[number])) {
       nextErrors.species = "Please choose a valid species.";
     }
-
     if (!normalizeText(form.breed)) {
       nextErrors.breed = validationMessages.breed;
     } else if (normalizeText(form.breed).length < 2 || normalizeText(form.breed).length > 50) {
       nextErrors.breed = "Breed must be between 2 and 50 characters.";
     }
-
     if (!normalizeText(form.gender)) {
       nextErrors.gender = validationMessages.gender;
     }
-
     if (!normalizeText(form.age)) {
       nextErrors.age = validationMessages.age;
     } else if (!validatePetAge(form.age)) {
       nextErrors.age = validationMessages.age;
     }
-
     if (!normalizeText(form.weight_kg)) {
       nextErrors.weight_kg = validationMessages.weight_kg;
     } else if (!validatePetWeight(form.weight_kg)) {
       nextErrors.weight_kg = validationMessages.weight_kg;
     }
-
     if (!normalizeText(form.sterilized)) {
       nextErrors.sterilized = validationMessages.sterilized;
     }
-
     if (!form.about.trim()) {
       nextErrors.about = validationMessages.about;
     } else if (form.about.trim().length > 2000) {
       nextErrors.about = "About pet must be 2000 characters or less.";
     }
-
     if (form.medications.trim().length > 500) {
       nextErrors.medications = validationMessages.medications;
     }
-
     if (form.care_instructions.trim().length > 1000) {
       nextErrors.care_instructions = validationMessages.care_instructions;
     }
-
     if (form.last_dental_check && form.last_dental_check > todayDateValue) {
       nextErrors.last_dental_check = validationMessages.last_dental_check;
     }
-
     if (photoFile) {
       const photoError = validatePetFile(photoFile, 5);
       if (photoError) nextErrors.photo = photoError;
     }
-
     if (medicalReportFile) {
       const reportError = validatePetFile(medicalReportFile, 10);
       if (reportError) nextErrors.medical_report = reportError;
     }
-
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
-
-const handleSave = async () => {
-if (isSaving) return;
-if (!validateForm()) return;
-
-setIsSaving(true);
-setSubmitError("");
-
-try {
-let photoUrl = "";
-let medicalReportUrl = "";
-
-
-// Upload photo first
-if (photoFile) {
-  let uploadResponse: Response | null = null;
-
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    const formData = new FormData();
-    formData.append("file", photoFile);
-
+  const handleSave = async () => {
+    if (isSaving || !validateForm()) return;
+    setIsSaving(true);
+    setSubmitError("");
+    async function uploadAsset(file: File, label: string): Promise<string> {
+      let response: Response | null = null;
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+          response = await fetch("/api/pets/uploads", {
+            method: "POST",
+            body: formData,
+          });
+          if (response.ok) break;
+        } catch {
+          response = null;
+        }
+        if (attempt === 1) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
+      }
+      if (!response?.ok) {
+        throw new Error(`Could not upload ${label}. Please try again.`);
+      }
+      const result: { url?: unknown } = await response.json();
+      if (typeof result.url !== "string" || !result.url) {
+        throw new Error(`Could not upload ${label}. Please try again.`);
+      }
+      return result.url;
+    }
     try {
-      uploadResponse = await fetch("/api/pets/uploads", {
+      // Upload the photo and medical document independently, when provided.
+      const photoUrl = photoFile ? await uploadAsset(photoFile, "pet photo") : "";
+      const medicalReportUrl = medicalReportFile
+        ? await uploadAsset(medicalReportFile, "medical document")
+        : "";
+      const payload: Record<string, unknown> = {
+        pet_name: form.pet_name.trim(),
+      };
+      if (form.species.trim()) payload.species = form.species.trim();
+      if (form.breed.trim()) payload.breed = form.breed.trim();
+      if (form.gender) payload.gender = form.gender.toLowerCase();
+      if (form.age.trim()) payload.age = Number(form.age);
+      if (form.weight_kg.trim()) payload.weight_kg = Number(form.weight_kg);
+      if (photoUrl) payload.photo = photoUrl;
+      if (medicalReportUrl) payload.medical_report = medicalReportUrl;
+      const medicalNotes = combinePetNotes(
+        form.about,
+        form.care_instructions,
+        form.medications,
+        form.sterilized,
+        form.last_dental_check,
+      );
+      if (medicalNotes) payload.medical_notes = medicalNotes;
+      const response = await fetch("/api/pets", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-
-      if (uploadResponse.ok) break;
-    } catch {
-      // ignore and retry
+      const result = await response.json().catch(() => null);
+      if (response.status === 400) {
+        setSubmitError(result?.message || "Please check the pet details and try again.");
+        return;
+      }
+      if (response.status !== 201) {
+        setSubmitError(result?.message || "Could not create pet. Please try again.");
+        return;
+      }
+      router.push("/owner/pets");
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Could not create pet. Please try again.");
+    } finally {
+      setIsSaving(false);
     }
-
-    if (attempt === 1) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
-  }
-
-  if (!uploadResponse || !uploadResponse.ok) {
-    setSubmitError("Could not upload pet photo. Please try again.");
-    return;
-  }
-
-  const uploadResult = await uploadResponse.json();
-  photoUrl = uploadResult.url;
-
-
-if (medicalReportFile) {
-  let reportResponse: Response | null = null;
-
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    const reportForm = new FormData();
-    reportForm.append("file", medicalReportFile);
-
-    try {
-      reportResponse = await fetch("/api/pets/uploads", {
-        method: "POST",
-        body: reportForm,
-      });
-
-      if (reportResponse.ok) break;
-    } catch {
-      // ignore and retry
-    }
-
-    if (attempt === 1) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
-  }
-
-  if (!reportResponse || !reportResponse.ok) {
-    setSubmitError("Could not upload vaccination card. Please try again.");
-    return;
-  }
-
-  const reportResult = await reportResponse.json();
-  medicalReportUrl = reportResult.url;
-}
-}
-
-// Create pet
-const payload: Record<string, unknown> = {
-  pet_name: form.pet_name,
-};
-
-if (form.species.trim()) payload.species = form.species.trim();
-if (form.breed.trim()) payload.breed = form.breed.trim();
-if (form.gender) payload.gender = form.gender.toLowerCase();
-if (form.age.trim()) payload.age = Number(form.age);
-if (form.weight_kg.trim()) payload.weight_kg = Number(form.weight_kg);
-if (photoUrl) payload.photo = photoUrl;
-if (medicalReportUrl) payload.medical_report = medicalReportUrl;
-
-const medicalNotes = combinePetNotes(
-  form.about,
-  form.care_instructions,
-  form.medications,
-  form.sterilized,
-  form.last_dental_check,
-);
-
-if (medicalNotes) {
-  payload.medical_notes = medicalNotes;
-}
-
-const response = await fetch("/api/pets", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload),
-});
-
-const result = await response.json().catch(() => null);
-
-if (response.status === 400) {
-  setSubmitError(result?.message || "Please check the pet details and try again.");
-  return;
-}
-
-if (response.status !== 201) {
-  setSubmitError(result?.message || "Could not create pet. Please try again.");
-  return;
-}
-
-router.push("/owner/pets");
-
-
-} catch {
-setSubmitError("Could not create pet. Please try again.");
-} finally {
-setIsSaving(false);
-}
-};
-
-
-
+  };
   return (
-<<<<<<< HEAD
     <div className="min-h-[calc(100vh-60px)] bg-[#fff8f7]">
-        <main className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-8">
-          <div className="mb-4 w-full max-w-[12500px]">
+      <main className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-5">
             <div>
-              <div className="flex items-center gap-2 text-[#4f4143]">
-                <Link href="/owner/pets" className="text-[18px] font-semibold leading-none hover:text-[#ab3d42]">
-                  <span aria-hidden>‹</span>
-=======
-    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
-      <OwnerSidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <DashboardHeader />
-
-        <main className="w-full px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-5">
-              <div>
-                <Link href="/owner/pets" className="mb-1 inline-flex items-center gap-1 text-xs text-[#8b7d7e] hover:text-[#ab3d42]">
-                  My Pets <span aria-hidden="true">&rsaquo;</span> Add New Pet
->>>>>>> origin/main
+              <Link
+                href="/owner/pets"
+                className="mb-1 inline-flex items-center gap-1 text-xs text-[#8b7d7e] hover:text-[#ab3d42]"
+              >
+                My Pets <span aria-hidden="true">&rsaquo;</span> Add New Pet
                 </Link>
                 <h1 className="page-title text-[#29252b]">Add New Pet</h1>
               </div>
             </div>
-
             <form
               id="add-pet-form"
               onSubmit={(event) => {
@@ -527,7 +412,6 @@ setIsSaving(false);
                     )}
                     <input type="file" accept="image/*" className="sr-only" onChange={handlePetPhotoChange} />
                   </label>
-
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <h2 className="text-base font-semibold text-[#30272a]">Pet Photo</h2>
@@ -541,10 +425,8 @@ setIsSaving(false);
                     </p>
                     {errors.photo ? <p className="mt-1 text-xs text-[#c24a50]">{errors.photo}</p> : null}
                   </div>
-
                 </div>
               </section>
-
               <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.85fr)_minmax(300px,1fr)]">
                 <div className="flex min-w-0 flex-col gap-3 lg:h-full">
                   <section className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
@@ -557,7 +439,6 @@ setIsSaving(false);
                         <FieldLabel>Pet Name *</FieldLabel>
                         <input value={form.pet_name} onChange={(event) => setValue("pet_name", event.target.value)} onBlur={() => handleFieldBlur("pet_name")} className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. Luna" />
                       </FieldGroup>
-
                       <FieldGroup error={errors.species}>
                         <FieldLabel>Species *</FieldLabel>
                         <select value={form.species} onChange={(event) => setValue("species", event.target.value)} onBlur={() => handleFieldBlur("species")} className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none focus:border-[#c96f73]">
@@ -568,12 +449,10 @@ setIsSaving(false);
                           <option value="Other">Other</option>
                         </select>
                       </FieldGroup>
-
                       <FieldGroup error={errors.breed}>
                         <FieldLabel>Breed *</FieldLabel>
                         <input value={form.breed} onChange={(event) => setValue("breed", event.target.value)} onBlur={() => handleFieldBlur("breed")} className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. Golden Retriever" />
                       </FieldGroup>
-
                       <FieldGroup error={errors.gender}>
                         <FieldLabel>Gender *</FieldLabel>
                         <div className="grid grid-cols-2 gap-2" onBlur={() => handleFieldBlur("gender")}>
@@ -588,19 +467,16 @@ setIsSaving(false);
                           ))}
                         </div>
                       </FieldGroup>
-
                       <FieldGroup error={errors.age}>
                         <FieldLabel>Age (Years) *</FieldLabel>
                         <input value={form.age} onChange={(event) => setValue("age", event.target.value)} onBlur={() => handleFieldBlur("age")} inputMode="numeric" className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. 3" />
                       </FieldGroup>
-
                       <FieldGroup error={errors.weight_kg}>
                         <FieldLabel>Weight (kg) *</FieldLabel>
                         <input value={form.weight_kg} onChange={(event) => setValue("weight_kg", event.target.value)} onBlur={() => handleFieldBlur("weight_kg")} inputMode="decimal" className="h-10 w-full rounded-lg border border-[#eedddd] bg-white px-3 text-sm text-[#403537] outline-none placeholder:text-[#bdaaaa] focus:border-[#c96f73]" placeholder="e.g. 15.4" />
                       </FieldGroup>
                     </div>
                   </section>
-
                   <section className="rounded-2xl border border-[#f0dada] bg-white p-3 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-4">
                     <h2 className="mb-4 text-lg font-semibold text-[#a63842]">About Pet</h2>
                     <FieldGroup error={errors.about}>
@@ -608,7 +484,6 @@ setIsSaving(false);
                       <div className="flex justify-end text-[11px] text-[#9f8e8f]">{form.about.length} / 2000</div>
                     </FieldGroup>
                   </section>
-
                   <section className="rounded-2xl border border-[#f0dada] bg-white p-3 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-4">
                     <h2 className="mb-1 flex items-center gap-2 text-lg font-semibold text-[#a63842]">
                       <span aria-hidden="true">✚</span>
@@ -620,7 +495,6 @@ setIsSaving(false);
                       <div className="flex justify-end text-[11px] text-[#9f8e8f]">{form.medications.length} / 500</div>
                     </FieldGroup>
                   </section>
-
                   <section className="flex flex-col rounded-2xl border border-[#f0dada] bg-white p-3 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-4 lg:flex-1">
                     <h2 className="mb-4 text-lg font-semibold text-[#a63842]">Care Instructions</h2>
                     <FieldGroup error={errors.care_instructions}>
@@ -629,7 +503,6 @@ setIsSaving(false);
                     </FieldGroup>
                   </section>
                 </div>
-
                 <aside className="flex min-w-0 flex-col gap-4 lg:h-full">
                   <section className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                     <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-[#a63842]">
@@ -661,7 +534,6 @@ setIsSaving(false);
                           })}
                         </div>
                       </FieldGroup>
-
                       <FieldGroup error={errors.last_dental_check}>
                         <FieldLabel>Last Dental / Vaccination</FieldLabel>
                         <div className="relative">
@@ -679,7 +551,6 @@ setIsSaving(false);
                       </div>
                     </div>
                   </section>
-
                   <section className="flex flex-col rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5 lg:flex-1">
                     <h2 className="mb-1 flex items-center gap-2 text-lg font-semibold text-[#a63842]">
                       <span aria-hidden="true">✚</span>
@@ -715,7 +586,6 @@ setIsSaving(false);
                   </section>
                 </aside>
               </div>
-
               <div className="mt-5 flex flex-col-reverse gap-3 border-t border-[#f3e5e5] pt-4 sm:flex-row sm:justify-end">
                 <Link href="/owner/pets" className="inline-flex h-10 items-center justify-center rounded-lg border border-[#f0dada] bg-white px-5 text-sm font-medium text-[#705f61] transition hover:bg-[#fff7f7]">
                   Cancel

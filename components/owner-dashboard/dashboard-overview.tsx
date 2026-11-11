@@ -67,6 +67,7 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
   const [deleteError, setDeleteError] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [bookingTab, setBookingTab] = useState<"Upcoming" | "Recent" | "Completed">("Upcoming");
+  const [currentTime, setCurrentTime] = useState<number | null>(null);
 
   // Keep using the existing owner-scoped pets API for both initial data and CRUD refreshes.
   useEffect(() => {
@@ -86,16 +87,20 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
     return () => { active = false; };
   }, []);
 
-  const now = Date.now();
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setCurrentTime(Date.now()), 0);
+    return () => window.clearTimeout(timeout);
+  }, []);
+
   const filteredBookings = bookings.filter((booking) => {
     const status = booking.status.toLowerCase();
     if (bookingTab === "Completed") return status === "completed";
-    if (bookingTab === "Upcoming") return isUpcomingDate(booking.date, now) && !["completed", "cancelled", "canceled", "declined", "rejected"].includes(status);
-    return status !== "completed" && (!booking.date || !isUpcomingDate(booking.date, now));
+    if (bookingTab === "Upcoming") return currentTime !== null && isUpcomingDate(booking.date, currentTime) && !["completed", "cancelled", "canceled", "declined", "rejected"].includes(status);
+    return status !== "completed" && (currentTime === null || !booking.date || !isUpcomingDate(booking.date, currentTime));
   }).slice(0, 3);
-  const nextBooking = useMemo(() => bookings
-    .filter((booking) => isUpcomingDate(booking.date, now) && !["completed", "cancelled", "canceled", "declined", "rejected"].includes(booking.status.toLowerCase()))
-    .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime())[0], [bookings, now]);
+  const nextBooking = useMemo(() => currentTime === null ? undefined : bookings
+    .filter((booking) => isUpcomingDate(booking.date, currentTime) && !["completed", "cancelled", "canceled", "declined", "rejected"].includes(booking.status.toLowerCase()))
+    .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime())[0], [bookings, currentTime]);
 
   async function confirmDeletePet() {
     if (!deleteTarget) return;
@@ -118,7 +123,7 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
   const tabs = ["Upcoming", "Recent", "Completed"] as const;
 
   return (
-    <main className="min-w-0 bg-[#f6f7f9] px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
+    <main className="min-w-0 bg-[#FAF8F6] px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
       <section className="mx-auto max-w-[1480px]">
         <div className="relative isolate mb-5 overflow-hidden rounded-[24px] bg-gradient-to-br from-[#B7434E] via-[#A63842] to-[#7D202B] px-5 py-6 text-white shadow-[0_18px_45px_rgba(125,32,43,0.2)] sm:px-8 sm:py-8 lg:py-9">
           <div aria-hidden="true" className="pointer-events-none absolute -right-12 -top-24 hidden size-80 rounded-full bg-[#F4B4BC]/20 blur-3xl sm:block" />
@@ -127,7 +132,7 @@ export function DashboardOverview({ userName, activeBookings, totalBookings, unr
           <div aria-hidden="true" className="pointer-events-none absolute right-[40%] top-7 hidden text-white/25 sm:block"><PawPrint size={23} /></div>
           <div aria-hidden="true" className="pointer-events-none absolute right-[36%] bottom-8 hidden text-[#ffd9de]/50 sm:block"><Heart size={16} fill="currentColor" /></div>
           <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 hidden w-[54%] sm:block lg:w-[51%]">
-            <Image src="/petcare.jpg" alt="" fill sizes="(min-width: 1280px) 48vw, (min-width: 640px) 54vw, 0px" className="object-cover object-center" />
+            <Image src="/about-hero-dog.webp" alt="" fill sizes="(min-width: 1280px) 48vw, (min-width: 640px) 54vw, 0px" className="object-cover object-center" />
             <div className="absolute inset-0 bg-gradient-to-r from-[#A63842] via-[#A63842]/35 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#7D202B]/10 via-transparent to-[#B7434E]/10" />
           </div>
