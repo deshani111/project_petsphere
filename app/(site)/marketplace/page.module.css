@@ -1,6 +1,6 @@
 .marketplacePage {
   min-height: 100vh;
-  background: linear-gradient(180deg, #fffaf7 0, #f8f8fa 360px, #f7f8fa 100%);
+  background: var(--ps-dashboard-page);
   color: #302526;
 }
 
@@ -56,37 +56,48 @@
 .postAd,
 .myAds {
   display: inline-flex;
-  min-height: 42px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  padding: 0 17px;
-  font-size: 12px;
-  font-weight: 800;
+  border: 2px solid #9d3e40;
+  border-radius: 999px;
+  padding: 0 24px;
+  background: #9d3e40;
+  color: #fff;
+  font-family: var(--ps-font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .01em;
   text-decoration: none;
-  transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+  transition: transform .1s ease, background-color .2s ease;
 }
 
 .postAd {
-  background: #9d3e40;
-  color: #fff;
-  box-shadow: 0 5px 12px rgba(161, 61, 63, .16);
+  box-shadow: none;
 }
 
-.postAd:hover {
+.postAd:hover,
+.myAds:hover {
   background: #813134;
-  transform: translateY(-1px);
+  color: #fff;
+  transform: translateY(-.15em);
 }
 
 .myAds {
-  border: 1px solid #e2d7d3;
-  background: #fff;
-  color: #514344;
+  border-color: #9d3e40;
+  background: #9d3e40;
+  color: #fff;
 }
 
 .myAds:hover {
-  border-color: #bd8585;
-  background: #fff8f5;
+  border-color: #813134;
+  background: #813134;
+  color: #fff;
+}
+
+.postAd:active,
+.myAds:active {
+  transform: translateY(0);
 }
 
 .resultBar {
@@ -156,8 +167,7 @@
   border: 1px solid #e4d9d5;
   border-radius: 10px;
   outline: none;
-  background: #fff;
-  color: #443738;
+  background: var(--surface); color: #443738;
   font: inherit;
   font-size: 13px;
 }
@@ -204,8 +214,7 @@
   padding: 0 24px 0 7px;
   border: 1px solid #e4d9d5;
   border-radius: 7px;
-  background: #fff;
-  cursor: pointer;
+  background: var(--surface); cursor: pointer;
 }
 
 .sortButton span {
@@ -224,8 +233,7 @@
   overflow: hidden;
   border: 1px solid #eadfda;
   border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 7px 20px rgba(65, 43, 40, .055);
+  background: var(--surface); box-shadow: 0 7px 20px rgba(65, 43, 40, .055);
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 
@@ -282,6 +290,7 @@
   font-size: 12px;
   line-height: 1.5;
   -webkit-box-orient: vertical;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
 }
 
@@ -334,14 +343,26 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  min-height: 38px;
+  border: 2px solid #9d3e40;
+  border-radius: 999px;
+  padding: 0 13px;
+  background: #fff1ef;
   color: #9d3e40;
   font-size: 12px;
   font-weight: 800;
   text-decoration: none;
+  transition: transform .1s ease, background-color .2s ease;
 }
 
 .cardFooter > a:hover {
+  background: #ffe4df;
   color: #762c2f;
+  transform: translateY(-.15em);
+}
+
+.cardFooter > a:active {
+  transform: translateY(0);
 }
 
 .tags {

@@ -62,8 +62,7 @@
 .modal {
   border: 1px solid #f1dede;
   border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 10px 24px rgba(132, 82, 82, 0.05);
+  background: var(--surface); box-shadow: 0 10px 24px rgba(132, 82, 82, 0.05);
 }
 
 .profileCard,
@@ -202,7 +201,7 @@
 .securityTile {
   border: 1px solid #f1dede;
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .summaryStat {
@@ -257,7 +256,7 @@
 
 .neutral {
   border-color: #f1dede;
-  background: #fff;
+  background: var(--surface);
 }
 
 .infoCard {
@@ -279,7 +278,7 @@
   padding: 12px 14px;
   border: 1px solid #f1dede;
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .infoFieldWide {
@@ -420,8 +419,7 @@
   height: 34px;
   border: 1px solid #eadbda;
   border-radius: 999px;
-  background: #fff;
-  color: #6f605e;
+  background: var(--surface); color: #6f605e;
   font-size: 20px;
   cursor: pointer;
 }
@@ -556,8 +554,7 @@
 }
 
 .secondaryButton {
-  background: #fff;
-  color: #5d4b4a;
+  background: var(--surface); color: #5d4b4a;
 }
 
 .primaryButton {
@@ -617,3 +614,5 @@
     width: 100%;
   }
 }
+
+

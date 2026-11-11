@@ -23,7 +23,7 @@
 
 .map :global(.leaflet-control-zoom a) {
   color: #a63842;
-  background: #fff;
+  background: var(--surface, #fff);
 }
 
 .map :global(.leaflet-control-zoom a:hover) {

@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Weight,
 } from "lucide-react";
+import { SkeletonPage } from "../../../../components/shared/skeleton";
 
 type Params = {
   params: Promise<{ id: string }>;
@@ -93,7 +94,7 @@ export default function PetProfilePage({ params }: Params) {
   }, [params]);
 
   if (isLoading) {
-    return <OwnerShell><div className="mx-auto max-w-6xl rounded-2xl border border-[#f0dddd] bg-white p-8 text-sm text-[#806e70]">Loading pet profile…</div></OwnerShell>;
+    return <OwnerShell><SkeletonPage variant="cards" /></OwnerShell>;
   }
   if (error || !pet) {
     return (
@@ -134,7 +135,7 @@ export default function PetProfilePage({ params }: Params) {
 
         <Card className="p-4 sm:p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="size-20 shrink-0 overflow-hidden rounded-2xl border border-[#f0dddd] bg-[#fff4f3] sm:size-[88px]">
+            <div className="size-20 shrink-0 overflow-hidden rounded-2xl border border-[#f0dddd] bg-[#fff4f3] sm:size-22">
               {pet.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={pet.photo} alt={`${pet.pet_name}`} className="size-full object-cover" />
@@ -158,11 +159,11 @@ export default function PetProfilePage({ params }: Params) {
         <div className="grid gap-4 sm:grid-cols-2">
           <Card className="flex items-center gap-4 p-4 sm:p-5">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#fff0ef] text-[#b34b50]"><Weight size={20} /></span>
-            <div><p className="text-xs font-medium uppercase tracking-[0.1em] text-[#927e80]">Weight</p><p className="mt-0.5 text-xl font-bold text-[#392e30]">{pet.weight_kg ? `${pet.weight_kg} kg` : "Not provided"}</p></div>
+            <div><p className="text-xs font-medium uppercase tracking-widest text-[#927e80]">Weight</p><p className="mt-0.5 text-xl font-bold text-[#392e30]">{pet.weight_kg ? `${pet.weight_kg} kg` : "Not provided"}</p></div>
           </Card>
           <Card className="flex items-center gap-4 p-4 sm:p-5">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#fff6e9] text-[#aa743b]"><Activity size={20} /></span>
-            <div><p className="text-xs font-medium uppercase tracking-[0.1em] text-[#927e80]">Last dental / vaccination date</p><p className="mt-0.5 text-base font-semibold text-[#392e30]">{notes.lastDentalVaccination || "Not recorded"}</p></div>
+            <div><p className="text-xs font-medium uppercase tracking-widest text-[#927e80]">Last dental / vaccination date</p><p className="mt-0.5 text-base font-semibold text-[#392e30]">{notes.lastDentalVaccination || "Not recorded"}</p></div>
           </Card>
         </div>
 

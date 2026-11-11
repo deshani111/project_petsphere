@@ -61,7 +61,7 @@ export async function sendPasswordResetEmail({ to, recipientName, resetUrl }) {
   ].join("\n");
   const htmlContent = `
     <div style="margin:0;padding:40px 20px;background:#f8f5f5;font-family:Arial,sans-serif;">
-      <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:16px;padding:40px;">
+      <div style="max-width:600px;margin:0 auto;background:var(--surface);border-radius:16px;padding:40px;">
         <div style="margin-bottom:30px;font-size:24px;font-weight:700;color:#A13D3F;">PetSphere</div>
         <h1 style="margin:0 0 16px;font-size:28px;line-height:1.08;">Reset your password</h1>
         <p style="margin:0 0 18px;color:#5e5356;font-size:16px;line-height:1.6;">Hi ${safeDisplayName},</p>
@@ -115,7 +115,7 @@ export async function sendVerificationEmail({
 
   const htmlContent = `
     <div style="margin: 0; padding: 40px 20px; background: #f8f5f5; font-family: Arial, sans-serif;">
-      <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 40px;">
+      <div style="max-width: 600px; margin: 0 auto; background: var(--surface); border-radius: 16px; padding: 40px;">
 
         <div style="margin-bottom: 30px; font-size: 24px; font-weight: 700; color: #A13D3F;">
           PetSphere

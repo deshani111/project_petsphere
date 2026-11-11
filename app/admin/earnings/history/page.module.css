@@ -6,15 +6,15 @@
 .header p { margin: 6px 0 0; color: #7b6c6b; font-size: .7rem; }
 .headerControls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .periodPicker, .filterButton { display: inline-flex; align-items: center; gap: 7px; height: 34px; border-radius: 10px; font-size: .66rem; }
-.periodPicker { padding: 0 10px; border: 1px solid #ead8d5; background: #fff; color: #776968; }
+.periodPicker { padding: 0 10px; border: 1px solid #ead8d5; background: var(--surface); color: #776968; }
 .periodPicker select { border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; outline: none; }
-.filterButton { border: 1px solid #ead8d5; padding: 0 11px; background: #fff; color: #6f5f5d; cursor: pointer; }
-.filterPanel { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; padding: 12px; border: 1px solid #f0e2df; border-radius: 12px; background: #fff; box-shadow: 0 7px 16px rgba(101, 67, 65, .045); }
+.filterButton { border: 1px solid #ead8d5; padding: 0 11px; background: var(--surface); color: #6f5f5d; cursor: pointer; }
+.filterPanel { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; padding: 12px; border: 1px solid #f0e2df; border-radius: 12px; background: var(--surface); box-shadow: 0 7px 16px rgba(101, 67, 65, .045); }
 .filterPanel label { display: grid; gap: 7px; color: #7d6d6b; font-size: .52rem; font-weight: 700; letter-spacing: .45px; text-transform: uppercase; }
-.filterPanel select { width: 100%; height: 34px; border: 1px solid #ead8d5; border-radius: 8px; padding: 0 10px; background: #fff; color: #463739; font: inherit; font-size: .68rem; outline: none; text-transform: none; }
+.filterPanel select { width: 100%; height: 34px; border: 1px solid #ead8d5; border-radius: 8px; padding: 0 10px; background: var(--surface); color: #463739; font: inherit; font-size: .68rem; outline: none; text-transform: none; }
 .clearButton { align-self: end; justify-self: end; height: 34px; border: 0; border-radius: 8px; padding: 0 12px; background: #fae5e2; color: #a75b52; font: inherit; font-size: .64rem; font-weight: 700; cursor: pointer; }
 .summaryGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.summaryCard, .tableCard, .loadingState, .errorState { border: 1px solid #f4ecea; border-radius: 12px; background: #fff; box-shadow: 0 7px 16px rgba(101, 67, 65, .05); }
+.summaryCard, .tableCard, .loadingState, .errorState { border: 1px solid #f4ecea; border-radius: 12px; background: var(--surface); box-shadow: 0 7px 16px rgba(101, 67, 65, .05); }
 .summaryCard { position: relative; min-height: 120px; padding: 16px; }
 .summaryIcon { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; background: #fff0ee; color: #ad4141; font-size: .72rem; font-weight: 800; }
 .good { background: #eaf8ef; color: #0e8c61; }
@@ -52,7 +52,7 @@
 .footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; color: #766867; font-size: .56rem; }
 .pagination { display: flex; align-items: center; gap: 6px; }
 .pagination button, .pagination span { border: 0; background: transparent; color: inherit; font: inherit; font-size: .56rem; }
-.pagination button { width: 24px; height: 24px; border: 1px solid #ead8d5; border-radius: 7px; background: #fff; color: #8d7a78; cursor: pointer; }
+.pagination button { width: 24px; height: 24px; border: 1px solid #ead8d5; border-radius: 7px; background: var(--surface); color: #8d7a78; cursor: pointer; }
 .pagination button:disabled { opacity: .75; cursor: default; }
 .current { border-color: #ad4141 !important; background: #ad4141 !important; color: #fff !important; }
 .loadingState, .errorState, .emptyState { display: grid; place-items: center; gap: 6px; padding: 32px; color: #796b6a; text-align: center; }

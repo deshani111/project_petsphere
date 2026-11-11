@@ -11,5 +11,5 @@ export async function GET() {
     select: { first_name: true, last_name: true },
   });
   const name = `${user?.first_name || "Pet"} ${user?.last_name || "Owner"}`.trim();
-  return NextResponse.json({ name });
+  return NextResponse.json({ name, role: session.role });
 }

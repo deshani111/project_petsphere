@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { CalendarIcon, FileIcon, PawIcon } from "../../../../../components/owner-dashboard/dashboard-icons";
 
 import { combinePetNotes, parsePetNotes } from "../../../../../lib/pet-notes";
+import { SkeletonPage } from "../../../../../components/shared/skeleton";
 
 type RealPet = {
   pet_id: string;
@@ -444,7 +445,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
     <div className="min-h-[calc(100vh-60px)] bg-[#fff8f7]">{content}</div>
   );
   if (loading) {
-    return shell(<div className="p-6">Loading pet...</div>);
+    return shell(<SkeletonPage variant="form" />);
   }
   if (loadError) {
     return shell(<div className="p-6">{loadError}</div>);
@@ -710,7 +711,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                         <div className="rounded-full bg-[#fff1f1] px-3 py-2 text-[12px] font-semibold text-[#b54a50]">
                           Medical document
                         </div>
-                        <p className="mt-3 max-w-[220px]">
+                        <p className="mt-3 max-w-55">
                           {medicalReportFile?.name || "Medical record uploaded"}
                         </p>
                       </div>

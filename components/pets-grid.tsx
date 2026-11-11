@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -43,7 +44,7 @@ export default function PetsGrid({
   };
 
   const confirmDelete = async () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || isDeleting) return;
 
     setIsDeleting(true);
     setDeleteError("");
@@ -81,24 +82,24 @@ export default function PetsGrid({
 
         <Link
           href="/owner/pets/add"
-          className="group block h-full min-h-[300px]"
+          className="group block h-full min-h-75"
           aria-label="Add another pet"
         >
-          <article className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-xl border-2 border-dashed border-[#e6c7c7] bg-[#fffaf9] p-3 shadow-[0_3px_12px_rgba(91,52,51,0.04)] transition hover:border-[#d99a9d] hover:bg-[#fff6f5] sm:p-3.5">
-            <div className="relative mb-3 flex min-h-[175px] flex-1 items-center justify-center overflow-hidden rounded-lg bg-white/40">
-              <div className="absolute inset-0 rounded-lg border border-dashed border-[#e8c7c7]" />
+          <article className="flex h-full min-h-75 flex-col overflow-hidden rounded-xl border-2 border-dashed border-(--ps-color-border-strong) bg-(--ps-color-surface-muted) p-3 shadow-(--ps-shadow-sm) transition hover:border-(--ps-color-primary) hover:bg-(--ps-color-primary-soft) sm:p-3.5">
+            <div className="relative mb-3 flex min-h-43.75 flex-1 items-center justify-center overflow-hidden rounded-lg bg-(--ps-color-surface)/40">
+              <div className="absolute inset-0 rounded-lg border border-dashed border-(--ps-color-border)" />
 
-              <div className="relative grid size-16 place-items-center rounded-full border-2 border-[#d69a9e] text-[38px] font-light leading-none text-[#ab3d42] transition group-hover:bg-white">
+              <div className="relative grid size-16 place-items-center rounded-full border-2 border-(--ps-color-border-strong) text-[38px] font-light leading-none ps-text-primary transition group-hover:bg-[var(--ps-color-surface)]">
                 +
               </div>
             </div>
 
             <div className="shrink-0 px-1 pb-1 text-center">
-              <h3 className="text-sm font-bold text-[#403537]">
+              <h3 className="text-sm font-bold ps-text-default">
                 Add another pet
               </h3>
 
-              <p className="mt-1 text-[11px] leading-relaxed text-[#7f7072]">
+              <p className="mt-1 text-xs leading-relaxed ps-text-muted">
                 Grow your pet family in just a few steps.
               </p>
             </div>
@@ -108,22 +109,29 @@ export default function PetsGrid({
 
       {deleteTarget ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 px-4 py-6">
-          <div className="w-full max-w-md rounded-2xl border border-[#f0e3e3] bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
-            <h3 className="text-[18px] font-semibold text-[#30272a]">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-pet-title"
+            className="ps-panel w-full max-w-md p-6"
+          >
+            <h3
+              id="delete-pet-title"
+              className="text-lg font-semibold ps-text-default"
+            >
               Delete pet?
             </h3>
 
-            <p className="mt-2 text-[13px] leading-6 text-[#6f5f5f]">
+            <p className="mt-2 text-sm leading-6 ps-text-muted">
               Are you sure you want to delete{" "}
-              <span className="font-semibold text-[#b54a50]">
+              <span className="font-semibold ps-text-danger">
                 {deleteTarget.name}
               </span>
               ?
             </p>
-            {deleteError ? <p className="mt-2 text-[11px] text-[#c24a50]">{deleteError}</p> : null}
 
             {deleteError ? (
-              <p className="mt-2 text-[11px] text-[#c24a50]">
+              <p role="alert" className="mt-2 text-xs ps-text-danger">
                 {deleteError}
               </p>
             ) : null}
@@ -133,7 +141,7 @@ export default function PetsGrid({
                 type="button"
                 onClick={() => setDeleteTarget(null)}
                 disabled={isDeleting}
-                className="inline-flex h-10 items-center justify-center rounded-md border border-[#eedddd] bg-white px-4 text-[13px] font-medium text-[#7a6768] hover:bg-[#fff8f8]"
+                className="ps-btn ps-btn--outline min-h-10 px-4 font-medium"
               >
                 Cancel
               </button>
@@ -142,7 +150,7 @@ export default function PetsGrid({
                 type="button"
                 onClick={confirmDelete}
                 disabled={isDeleting}
-                className="inline-flex h-10 items-center justify-center rounded-md bg-[#b54a50] px-4 text-[13px] font-medium text-white hover:bg-[#a94046]"
+                className="ps-btn ps-btn--danger min-h-10 px-4 font-medium"
               >
                 {isDeleting ? "Deleting..." : "Delete"}
               </button>

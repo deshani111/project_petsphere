@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import styles from "./page.module.css";
 
@@ -14,6 +15,8 @@ function LockIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x
 function EyeIcon({ hidden }) { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="2.5" />{hidden ? <path d="m4 4 16 16" /> : null}</svg>; }
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const nextPath = searchParams.get("next");
   const [formData, setFormData] = useState(initialFormState);
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState({ state: "idle", message: "" });
@@ -36,7 +39,7 @@ export default function LoginPage() {
     if (!isValidEmail(formData.email)) return setStatus({ state: "error", message: "Please enter a valid email address." });
     setStatus({ state: "loading", message: "Signing you in…" });
     try {
-      const response = await fetch("/api/auth/login", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
+      const response = await fetch("/api/auth/login", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...formData, next: nextPath }) });
       const payload = await response.json();
       if (!response.ok) {
         setStatus({ state: "error", message: payload.message || "We could not sign you in. Please try again." });
@@ -61,11 +64,6 @@ export default function LoginPage() {
     <aside className={styles.welcomePanel}>
       <Image src="/login-pet-companion.webp" alt="A pet owner holding her happy dog" className={styles.welcomeImage} fill sizes="(max-width: 760px) 0px, 46vw" priority />
       <div className={styles.imageOverlay} />
-      <div className={styles.welcomeContent}>
-        <div className={styles.brand}><span className={styles.brandMark}><Image src="/petsphere-mark.svg" alt="" width={21} height={21} /></span>Pet<span>Sphere</span></div>
-        <div className={styles.welcomeCopy}><span>Care that feels like home</span><h2>Good care starts with a trusted connection.</h2><p>From everyday walks to overnight stays, find people who care for your pet like family.</p></div>
-        <div className={styles.trustLine}><b>Pet parents</b><i /> <b>Caring sitters</b></div>
-      </div>
     </aside>
 
     <section className={styles.formPanel}><div className={styles.formInner}>

@@ -90,7 +90,7 @@ export default async function OwnerBookingsPage() {
   }));
 
   return (
-    <div className="flex min-h-screen bg-[#fff8f7]">
+    <div className="ps-page flex min-h-screen">
       <OwnerSidebar />
 
       <div className="min-w-0 flex-1">
@@ -102,6 +102,7 @@ export default async function OwnerBookingsPage() {
               <p className="text-xs font-bold uppercase tracking-widest text-[#ab3d42]">
                 Owner dashboard
               </p>
+
               <h1 className="mt-2 text-3xl font-bold text-[#30272a]">
                 My Bookings
               </h1>

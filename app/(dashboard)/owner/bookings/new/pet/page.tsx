@@ -9,6 +9,7 @@ import {
   type ApiPet,
   getApiMessage,
 } from "../../../../../../lib/pet-api";
+import { SkeletonCard } from "../../../../../../components/shared/skeleton";
 
 export default function SelectPetPage() {
   const { draft, setDraft } = useBooking();
@@ -71,7 +72,7 @@ export default function SelectPetPage() {
           Select your companion
         </h1>
 
-        <p className="mb-4 mt-1 text-[9px] text-[#7c7071]">
+        <p className="mb-4 mt-1 text-sm text-[#7c7071]">
           Choose the pet this booking is for.
         </p>
 
@@ -81,25 +82,23 @@ export default function SelectPetPage() {
           </p>
         ) : null}
 
-        {isLoading ? (
-          <p className="text-sm text-[#7c7071]">
-            Loading your pets...
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {pets.map((pet) => {
-              const selected =
-                selectedPet === String(pet.pet_id);
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {isLoading ? (
+            Array.from({ length: 3 }, (_, index) => (
+              <SkeletonCard image={false} key={index} />
+            ))
+          ) : (
+            pets.map((pet) => {
+              const petId = String(pet.pet_id);
+              const selected = selectedPet === petId;
 
               return (
                 <button
                   key={pet.pet_id}
                   type="button"
                   aria-pressed={selected}
-                  onClick={() =>
-                    togglePet(String(pet.pet_id))
-                  }
-                  className={`min-h-[150px] rounded-[11px] border bg-white p-3 text-center transition ${
+                  onClick={() => togglePet(petId)}
+                  className={`min-h-37.5 rounded-[11px] border bg-white p-3 text-center transition ${
                     selected
                       ? "border-[#A13D3F] ring-1 ring-[#A13D3F]"
                       : "border-[#f0dfdd] hover:border-[#DCC0BF]"
@@ -121,27 +120,29 @@ export default function SelectPetPage() {
                     {pet.pet_name}
                   </strong>
 
-                  <span className="text-[8px] text-[#655a5b]">
+                  <span className="text-[10px] text-[#655a5b]">
                     {pet.breed || pet.species || "Pet"}
                   </span>
 
                   {selected ? (
-                    <span className="mt-1 block text-[8px] font-semibold text-[#A13D3F]">
+                    <span className="mt-1 block text-[9px] font-semibold text-[#A13D3F]">
                       ✓ Selected
                     </span>
                   ) : null}
                 </button>
               );
-            })}
+            })
+          )}
 
+          {!isLoading && (
             <Link
               href="/owner/pets/add"
-              className="grid min-h-[150px] place-items-center rounded-[11px] border border-dashed border-[#e7b4ad] bg-white p-3 text-center text-[9px] text-[#A13D3F]"
+              className="grid min-h-37.5 place-items-center rounded-[11px] border border-dashed border-[#e7b4ad] bg-white p-3 text-center text-sm text-[#A13D3F] transition hover:bg-[#fff8f7]"
             >
               + Add another pet
             </Link>
-          </div>
-        )}
+          )}
+        </div>
 
         {!isLoading &&
           pets.length === 0 &&

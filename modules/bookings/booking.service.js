@@ -222,6 +222,10 @@ export async function updateSitterBookingStatus(sitterId, bookingId, nextStatus)
     }
 
     if (nextStatus === "confirmed") {
+      const todayUtc = Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate());
+      if (existing.start_date && existing.start_date.getTime() < todayUtc) {
+        return { error: "This booking request has expired because its start date has passed.", status: 409 };
+      }
       const availabilityError = await validateSitterAvailability(tx, sitterId, existing.start_date, existing.end_date);
       if (availabilityError) return { error: availabilityError, status: 409 };
       const conflictError = await assertNoConflictingBooking(tx, existing);

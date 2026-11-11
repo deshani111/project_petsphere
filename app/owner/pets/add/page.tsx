@@ -36,13 +36,13 @@ const initialForm: AddPetForm = {
 type FormErrors = Partial<Record<keyof AddPetForm, string>>;
 type TouchedFields = Partial<Record<keyof AddPetForm, boolean>>;
 function FieldLabel({ children }: { children: React.ReactNode }) {
-  return <span className="block text-[12px] font-semibold text-[#8b7072]">{children}</span>;
+  return <span className="ps-label">{children}</span>;
 }
 function FieldGroup({ error, children }: { error?: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
       {children}
-      {error ? <p className="text-[11px] text-[#c24a50]">{error}</p> : null}
+      {error ? <p className="text-xs ps-text-danger">{error}</p> : null}
     </div>
   );
 }
@@ -384,10 +384,10 @@ export default function AddPetPage() {
                 className="mb-1 inline-flex items-center gap-1 text-xs text-[#8b7d7e] hover:text-[#ab3d42]"
               >
                 My Pets <span aria-hidden="true">&rsaquo;</span> Add New Pet
-                </Link>
-                <h1 className="page-title text-[#29252b]">Add New Pet</h1>
-              </div>
+              </Link>
+              <h1 className="page-title text-[#29252b]">Add New Pet</h1>
             </div>
+          </div>
             <form
               id="add-pet-form"
               onSubmit={(event) => {

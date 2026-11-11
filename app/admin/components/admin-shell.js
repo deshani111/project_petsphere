@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./admin-shell.module.css";
@@ -89,15 +90,17 @@ const Icons = {
 };
 
 const navigationItems = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/admin/users", label: "Users", icon: "users" },
-  { href: "/admin/bookings", label: "Bookings", icon: "bookings" },
-  { href: "/admin/pet-marketplace", label: "Pet Marketplace", icon: "marketplace" },
-  { href: "/admin/blogs", label: "Blogs", icon: "blogs" },
-  { href: "/admin/earnings", label: "Earnings", icon: "earnings" },
-  { href: "/admin/reviews", label: "Reviews", icon: "reviews" },
-  { href: "/admin/profile", label: "My Profile", icon: "profile" },
+  { href: "/admin/dashboard", label: "Dashboard", icon: "dashboard", group: "Manage" },
+  { href: "/admin/users", label: "Users", icon: "users", group: "Manage" },
+  { href: "/admin/bookings", label: "Bookings", icon: "bookings", group: "Manage" },
+  { href: "/admin/pet-marketplace", label: "Pet Marketplace", icon: "marketplace", group: "Manage" },
+  { href: "/admin/blogs", label: "Blogs", icon: "blogs", group: "Manage" },
+  { href: "/admin/earnings", label: "Earnings", icon: "earnings", group: "Manage" },
+  { href: "/admin/reviews", label: "Reviews", icon: "reviews", group: "Manage" },
+  { href: "/admin/profile", label: "My Profile", icon: "profile", group: "Account" },
 ];
+
+const navigationGroups = ["Manage", "Account"];
 
 function getRoleLabel(role) {
   if (!role) {
@@ -115,6 +118,7 @@ export default function AdminShell({ admin, children }) {
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [pendingAds, setPendingAds] = useState(0);
   const name = admin.fullName || "Admin User";
   const roleLabel = getRoleLabel(admin.role);
@@ -141,55 +145,72 @@ export default function AdminShell({ admin, children }) {
 
   const navigation = (
     <nav className={styles.navigation} aria-label="Admin navigation">
-      {navigationItems.map((item) =>
-        item.href ? (
-          <Link
-            key={item.label}
-            href={item.href}
-            onClick={() => setMenuOpen(false)}
-            className={isActiveRoute(item.href) ? styles.activeLink : undefined}
-            aria-current={isActiveRoute(item.href) ? "page" : undefined}
-          >
-            <span aria-hidden="true">{Icons[item.icon]}</span>
-            {item.label}{item.label === "Pet Marketplace" && pendingAds > 0 && <small aria-label={`${pendingAds} pending ads`}>{pendingAds}</small>}
-          </Link>
-        ) : (
-          <span className={styles.disabledLink} key={item.label} aria-disabled="true">
-            <span aria-hidden="true">{Icons[item.icon]}</span>
-            {item.label}
-          </span>
-        ),
-      )}
+      {navigationGroups.map((group) => (
+        <div className={styles.navigationGroup} key={group}>
+          <p className={styles.groupLabel}>{group}</p>
+          {navigationItems.filter((item) => item.group === group).map((item) => {
+            const active = isActiveRoute(item.href);
+
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className={active ? styles.activeLink : undefined}
+                aria-current={active ? "page" : undefined}
+              >
+                <span className={active ? styles.activeIcon : undefined} aria-hidden="true">{Icons[item.icon]}</span>
+                <span className={`${styles.navigationLabel} ${active ? styles.activeLabel : ""}`}>{item.label}</span>
+                {item.label === "Pet Marketplace" && pendingAds > 0 && <small aria-label={`${pendingAds} pending ads`}>{pendingAds}</small>}
+              </Link>
+            );
+          })}
+        </div>
+      ))}
     </nav>
   );
 
   return (
-    <div className={`${styles.shell} admin-shell`}>
-      <aside className={`${styles.sidebar} ${menuOpen ? styles.menuOpen : ""}`}>
-        <Link href="/admin/dashboard" className={styles.brand} onClick={() => setMenuOpen(false)}>
-          <span aria-hidden="true">♟</span>
-          PetSphere
-          <small>Pet Care Platform</small>
+    <div className={`${styles.shell} ${collapsed ? styles.shellCollapsed : ""} admin-shell`}>
+      <div className={styles.mobileSidebarBar}>
+        <Link href="/admin/dashboard" aria-label="PetSphere dashboard" onClick={() => setMenuOpen(false)}>
+          <Image src="/petsphere-logo.svg" alt="PetSphere" width={160} height={40} priority />
         </Link>
-        {navigation}
-        <button type="button" onClick={handleLogout} className={styles.logoutButton}>
-          <span aria-hidden="true">{Icons.logout}</span>
-          Logout
+        <button
+          type="button"
+          className={styles.mobileMenuButton}
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? "Close admin navigation" : "Open admin navigation"}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span className={styles.mobileMenuIcon} aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
         </button>
+      </div>
+      <aside className={`${styles.sidebar} ${menuOpen ? styles.menuOpen : ""} ${collapsed ? styles.collapsed : ""}`}>
+        <div className={styles.sidebarHeader}>
+          <Link href="/admin/dashboard" className={styles.brand} onClick={() => setMenuOpen(false)}>
+            <Image src="/petsphere-logo.svg" alt="PetSphere" width={180} height={45} priority className={styles.brandLogo} />
+          </Link>
+          <button type="button" className={styles.collapseButton} onClick={() => setCollapsed((value) => !value)} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} aria-expanded={!collapsed}>
+            {collapsed ? "›" : "‹"}
+          </button>
+        </div>
+        {navigation}
+        <div className={styles.logoutArea}>
+          <button type="button" onClick={handleLogout} className={styles.logoutButton}>
+            <span aria-hidden="true">{Icons.logout}</span>
+            Logout
+          </button>
+        </div>
       </aside>
       {menuOpen && <button className={styles.backdrop} aria-label="Close navigation" onClick={() => setMenuOpen(false)} />}
       <main className={styles.mainContent}>
-        <header className={styles.topBar}>
-          <button
-            type="button"
-            className={styles.menuButton}
-            aria-expanded={menuOpen}
-            aria-label="Open navigation"
-            onClick={() => setMenuOpen(true)}
-          >
-            ☰
-          </button>
-          <div className={styles.headerActions}>
+      <header className={styles.topBar}>
+        <div className={styles.headerActions}>
             <button type="button" className={styles.notificationButton} aria-label="Notifications">
               {Icons.bell}
             </button>

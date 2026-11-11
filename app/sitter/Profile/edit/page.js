@@ -175,7 +175,7 @@ export default function EditProfile() {
           <div className={styles.formGrid}>
             <Field label="Full Name" value={data.fullName} onChange={(v) => change("fullName", v)} required/>
             <Field label="Professional Title" value="Pet Sitter & Dog Walker" readOnly/>
-            <Field label="Email Address" value={data.email} onChange={(v) => change("email", v)} icon={<Mail size={11}/>} required/>
+            <Field label="Email Address" type="email" autoComplete="email" value={data.email} onChange={(v) => change("email", v)} icon={<Mail size={11}/>} required/>
             <span className={styles.emailOk}><Check size={13}/></span>
           </div>
         </section>
@@ -184,7 +184,7 @@ export default function EditProfile() {
           <section className={styles.card}>
             <h2><UserRound size={13}/> Professional Details</h2>
             <div className={styles.two}>
-              <Field label="Phone Number" value={data.phone} onChange={(v) => change("phone", v)} icon={<Phone size={11}/>}/>
+              <Field label="Phone Number" type="tel" inputMode="tel" autoComplete="tel" value={data.phone} onChange={(v) => change("phone", v)} icon={<Phone size={11}/>}/>
               <Field label="City" value={data.city} onChange={(v) => change("city", v)} icon={<MapPin size={11}/>}/>
             </div>
             <Field label="Address" value={data.address} onChange={(v) => change("address", v)}/>
@@ -204,8 +204,8 @@ export default function EditProfile() {
 
         <section className={styles.card}>
           <h2>âœŽ Bio / About</h2>
-          <label className={styles.label}>Tell pet owners about your experience</label>
-          <textarea value={data.bio} maxLength="2000" onChange={(e) => change("bio", e.target.value)} placeholder="Share your pet-care experience..."/>
+            <label className={styles.label} htmlFor="sitter-bio">Tell pet owners about your experience</label>
+            <textarea id="sitter-bio" value={data.bio} maxLength="2000" onChange={(e) => change("bio", e.target.value)} placeholder="Share your pet-care experience..."/>
           <small className={styles.count}>{data.bio.length}/2000</small>
         </section>
 
@@ -236,7 +236,7 @@ export default function EditProfile() {
           </div>
         </section>
 
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <p className={styles.error} role="alert">{error}</p>}
 
         <footer>
           <Link href="/sitter/Profile">Cancel</Link>
@@ -247,11 +247,11 @@ export default function EditProfile() {
   );
 }
 
-function Field({ label, value, onChange, icon, readOnly, required }) {
+function Field({ label, value, onChange, icon, readOnly, required, type = "text", inputMode, autoComplete }) {
   return (
     <label className={styles.field}>
       <span>{icon}{label}{required && <b>*</b>}</span>
-      <input value={value} onChange={(e) => onChange?.(e.target.value)} readOnly={readOnly}/>
+      <input type={type} inputMode={inputMode} autoComplete={autoComplete} value={value} onChange={(e) => onChange?.(e.target.value)} readOnly={readOnly}/>
     </label>
   );
 }
