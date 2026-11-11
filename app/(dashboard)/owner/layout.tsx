@@ -15,15 +15,15 @@ export default async function OwnerLayout({ children }: { children: ReactNode })
   if (!session) redirect("/login");
   if (session.role !== "pet_owner") redirect("/");
 
-<<<<<<< HEAD
-  return <OwnerLayoutShell>{children}</OwnerLayoutShell>;
-=======
   const user = await prisma.users.findUnique({
     where: { user_id: BigInt(session.sub) },
     select: { first_name: true, last_name: true },
   });
   const userName = `${user?.first_name || "Pet"} ${user?.last_name || "Owner"}`.trim();
 
-  return <OwnerHeaderNameProvider userName={userName}>{children}</OwnerHeaderNameProvider>;
->>>>>>> origin/main
+  return (
+    <OwnerHeaderNameProvider userName={userName}>
+      <OwnerLayoutShell>{children}</OwnerLayoutShell>
+    </OwnerHeaderNameProvider>
+  );
 }

@@ -14,9 +14,17 @@ export default async function OwnerLayoutShell({ children }: { children: ReactNo
     : null;
   const userName = `${user?.first_name || "Pet"} ${user?.last_name || "Owner"}`.trim();
 
+  return <OwnerDashboardFrame userName={userName}>{children}</OwnerDashboardFrame>;
+}
+
+export function OwnerDashboardFrame({ children, userName, previewPath }: {
+  children: ReactNode;
+  userName: string;
+  previewPath?: string;
+}) {
   return (
     <div className="flex min-h-screen bg-[#fff8f7]">
-      <OwnerSidebar />
+      <OwnerSidebar previewPath={previewPath} />
       <div className="min-w-0 flex-1">
         <DashboardHeader userName={userName} />
         {children}

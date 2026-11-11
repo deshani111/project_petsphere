@@ -1,6 +1,17 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
+import {
+  Activity,
+  ArrowLeft,
+  CalendarDays,
+  FileText,
+  HeartPulse,
+  PawPrint,
+  Pencil,
+  ShieldCheck,
+  Weight,
+} from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { type ApiPet, getApiMessage } from "../../../../lib/pet-api";
 import { parsePetNotes } from "../../../../lib/pet-notes";
@@ -82,7 +93,7 @@ export default function PetProfilePage({ params }: Params) {
   }, [params]);
 
   if (isLoading) {
-    return <OwnerShell><div className="mx-auto max-w-6xl rounded-2xl border border-[#f0dddd] bg-white p-8 text-sm text-[#806e70]">Loading pet profile…</div></OwnerShell>;
+    return <OwnerShell><div className="mx-auto max-w-6xl rounded-2xl border border-[#f0dddd] bg-white p-8 text-sm text-[#806e70]">Loading pet profileâ€¦</div></OwnerShell>;
   }
   if (error || !pet) {
     return (
@@ -98,11 +109,11 @@ export default function PetProfilePage({ params }: Params) {
   const notes = parsePetNotes(pet.medical_notes);
   const gender = pet.gender ? pet.gender.charAt(0).toUpperCase() + pet.gender.slice(1).toLowerCase() : "";
   const age = pet.age == null ? "" : `${pet.age} ${pet.age === 1 ? "year" : "years"} old`;
-  const subtitle = [age, pet.breed, gender].filter(Boolean).join(" · ");
+  const subtitle = [age, pet.breed, gender].filter(Boolean).join(" Â· ");
   const sterilizationStatus = notes.sterilized === "yes"
-    ? "Yes — Neutered / spayed"
+    ? "Yes â€” Neutered / spayed"
     : notes.sterilized === "no"
-      ? "No — Not sterilized"
+      ? "No â€” Not sterilized"
       : notes.sterilized
         ? "Unknown"
         : "Not provided";
@@ -114,7 +125,7 @@ export default function PetProfilePage({ params }: Params) {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <nav aria-label="Breadcrumb" className="mb-2 flex items-center gap-2 text-xs text-[#947e80]">
-              <Link href="/owner/pets" className="hover:text-[#a63c42]">My Pets</Link><span aria-hidden="true">›</span><span className="text-[#544244]">{pet.pet_name}</span>
+              <Link href="/owner/pets" className="hover:text-[#a63c42]">My Pets</Link><span aria-hidden="true">â€º</span><span className="text-[#544244]">{pet.pet_name}</span>
             </nav>
             <h1 className="text-2xl font-bold tracking-tight text-[#392e30] sm:text-[28px]">Pet Profile</h1>
           </div>
@@ -205,3 +216,4 @@ export default function PetProfilePage({ params }: Params) {
     </OwnerShell>
   );
 }
+

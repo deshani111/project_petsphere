@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { UnreadBadge } from "../../components/messaging/unread-badge";
 import {
   LayoutDashboard,
   CalendarDays,
@@ -58,6 +59,7 @@ export default function Sidebar() {
             >
               <Icon size={15} strokeWidth={1.8} />
               <span>{label}</span>
+              {href === "/sitter/messages" && <UnreadBadge />}
             </Link>
           );
         })}

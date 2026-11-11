@@ -97,6 +97,7 @@ model booking {
   pet_sitter      pet_sitter?   @relation(fields: [sitter_id], references: [sitter_id], onDelete: NoAction, onUpdate: NoAction)
   payment         payment[]
   review          review[]
+  conversation    conversation[]
 
   @@index([owner_id], map: "idx_booking_owner_id")
   @@index([pet_id], map: "idx_booking_pet_id")
@@ -117,12 +118,21 @@ model message {
   message_id                       BigInt   @id @default(autoincrement())
   sender_id                        BigInt
   receiver_id                      BigInt
-  message_text                     String
+  message_text                     String?
+  conversation_id                  BigInt?
+  client_id                        String?  @db.Uuid
+  read_at                          DateTime? @db.Timestamp(6)
+  conversation                     conversation? @relation(fields: [conversation_id], references: [conversation_id], onDelete: Cascade)
+  attachments                      message_attachment[]
   sent_date                        DateTime @default(now()) @db.Timestamp(6)
   is_read                          Boolean  @default(false)
   users_message_receiver_idTousers users    @relation("message_receiver_idTousers", fields: [receiver_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
   users_message_sender_idTousers   users    @relation("message_sender_idTousers", fields: [sender_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
+  @@unique([sender_id, client_id])
+  @@index([conversation_id, message_id])
+  @@index([conversation_id, read_at])
+  @@index([receiver_id, is_read, conversation_id])
   @@index([receiver_id], map: "idx_message_receiver_id")
   @@index([sender_id], map: "idx_message_sender_id")
 }
@@ -362,6 +372,8 @@ model users {
   blog_post                          blog_post[]
   message_message_receiver_idTousers message[]                @relation("message_receiver_idTousers")
   message_message_sender_idTousers   message[]                @relation("message_sender_idTousers")
+  owner_conversations                conversation[] @relation("conversation_owner")
+  sitter_conversations               conversation[] @relation("conversation_sitter")
   notification                       notification[]
   pet_owner                          pet_owner?
   pet_sitter                         pet_sitter?
@@ -403,4 +415,35 @@ model PasswordResetRequest {
 
   @@index([emailHash, createdAt], map: "idx_password_reset_request_email_created")
   @@index([ipHash, createdAt], map: "idx_password_reset_request_ip_created")
+}
+
+model conversation {
+  conversation_id BigInt @id @default(autoincrement())
+  scope_key String @unique
+  owner_user_id BigInt
+  sitter_user_id BigInt
+  booking_id BigInt?
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  owner users @relation("conversation_owner", fields: [owner_user_id], references: [user_id], onDelete: Cascade)
+  sitter users @relation("conversation_sitter", fields: [sitter_user_id], references: [user_id], onDelete: Cascade)
+  booking booking? @relation(fields: [booking_id], references: [booking_id], onDelete: Cascade)
+  messages message[]
+
+  @@index([owner_user_id, updated_at])
+  @@index([sitter_user_id, updated_at])
+  @@index([booking_id])
+}
+
+model message_attachment {
+  attachment_id BigInt @id @default(autoincrement())
+  message_id BigInt
+  storage_key String @unique
+  original_name String @db.VarChar(200)
+  mime_type String @db.VarChar(100)
+  file_size Int
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  message message @relation(fields: [message_id], references: [message_id], onDelete: Cascade)
+
+  @@index([message_id])
 }

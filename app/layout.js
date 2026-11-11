@@ -1,6 +1,6 @@
 
 import "./globals.css";
-import { Inter, Playfair_Display } from "next/font/google";
+import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import LayoutShell from "../components/shared/layout-shell";
 import { SESSION_COOKIE_NAME, getCachedSessionAccount } from "../modules/auth/auth.service";
@@ -9,15 +9,15 @@ import { SESSION_COOKIE_NAME, getCachedSessionAccount } from "../modules/auth/au
 // Remove this opt-out after verifying the segment passes validation without it.
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: "./fonts/inter-latin.woff2",
   display: "swap",
   variable: "--font-inter",
-  weight: ["400", "500", "600", "700"],
+  weight: "400 700",
 });
 
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
+const playfairDisplay = localFont({
+  src: "./fonts/playfair-display-latin-italic.woff2",
   display: "swap",
   variable: "--font-playfair-display",
   style: "italic",

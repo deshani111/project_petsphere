@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, MapPin, Star } from "lucide-react";
+import { ContactButton } from "../../../../components/messaging/contact-button";
 import type { ApprovedPublicMapLocation } from "../../../../lib/sitters/public-map-location";
 
 export type SitterListing = {
@@ -56,7 +57,7 @@ export function SitterCard({
       aria-label={`${sitter.name || "Sitter profile"}, ${isSelected ? "selected" : "not selected"}`}
       onClick={onSelect}
       onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
+        if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) {
           event.preventDefault();
           onSelect();
         }
@@ -102,7 +103,7 @@ export function SitterCard({
 
       <div className="col-span-2 flex items-end justify-between gap-3 border-t border-[#EEDFE1] pt-2.5 sm:col-span-1 sm:flex-col sm:items-end sm:justify-center sm:border-l sm:border-t-0 sm:pl-3 sm:pt-0">
         <div className="sm:text-right"><p className="text-[8px] font-bold uppercase tracking-[.08em] text-[#6f6e78]">Starting from</p><p className="mt-1 text-xs font-semibold text-[#252630]">{priceLabel(sitter)}</p>{sitter.services.some((service) => service.price > 0) && <p className="mt-0.5 text-[9px] text-[#6f6e78]">per {sitter.services.find((service) => service.price > 0)?.unit || "service"}</p>}</div>
-        <span className="inline-flex h-8 shrink-0 items-center rounded-md border border-[#EEDFE1] px-3 text-[10px] font-semibold text-[#6f6e78]">Profile details unavailable</span>
+        <ContactButton role="owner" sitterId={sitter.id} className="inline-flex min-h-8 items-center justify-center gap-1.5 rounded-md border border-[#EEDFE1] bg-white px-2 text-[11px] font-semibold text-[#A63842] hover:bg-[#FFF1F2] disabled:opacity-60" />
       </div>
     </article>
   );

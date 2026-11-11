@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import BookingSummary from "../components/booking-summary";
 import { useBooking } from "../components/booking-context";
 
@@ -28,6 +30,36 @@ const fields = [
 export default function BookingInstructionsPage() {
   const { draft, setDraft } = useBooking();
   const notes = draft.notes;
+  const router = useRouter();
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  async function requestBooking() {
+    if (submitting) return;
+    if (!draft.service || !draft.pet || !/^\d+$/.test(draft.pet) || !draft.startDate) {
+      setError("Select a pet and booking dates before confirming.");
+      return;
+    }
+    const dateOnly = (date: Date) => [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
+    setSubmitting(true);
+    setError("");
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service: draft.service, petId: draft.pet, startDate: dateOnly(draft.startDate),
+          endDate: draft.endDate ? dateOnly(draft.endDate) : null,
+          notes: fields.filter(({ id }) => notes[id]?.trim()).map(({ id, title }) => title + ": " + notes[id].trim()).join("\n\n"),
+        }),
+      });
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data?.bookingId) throw new Error(data?.message || "Could not request the booking.");
+      router.push("/owner/bookings/requested?bookingId=" + encodeURIComponent(data.bookingId));
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : "Could not request the booking.");
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div className="booking-content-grid">
@@ -72,6 +104,8 @@ export default function BookingInstructionsPage() {
           ))}
         </div>
 
+        {error && <p role="alert" className="mt-4 text-sm text-[#a13737]">{error}</p>}
+
         <div className="mt-7 flex flex-wrap items-center justify-between gap-4">
           <Link
             href="/owner/bookings"
@@ -88,12 +122,11 @@ export default function BookingInstructionsPage() {
               ← Previous
             </Link>
 
-            <Link
-              href="/owner/bookings/requested"
+            <button type="button" onClick={() => void requestBooking()} disabled={submitting}
               className="rounded-[7px] bg-[#A13D3F] px-4 py-2.5 text-[13px] text-white shadow-[0_5px_10px_rgba(161,61,63,.17)]"
             >
-              Confirm Booking
-            </Link>
+              {submitting ? "Requesting…" : "Confirm Booking"}
+            </button>
           </div>
         </div>
       </section>

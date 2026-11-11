@@ -3,12 +3,7 @@
 import Link from "next/link";
 import { use, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
-=======
-import { DashboardHeader } from "../../../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../../../components/owner-dashboard/owner-sidebar";
 import { CalendarIcon, FileIcon, PawIcon } from "../../../../../components/owner-dashboard/dashboard-icons";
->>>>>>> origin/main
 import { combinePetNotes, parsePetNotes } from "../../../../../lib/pet-notes";
 
 type RealPet = {
@@ -497,17 +492,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           : "none";
 
   const shell = (content: ReactNode) => (
-<<<<<<< HEAD
     <div className="min-h-[calc(100vh-60px)] bg-[#fff8f7]">{content}</div>
-=======
-    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
-      <OwnerSidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <DashboardHeader />
-        {content}
-      </div>
-    </div>
->>>>>>> origin/main
   );
 
   if (loading) {

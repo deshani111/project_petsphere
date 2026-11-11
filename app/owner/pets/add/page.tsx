@@ -477,7 +477,6 @@ setIsSaving(false);
 
 
   return (
-<<<<<<< HEAD
     <div className="min-h-[calc(100vh-60px)] bg-[#fff8f7]">
         <main className="w-full px-4 py-7 sm:px-5 sm:py-9 lg:px-8">
           <div className="mb-4 w-full max-w-[12500px]">
@@ -485,19 +484,6 @@ setIsSaving(false);
               <div className="flex items-center gap-2 text-[#4f4143]">
                 <Link href="/owner/pets" className="text-[18px] font-semibold leading-none hover:text-[#ab3d42]">
                   <span aria-hidden>‹</span>
-=======
-    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
-      <OwnerSidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <DashboardHeader />
-
-        <main className="w-full px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-5">
-              <div>
-                <Link href="/owner/pets" className="mb-1 inline-flex items-center gap-1 text-xs text-[#8b7d7e] hover:text-[#ab3d42]">
-                  My Pets <span aria-hidden="true">&rsaquo;</span> Add New Pet
->>>>>>> origin/main
                 </Link>
                 <h1 className="page-title text-[#29252b]">Add New Pet</h1>
               </div>

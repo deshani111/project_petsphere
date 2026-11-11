@@ -1,14 +1,9 @@
-import { NextResponse } from "next/server";
-import { getCurrentSitter } from "../../../../modules/sitter/sitter.service";
-import { getSitterConversations } from "../../../../modules/messaging/messaging.service";
+import { actor, contacts, listConversations, MessagingError } from "../../../../modules/messaging/messaging.service";
+import { endpoint, json } from "../../../../modules/messaging/messaging-http";
 
-export async function GET() {
-  const sitter = await getCurrentSitter();
-  if (!sitter) return NextResponse.json({ message: "Sitter access is required." }, { status: 401 });
-  try {
-    return NextResponse.json(await getSitterConversations(sitter));
-  } catch (error) {
-    console.error("Sitter conversations could not be loaded:", error);
-    return NextResponse.json({ message: "Could not load conversations." }, { status: 500 });
-  }
-}
+export const GET = endpoint(async () => {
+  const user = await actor();
+  if (user.role !== "pet_sitter") throw new MessagingError(403, "Sitter access is required.");
+  const { conversations } = await listConversations(user);
+  return json({ conversations: conversations.filter((row) => !row.booking).map((row) => ({ ...row, sentAt: row.updatedAt })), contacts: (await contacts(user)).map((row) => ({ ...row, userId: row.id })) });
+});

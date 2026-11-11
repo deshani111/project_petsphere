@@ -15,6 +15,10 @@ export default function LayoutShell({
 }) {
   const pathname = usePathname();
 
+  if (process.env.NODE_ENV === "development" && ["/booking-details-preview", "/messages-preview"].includes(pathname)) {
+    return children;
+  }
+
   const isAuthPage =
     pathname === "/register" ||
     pathname === "/login" ||

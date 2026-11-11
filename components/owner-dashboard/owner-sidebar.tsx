@@ -4,6 +4,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { UnreadBadge } from "../messaging/unread-badge";
 
 import {
   CalendarIcon,
@@ -60,11 +61,12 @@ const navigation = [
   },
 ];
 
-export function OwnerSidebar() {
-  const pathname = usePathname() || "";
+export function OwnerSidebar({ previewPath }: { previewPath?: string } = {}) {
+  const currentPath = usePathname();
+  const pathname = previewPath ?? currentPath ?? "";
 
   return (
-    <aside className="relative z-30 h-auto w-full border-b border-[#EEDFE1] bg-white lg:sticky lg:top-0 lg:h-screen lg:w-56 lg:shrink-0 lg:border-b-0 lg:border-r">
+    <aside inert={previewPath !== undefined} className="relative z-30 h-auto w-full border-b border-[#EEDFE1] bg-white lg:sticky lg:top-0 lg:h-screen lg:w-56 lg:shrink-0 lg:border-b-0 lg:border-r">
       <div className="flex h-full flex-col px-3 py-3 lg:px-5 lg:py-6">
 
         {/* PetSphere Logo */}
@@ -137,6 +139,7 @@ export function OwnerSidebar() {
                 />
 
                 {label}
+                {href === "/owner/messages" && <UnreadBadge disabled={previewPath !== undefined} />}
               </Link>
             );
           })}
