@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { use, useEffect, useMemo, useState, type ReactNode } from "react";
+
+import { use, useEffect, useMemo, useState, type ChangeEvent, type ReactNode } from "react";
+
 import { useRouter } from "next/navigation";
-import { DashboardHeader } from "../../../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../../../components/owner-dashboard/owner-sidebar";
+
 import { CalendarIcon, FileIcon, PawIcon } from "../../../../../components/owner-dashboard/dashboard-icons";
+
 import { combinePetNotes, parsePetNotes } from "../../../../../lib/pet-notes";
 
 type RealPet = {
@@ -83,31 +85,25 @@ function validatePetFile(file: File | null, maxSizeMB = 5) {
 
 async function uploadPetAsset(file: File) {
   let response: Response | null = null;
-
   for (let attempt = 1; attempt <= 2; attempt++) {
     const formData = new FormData();
     formData.append("file", file);
-
     try {
       response = await fetch("/api/pets/uploads", {
         method: "POST",
         body: formData,
       });
-
       if (response.ok) break;
     } catch {
       // Retry once below.
     }
-
     if (attempt === 1) {
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
   }
-
   if (!response || !response.ok) {
     throw new Error("Could not upload file. Please try again.");
   }
-
   const data = await response.json();
   return data.url as string;
 }
@@ -116,11 +112,9 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
   const router = useRouter();
   const { id } = use(params);
   const petId = id;
-
   const [pet, setPet] = useState<RealPet | null>(null);
   const [loadError, setLoadError] = useState("");
   const [loading, setLoading] = useState(true);
-
   const [form, setForm] = useState<EditPetForm>({
     pet_name: "",
     species: "",
@@ -134,7 +128,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
     sterilized: "",
     last_dental_check: "",
   });
-
   const [errors, setErrors] = useState<FormErrors>({});
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState("");
@@ -146,20 +139,16 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
 
   useEffect(() => {
     let cancelled = false;
-
     async function loadPet() {
       setLoading(true);
       setLoadError("");
-
       try {
         const response = await fetch(`/api/pets/${encodeURIComponent(petId)}`);
         const data = await response.json();
-
         if (!response.ok) {
           if (!cancelled) setLoadError(data.message || "Could not load this pet.");
           return;
         }
-
         if (!cancelled) {
           const notes = parsePetNotes(data.medical_notes);
           setPet(data);
@@ -187,29 +176,11 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
         if (!cancelled) setLoading(false);
       }
     }
-
     loadPet();
-
     return () => {
       cancelled = true;
     };
   }, [petId]);
-
-  useEffect(() => {
-    return () => {
-      if (photoPreview.startsWith("blob:")) {
-        URL.revokeObjectURL(photoPreview);
-      }
-    };
-  }, [photoPreview]);
-
-  useEffect(() => {
-    return () => {
-      if (medicalReportPreview.startsWith("blob:")) {
-        URL.revokeObjectURL(medicalReportPreview);
-      }
-    };
-  }, [medicalReportPreview]);
 
   useEffect(() => {
     return () => {
@@ -237,13 +208,12 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
       weight_kg: "Weight must be between 0.1 and 200 kg.",
       about: "About pet is required.",
       medications: "Medications must be 500 characters or less.",
-      care_instructions: "Care instructions must be 500 characters or less.",
+      care_instructions: "Care instructions must be 1000 characters or less.",
       sterilized: "Sterilization status is required.",
       last_dental_check: "Please choose today or an earlier date.",
     }),
     [],
   );
-
   const validateFieldValue = (key: keyof EditPetForm, nextForm: EditPetForm = form) => {
     switch (key) {
       case "pet_name": {
@@ -276,7 +246,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
       }
       case "about": {
         if (!nextForm.about.trim()) return validationMessages.about;
-        if (nextForm.about.trim().length > 500) return "About pet must be 500 characters or less.";
+        if (nextForm.about.trim().length > 2000) return "About pet must be 2000 characters or less.";
         return undefined;
       }
       case "medications": {
@@ -284,7 +254,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
         return undefined;
       }
       case "care_instructions": {
-        if (nextForm.care_instructions.trim().length > 500) return validationMessages.care_instructions;
+        if (nextForm.care_instructions.trim().length > 1000) return validationMessages.care_instructions;
         return undefined;
       }
       case "sterilized": {
@@ -301,108 +271,86 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
         return undefined;
     }
   };
-
   const setValue = (key: keyof EditPetForm, value: string) => {
     const nextForm = { ...form, [key]: value };
     setForm(nextForm);
-
     if (touched[key]) {
       const nextError = validateFieldValue(key, nextForm);
       setErrors((current) => ({ ...current, [key]: nextError || undefined }));
     } else {
       setErrors((current) => ({ ...current, [key]: undefined }));
     }
-
     setSaveMessage("");
   };
-
   const handleFieldBlur = (key: keyof EditPetForm) => {
     setTouched((current) => ({ ...current, [key]: true }));
     const nextError = validateFieldValue(key, form);
     setErrors((current) => ({ ...current, [key]: nextError || undefined }));
   };
-
   const validateForm = () => {
     const nextErrors: FormErrors = {};
-
     if (!form.pet_name.trim()) {
       nextErrors.pet_name = validationMessages.pet_name;
     } else if (form.pet_name.trim().length < 2 || form.pet_name.trim().length > 60) {
       nextErrors.pet_name = "Pet name must be between 2 and 60 characters.";
     }
-
     if (!form.species.trim()) {
       nextErrors.species = validationMessages.species;
     }
-
     if (!form.breed.trim()) {
       nextErrors.breed = validationMessages.breed;
     } else if (form.breed.trim().length < 2 || form.breed.trim().length > 50) {
       nextErrors.breed = "Breed must be between 2 and 50 characters.";
     }
-
     if (!form.gender.trim()) {
       nextErrors.gender = validationMessages.gender;
     }
-
     if (!form.age.trim()) {
       nextErrors.age = validationMessages.age;
     } else if (!validatePetAge(form.age)) {
       nextErrors.age = validationMessages.age;
     }
-
     if (!form.weight_kg.trim()) {
       nextErrors.weight_kg = validationMessages.weight_kg;
     } else if (!validatePetWeight(form.weight_kg)) {
       nextErrors.weight_kg = validationMessages.weight_kg;
     }
-
     if (!form.about.trim()) {
       nextErrors.about = validationMessages.about;
-    } else if (form.about.trim().length > 500) {
-      nextErrors.about = "About pet must be 500 characters or less.";
+    } else if (form.about.trim().length > 2000) {
+      nextErrors.about = "About pet must be 2000 characters or less.";
     }
-
     if (form.medications.trim().length > 500) {
       nextErrors.medications = validationMessages.medications;
     }
-
-    if (form.care_instructions.trim().length > 500) {
+    if (form.care_instructions.trim().length > 1000) {
       nextErrors.care_instructions = validationMessages.care_instructions;
     }
-
     if (!form.sterilized.trim()) {
       nextErrors.sterilized = validationMessages.sterilized;
     }
-
     if (form.last_dental_check && form.last_dental_check > new Date().toISOString().split("T")[0]) {
       nextErrors.last_dental_check = validationMessages.last_dental_check;
     }
-
     if (photoFile) {
       const photoError = validatePetFile(photoFile, 5);
       if (photoError) {
         nextErrors.pet_name = nextErrors.pet_name || photoError;
       }
     }
-
     if (medicalReportFile) {
       const reportError = validatePetFile(medicalReportFile, 10);
       if (reportError) {
         nextErrors.medications = nextErrors.medications || reportError;
       }
     }
-
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
-
   const handleSave = async () => {
     if (!validateForm()) return;
-
     setSaving(true);
     setSaveMessage("");
-
     try {
       const payload: Record<string, unknown> = {
         pet_name: form.pet_name,
@@ -419,28 +367,22 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           form.last_dental_check,
         ),
       };
-
       if (photoFile) {
         payload.photo = await uploadPetAsset(photoFile);
       }
-
       if (medicalReportFile) {
         payload.medical_report = await uploadPetAsset(medicalReportFile);
       }
-
       const response = await fetch(`/api/pets/${encodeURIComponent(petId)}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       const data = await response.json();
-
       if (!response.ok) {
         setSaveMessage(data.message || "Could not save changes.");
         return;
       }
-
       setSaveMessage("Changes saved successfully.");
       router.push(`/owner/pets/${petId}`);
     } catch {
@@ -449,56 +391,45 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
       setSaving(false);
     }
   };
-
-  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     const photoError = validatePetFile(file, 5);
     if (photoError) {
       setErrors((current) => ({ ...current, pet_name: current.pet_name || photoError }));
       return;
     }
-
     if (photoPreview.startsWith("blob:")) {
       URL.revokeObjectURL(photoPreview);
     }
-
     setPhotoFile(file);
     setPhotoPreview(URL.createObjectURL(file));
     setSaveMessage("");
     setErrors((current) => ({ ...current, pet_name: undefined }));
   };
-
-  const handleMedicalReportChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMedicalReportChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     const reportError = validatePetFile(file, 10);
     if (reportError) {
       setErrors((current) => ({ ...current, medications: current.medications || reportError }));
       return;
     }
-
     if (medicalReportPreview.startsWith("blob:")) {
       URL.revokeObjectURL(medicalReportPreview);
     }
-
     setMedicalReportFile(file);
     setMedicalReportPreview(URL.createObjectURL(file));
     setSaveMessage("");
     setErrors((current) => ({ ...current, medications: undefined }));
   };
-
   const inputClass =
     "h-10 w-full rounded-md border border-[#eedddd] bg-white px-3 text-[14px] text-[#403537] outline-none focus:border-[#c96f73]";
-
   const sterilizationLabel = {
     yes: "Yes — Neutered/Spayed",
     no: "No — Not sterilized",
     unknown: "Unknown",
   } as const;
-
   const certificateSource = medicalReportFile?.type.startsWith("image/")
     ? "image"
     : medicalReportFile?.type === "application/pdf"
@@ -510,27 +441,17 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           : "none";
 
   const shell = (content: ReactNode) => (
-    <div className="flex flex-col min-h-screen bg-[#fff8f7] lg:flex-row">
-      <OwnerSidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <DashboardHeader />
-        {content}
-      </div>
-    </div>
+    <div className="min-h-[calc(100vh-60px)] bg-[#fff8f7]">{content}</div>
   );
-
   if (loading) {
     return shell(<div className="p-6">Loading pet...</div>);
   }
-
   if (loadError) {
     return shell(<div className="p-6">{loadError}</div>);
   }
-
   if (!pet) {
     return shell(<div className="p-6">Pet not found.</div>);
   }
-
   return shell(
     <main className="w-full px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
       <div className="mx-auto max-w-6xl">
@@ -546,7 +467,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
           </div>
         </div>
       </div>
-
       <section className="w-full rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_3px_16px_rgba(117,55,59,0.04)] sm:p-5">
         <div className="mb-5 rounded-xl border border-[#f0dada] bg-[#fffafa] p-4 sm:p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
@@ -572,7 +492,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
             </div>
           </div>
         </div>
-
         <form
           id="edit-pet-profile-form"
           onSubmit={(event) => {
@@ -587,7 +506,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                   <span aria-hidden>◌</span>
                   Basic information
                 </h2>
-
                 <div className="grid gap-4 sm:grid-cols-2">
                   <FieldGroup error={errors.pet_name}>
                     <FieldLabel>Pet Name</FieldLabel>
@@ -598,7 +516,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                       className={inputClass}
                     />
                   </FieldGroup>
-
                   <FieldGroup error={errors.species}>
                     <FieldLabel>Species</FieldLabel>
                     <select
@@ -614,7 +531,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                       <option value="Other">Other</option>
                     </select>
                   </FieldGroup>
-
                   <FieldGroup error={errors.breed}>
                     <FieldLabel>Breed</FieldLabel>
                     <input
@@ -624,7 +540,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                       className={inputClass}
                     />
                   </FieldGroup>
-
                   <FieldGroup error={errors.age}>
                     <FieldLabel>Age</FieldLabel>
                     <input
@@ -634,7 +549,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                       className={inputClass}
                     />
                   </FieldGroup>
-
                   <FieldGroup error={errors.gender}>
                     <FieldLabel>Gender</FieldLabel>
                     <div className="grid grid-cols-2 gap-2">
@@ -662,7 +576,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                       ))}
                     </div>
                   </FieldGroup>
-
                   <FieldGroup error={errors.weight_kg}>
                     <FieldLabel>Weight (kg)</FieldLabel>
                     <input
@@ -674,7 +587,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                   </FieldGroup>
                 </div>
               </div>
-
               <div className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
@@ -690,9 +602,7 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                     className="mt-1 w-full rounded-md border border-[#eedddd] bg-white px-3 py-2 text-[14px] text-[#403537] outline-none focus:border-[#c96f73]"
                   />
                 </FieldGroup>
-
               </div>
-
               <div className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[18px] font-semibold text-[#a63842]">
                   <FileIcon className="size-4" />
@@ -710,7 +620,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                   />
                 </FieldGroup>
               </div>
-
               <div className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
@@ -728,14 +637,12 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                 </FieldGroup>
               </div>
             </div>
-
             <aside className="flex min-w-0 flex-col gap-4">
               <section className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   Medical Information
                 </h2>
-
                 <div className="space-y-4">
                   <div>
                     <FieldLabel>Sterilization Status</FieldLabel>
@@ -746,7 +653,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                         { value: "unknown", label: sterilizationLabel.unknown },
                       ].map((option) => {
                         const selected = form.sterilized === option.value;
-
                         return (
                           <label
                             key={option.value}
@@ -771,7 +677,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                     </div>
                     {errors.sterilized ? <p className="mt-2 text-[12px] text-[#c24a50]">{errors.sterilized}</p> : null}
                   </div>
-
                   <FieldGroup error={errors.last_dental_check}>
                     <FieldLabel>Last Dental / Vaccination</FieldLabel>
                     <input
@@ -785,16 +690,13 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                   </FieldGroup>
                 </div>
               </section>
-
               <section className="rounded-2xl border border-[#f0dada] bg-white p-4 shadow-[0_2px_10px_rgba(117,55,59,0.03)] sm:p-5">
                 <h2 className="mb-4 flex items-center gap-2 text-[20px] font-semibold text-[#b54a50]">
                   <span aria-hidden>◌</span>
                   Medical Records
                 </h2>
-
                 <div className="rounded-[14px] border border-[#f0dede] bg-white p-3">
                   <FieldLabel>Uploaded Medical Document</FieldLabel>
-
                   <div className="mt-3 overflow-hidden rounded-xl border border-[#f0dede] bg-[#fff8f7]">
                     {medicalReportPreview && certificateSource === "image" ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -818,18 +720,15 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
                       </div>
                     )}
                   </div>
-
                 <label className="mt-3 inline-flex h-9 cursor-pointer items-center justify-center rounded-md border border-[#f0dede] bg-white px-3 text-[12px] font-medium text-[#ab3d42] hover:bg-[#fff7f7]">
                   Replace Medical Document
                   <input type="file" accept="image/*,.pdf" className="hidden" onChange={handleMedicalReportChange} />
                 </label>
-
                   <p className="mt-3 text-[12px] text-[#8f7f80]">Accepted format: JPEG, PNG, WEBP, or PDF.</p>
                 </div>
               </section>
             </aside>
           </div>
-
           <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
             <Link
               href={`/owner/pets/${petId}`}
@@ -845,7 +744,6 @@ export default function EditPetPage({ params }: { params: Promise<{ id: string }
               {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
-
           {saveMessage ? (
             <p className="pt-2 text-right text-[12px] font-medium text-[#2d8f68]">{saveMessage}</p>
           ) : null}

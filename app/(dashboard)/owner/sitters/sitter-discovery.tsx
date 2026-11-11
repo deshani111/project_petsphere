@@ -51,6 +51,7 @@ export default function SitterDiscovery() {
   const [searchDraft, setSearchDraft] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [availableOnly, setAvailableOnly] = useState(false);
+  const [selectedService, setSelectedService] = useState("");
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState("recommended");
   const [selectedSitterId, setSelectedSitterId] = useState<string | null>(null);
@@ -91,12 +92,34 @@ export default function SitterDiscovery() {
     { id: "map", label: "Map Only" },
   ];
 
+  const serviceOptions = useMemo(() => {
+  return Array.from(
+    new Set(
+      sitters.flatMap((sitter) =>
+        (sitter.services ?? []).map((service) => service.name)
+      )
+    )
+  ).sort((a, b) => a.localeCompare(b));
+}, [sitters]);
+
   const filteredSitters = useMemo(() => {
     const query = searchTerm.trim().toLocaleLowerCase();
     const matches = sitters.filter((sitter) => {
       const textMatch = !query || [sitter.name, sitter.serviceArea]
         .some((value) => value?.toLocaleLowerCase().includes(query));
-      return textMatch && (!availableOnly || sitter.isAvailable) && (minRating === 0 || (sitter.reviewCount > 0 && sitter.rating >= minRating));
+      const serviceMatch =
+  !selectedService ||
+  (sitter.services ?? []).some(
+    (service) => service.name === selectedService
+  );
+
+return (
+  textMatch &&
+  serviceMatch &&
+  (!availableOnly || sitter.isAvailable) &&
+  (minRating === 0 ||
+    (sitter.reviewCount > 0 && sitter.rating >= minRating))
+);
     });
 
     return matches.sort((a, b) => {
@@ -106,14 +129,21 @@ export default function SitterDiscovery() {
       if (sortBy === "reviews") return b.reviewCount - a.reviewCount || b.rating - a.rating;
       return 0;
     });
-  }, [sitters, searchTerm, availableOnly, minRating, sortBy]);
+  }, [sitters, searchTerm, selectedService, availableOnly, minRating, sortBy]);
 
   const hasApprovedMapLocations = sitters.some((sitter) => sitter.publicMapLocation?.approvalStatus === "approved");
   const activeSelectedSitterId = filteredSitters.some((sitter) => sitter.id === selectedSitterId)
     ? selectedSitterId
     : null;
 
-  const hasActiveFilters = Boolean(searchDraft.trim() || searchTerm || availableOnly || minRating > 0 || sortBy !== "recommended");
+  const hasActiveFilters = Boolean(
+  searchDraft.trim() ||
+  searchTerm ||
+  selectedService ||
+  availableOnly ||
+  minRating > 0 ||
+  sortBy !== "recommended"
+);
   const mapNotice = isLoading
     ? null
     : loadError
@@ -126,6 +156,7 @@ export default function SitterDiscovery() {
   const clearFilters = () => {
     setSearchDraft("");
     setSearchTerm("");
+    setSelectedService("");
     setAvailableOnly(false);
     setMinRating(0);
     setSortBy("recommended");
@@ -144,7 +175,34 @@ export default function SitterDiscovery() {
 
     <section aria-label="Sitter search filters" className="mb-5 rounded-xl border border-[#EEDFE1] bg-white p-4 shadow-[0_2px_12px_rgba(37,38,48,.035)] sm:p-5">
       <form onSubmit={submitSearch} className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_1.25fr_1fr_auto]">
-        <div className="min-w-0"><span className="mb-1.5 block text-[9px] font-bold uppercase tracking-[.08em] text-[#6f6e78]">Service Type</span><button type="button" disabled title="No active sitter service listings are available" className={`flex h-10 w-full cursor-not-allowed items-center justify-between rounded-lg border px-3 text-left text-xs ${unavailable}`}>No services listed<ChevronDown size={14}/></button></div>
+        <div className="min-w-0">
+  <label
+    htmlFor="sitter-service-type"
+    className="mb-1.5 block text-[9px] font-bold uppercase tracking-[.08em] text-[#6f6e78]"
+  >
+    Service Type
+  </label>
+
+  <select
+    id="sitter-service-type"
+    value={selectedService}
+    onChange={(event) => setSelectedService(event.target.value)}
+    disabled={serviceOptions.length === 0}
+    className="h-10 w-full rounded-lg border border-[#EEDFE1] bg-white px-3 text-xs text-[#252630] outline-none focus:border-[#A63842] disabled:cursor-not-allowed disabled:bg-[#F8F9FB]"
+  >
+    <option value="">
+      {serviceOptions.length === 0
+        ? "No services listed"
+        : "All Services"}
+    </option>
+
+    {serviceOptions.map((service) => (
+      <option key={service} value={service}>
+        {service}
+      </option>
+    ))}
+  </select>
+</div>
         <label className="min-w-0"><span className="mb-1.5 block text-[9px] font-bold uppercase tracking-[.08em] text-[#6f6e78]">Name / Location</span><span className="flex h-10 items-center gap-2 rounded-lg border border-[#EEDFE1] bg-white px-3 focus-within:border-[#A63842] focus-within:ring-2 focus-within:ring-[#A63842]/10"><MapPin size={14} className="shrink-0 text-[#A63842]"/><input value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Name or service area" aria-label="Search by sitter name or service area" className="min-w-0 flex-1 bg-transparent text-xs text-[#252630] outline-none placeholder:text-[#6f6e78]" /></span></label>
         <div><span className="mb-1.5 block text-[9px] font-bold uppercase tracking-[.08em] text-[#6f6e78]">Dates / Pet</span><button type="button" disabled title="Date and pet matching is not part of this stage" className={`flex h-10 w-full cursor-not-allowed items-center gap-2 rounded-lg border px-3 text-left text-xs ${unavailable}`}><CalendarDays size={14}/>Not available yet</button></div>
         <div className="flex items-end"><button type="submit" className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-[#A63842] px-5 text-xs font-semibold text-white transition hover:bg-[#8E303A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A63842] sm:w-auto"><Search size={14}/>Search</button></div>
