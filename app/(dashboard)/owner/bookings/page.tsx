@@ -4,8 +4,6 @@ import { prisma } from "../../../../lib/prisma";
 import { getCurrentSession } from "../../../../lib/session";
 import { bookings as decoyBookings } from "../../../../lib/mock-bookings";
 import { BookingTable } from "./booking-table";
-import { DashboardHeader } from "../../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
 
 function formatDate(date: Date | null) {
   return date
@@ -19,9 +17,6 @@ function formatDate(date: Date | null) {
 
 export default async function OwnerBookingsPage() {
   const session = await getCurrentSession();
-
-  const userName =
-    `${session?.firstName || "Pet"} ${session?.lastName || "Owner"}`.trim();
 
   const userId = session?.sub ? BigInt(session.sub) : null;
 
@@ -90,44 +85,36 @@ export default async function OwnerBookingsPage() {
   }));
 
   return (
-    <div className="ps-page flex min-h-screen">
-      <OwnerSidebar />
+    <main className="mx-auto max-w-6xl px-5 py-9">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-[#ab3d42]">
+            Owner dashboard
+          </p>
 
-      <div className="min-w-0 flex-1">
-        <DashboardHeader userName={userName} />
+          <h1 className="mt-2 text-3xl font-bold text-[#30272a]">
+            My Bookings
+          </h1>
+        </div>
 
-        <main className="mx-auto max-w-6xl px-5 py-9">
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#ab3d42]">
-                Owner dashboard
-              </p>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/owner/payments"
+            className="rounded-lg border border-[#ab3d42] bg-white px-5 py-3 text-sm font-semibold text-[#ab3d42] transition hover:bg-[#fff4f2]"
+          >
+            Payment History
+          </Link>
 
-              <h1 className="mt-2 text-3xl font-bold text-[#30272a]">
-                My Bookings
-              </h1>
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/owner/payments"
-                className="rounded-lg border border-[#ab3d42] bg-white px-5 py-3 text-sm font-semibold text-[#ab3d42] transition hover:bg-[#fff4f2]"
-              >
-                Payment History
-              </Link>
-
-              <Link
-                href="/owner/bookings/new"
-                className="rounded-lg bg-[#ab3d42] px-5 py-3 text-sm font-semibold text-white"
-              >
-                New booking
-              </Link>
-            </div>
+          <Link
+            href="/owner/bookings/new"
+            className="rounded-lg bg-[#ab3d42] px-5 py-3 text-sm font-semibold text-white"
+          >
+            New booking
+          </Link>
           </div>
-
-          <BookingTable bookings={[...bookingRows, ...demoBookings]} />
-        </main>
       </div>
-    </div>
+
+      <BookingTable bookings={[...bookingRows, ...demoBookings]} />
+    </main>
   );
 }

@@ -89,7 +89,7 @@ export default function PetsGrid({
             <div className="relative mb-3 flex min-h-43.75 flex-1 items-center justify-center overflow-hidden rounded-lg bg-(--ps-color-surface)/40">
               <div className="absolute inset-0 rounded-lg border border-dashed border-(--ps-color-border)" />
 
-              <div className="relative grid size-16 place-items-center rounded-full border-2 border-(--ps-color-border-strong) text-[38px] font-light leading-none ps-text-primary transition group-hover:bg-[var(--ps-color-surface)]">
+              <div className="relative grid size-16 place-items-center rounded-full border-2 border-(--ps-color-border-strong) text-[38px] font-light leading-none ps-text-primary transition group-hover:bg-(--ps-color-surface)">
                 +
               </div>
             </div>
