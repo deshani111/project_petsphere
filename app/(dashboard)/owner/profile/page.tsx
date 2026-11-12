@@ -16,8 +16,6 @@ import {
   UserRound,
 } from "lucide-react";
 import { redirect } from "next/navigation";
-import { DashboardHeader } from "../../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
 import { prisma } from "../../../../lib/prisma";
 import { getCurrentSession } from "../../../../lib/session";
 
@@ -78,7 +76,7 @@ export default async function OwnerProfilePage() {
   if (session.role !== "pet_owner") redirect("/");
 
   const userId = BigInt(session.sub);
-  const [user, owner, unreadMessages] = await Promise.all([
+  const [user, owner] = await Promise.all([
     prisma.users.findUnique({
       where: { user_id: userId },
       select: {
@@ -109,7 +107,6 @@ export default async function OwnerProfilePage() {
         },
       },
     }),
-    prisma.message.count({ where: { receiver_id: userId, is_read: false } }),
   ]);
 
   const fullName = `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim() || "Pet Owner";
@@ -117,12 +114,8 @@ export default async function OwnerProfilePage() {
   const emailVerified = Boolean(user?.emailVerified);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#FFF8F8] lg:flex-row">
-      <OwnerSidebar />
-      <div className="min-w-0 flex-1">
-        <DashboardHeader userName={fullName} unreadMessages={unreadMessages} />
-        <main className="px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
-          <div className="mx-auto max-w-[1180px]">
+    <main className="px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
+          <div className="mx-auto max-w-295">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <h1 className="text-xl font-bold tracking-tight text-[#252630] sm:text-2xl">My Profile</h1>
               <ComingSoonButton label="Edit Profile" />
@@ -131,7 +124,7 @@ export default async function OwnerProfilePage() {
             <section className={`${cardClass} mb-4 p-4 sm:p-5`} aria-label="Profile overview">
               <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
                 <div className="flex min-w-0 items-center gap-4">
-                  <div className="grid size-[68px] shrink-0 place-items-center overflow-hidden rounded-xl bg-[#F8E8E9] text-lg font-bold text-[#A63842] ring-1 ring-[#EEDFE1]">
+                  <div className="grid size-17 shrink-0 place-items-center overflow-hidden rounded-xl bg-[#F8E8E9] text-lg font-bold text-[#A63842] ring-1 ring-[#EEDFE1]">
                     {initials(fullName)}
                   </div>
                   <div className="min-w-0">
@@ -150,7 +143,7 @@ export default async function OwnerProfilePage() {
                     <p className="mt-2 text-[10px] text-[#8A8790]">Member since {formatDate(user?.created_at)}</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2 md:min-w-[250px]">
+                <div className="grid grid-cols-2 gap-2 md:min-w-62.5">
                   <div className="rounded-lg bg-[#FFF8F8] p-3 text-center">
                     <p className="text-lg font-bold leading-none text-[#A63842]">{pets.length}</p>
                     <p className="mt-1.5 text-[9px] font-medium uppercase tracking-wide text-[#77747D]">Registered pets</p>
@@ -237,7 +230,7 @@ export default async function OwnerProfilePage() {
                     ].map(([title, description]) => (
                       <div key={title} className="flex items-center justify-between gap-3 rounded-lg bg-[#FFFCFC] px-3 py-2.5">
                         <div><p className="text-[10px] font-semibold text-[#45434A]">{title}</p><p className="mt-0.5 text-[9px] leading-relaxed text-[#8A8790]">{description}</p></div>
-                        <button type="button" disabled aria-label={`${title}: unavailable`} title="Notification preferences are not configured yet." className="relative h-[18px] w-9 shrink-0 cursor-not-allowed rounded-full bg-[#DEDADD] opacity-70"><span className="absolute left-[2px] top-[2px] size-[14px] rounded-full bg-white shadow-sm" /></button>
+                        <button type="button" disabled aria-label={`${title}: unavailable`} title="Notification preferences are not configured yet." className="relative h-4.5 w-9 shrink-0 cursor-not-allowed rounded-full bg-[#DEDADD] opacity-70"><span className="absolute left-0.5 top-0.5 size-3.5 rounded-full bg-white shadow-sm" /></button>
                       </div>
                     ))}
                   </div>
@@ -253,7 +246,7 @@ export default async function OwnerProfilePage() {
               />
               <div className="grid gap-2 sm:grid-cols-3">
                 {["NIC Front", "NIC Back", "Selfie Holding NIC"].map((document) => (
-                  <div key={document} className="flex min-h-[62px] items-center gap-2.5 rounded-lg bg-[#F8F7F8] px-3 py-2.5">
+                  <div key={document} className="flex min-h-15.5 items-center gap-2.5 rounded-lg bg-[#F8F7F8] px-3 py-2.5">
                     <span className="grid size-7 shrink-0 place-items-center rounded-md bg-white text-[#85828B]"><FileCheck2 size={14} /></span>
                     <span className="min-w-0 flex-1"><span className="block truncate text-[10px] font-semibold text-[#45434A]">{document}</span><span className="mt-0.5 block text-[9px] text-[#8A8790]">Not available</span></span>
                     <CircleHelp size={13} className="text-[#AAA5AC]" />
@@ -266,8 +259,6 @@ export default async function OwnerProfilePage() {
               </div>
             </section>
           </div>
-        </main>
-      </div>
-    </div>
+    </main>
   );
 }

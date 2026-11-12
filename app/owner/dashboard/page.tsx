@@ -1,10 +1,8 @@
-import { DashboardHeader } from "../../../components/owner-dashboard/dashboard-header";
 import {
   DashboardOverview,
   type DashboardBooking,
 } from "../../../components/owner-dashboard/dashboard-overview";
 import { getCurrentSession } from "../../../lib/session";
-import { OwnerSidebar } from "../../../components/owner-dashboard/owner-sidebar";
 import { prisma } from "../../../lib/prisma";
 import { redirect } from "next/navigation";
 
@@ -111,24 +109,12 @@ export default async function OwnerDashboardPage() {
   }));
 
   return (
-    <div className="ps-page flex min-h-screen flex-col lg:flex-row">
-      <OwnerSidebar />
-
-      <div className="min-w-0 flex-1">
-        <DashboardHeader
-          userName={userName}
-          userImage={null}
-          unreadMessages={unreadMessages}
-        />
-
-        <DashboardOverview
-          userName={userName}
-          activeBookings={activeBookings}
-          totalBookings={bookings.length}
-          unreadMessages={unreadMessages}
-          bookings={dashboardBookings}
-        />
-      </div>
-    </div>
+    <DashboardOverview
+      userName={userName}
+      activeBookings={activeBookings}
+      totalBookings={bookings.length}
+      unreadMessages={unreadMessages}
+      bookings={dashboardBookings}
+    />
   );
 }

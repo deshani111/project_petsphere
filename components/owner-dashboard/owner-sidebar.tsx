@@ -257,17 +257,6 @@ export function OwnerSidebar({
               />
             </Link>
 
-            {collapsed && (
-              <Link
-                href={homeHref}
-                aria-label="PetSphere dashboard"
-                onClick={closeMobileMenu}
-                className="grid size-10 place-items-center rounded-xl bg-[#A13D3F] text-lg font-bold text-white"
-              >
-                P
-              </Link>
-            )}
-
             <button
               type="button"
               aria-label={
@@ -328,14 +317,6 @@ export function OwnerSidebar({
                               : "text-[#403537] hover:bg-[#FFF1F2] hover:text-[#A13D3F]"
                           }`}
                         >
-                          {/* Active Indicator */}
-                          {active && (
-                            <span
-                              className="absolute inset-y-2 left-0 w-0.5 rounded-r-full bg-white"
-                              aria-hidden="true"
-                            />
-                          )}
-
                           <Icon
                             className={`size-4.5 shrink-0 transition-colors duration-200 ${
                               active

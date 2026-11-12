@@ -1,7 +1,6 @@
 
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { BellIcon } from "./dashboard-icons";
 import { useOwnerHeaderName } from "./owner-header-context";
@@ -80,13 +79,6 @@ export function DashboardHeader({
           </div>
         </div>
 
-        {/* Find a Sitter Button */}
-        <Link
-          href="/owner/sitters"
-          className="inline-flex h-8 items-center gap-1.5 rounded-md bg-[#A13D3F] px-3 text-[10px] font-semibold text-white shadow-sm transition hover:bg-[#8E303A]"
-        >
-          Find a Sitter
-        </Link>
       </div>
     </header>
   );

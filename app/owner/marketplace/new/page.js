@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
-import SitterSidebar from "../../../../app/sitter/Sidebar";
 import styles from "./page.module.css";
 
 const initialForm = {
@@ -37,7 +35,7 @@ function formatAge(years, months) {
   return parts.join(" ");
 }
 
-export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketplaceShell = false }) {
+export default function NewMarketplaceAdPage() {
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
   const [form, setForm] = useState(initialForm);
@@ -53,15 +51,6 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
   const [confirmed, setConfirmed] = useState({});
   const [notice, setNotice] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [userName, setUserName] = useState("Pet Owner");
-
-  useEffect(() => {
-    fetch("/api/auth/me", { credentials: "same-origin" })
-      .then((response) => response.ok ? response.json() : null)
-      .then((payload) => { if (payload?.name) setUserName(payload.name); })
-      .catch(() => {});
-  }, []);
-
   useEffect(() => {
     if (!editId) return;
     fetch(`/api/marketplace/ads/${editId}?mode=edit`)
@@ -165,12 +154,7 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
   };
 
   return (
-    <div className={marketplaceShell ? undefined : styles.dashboardShell}>
-      {!marketplaceShell && sellerRole === "pet_sitter" ? <SitterSidebar /> : null}
-      {!marketplaceShell && sellerRole !== "pet_sitter" ? <OwnerSidebar /> : null}
-      <div className={marketplaceShell ? undefined : styles.dashboardMain}>
-        {!marketplaceShell && <header className={styles.dashboardHeader}><Link href="/owner/dashboard" className={styles.headerUser} aria-label="Open owner dashboard"><span>{userName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "PO"}</span><b>{userName}</b></Link></header>}
-        <main className={styles.page}>
+    <main className={styles.page}>
           <div className={styles.shell}>
         <Link href="/marketplace" className={styles.back}><span aria-hidden="true">←</span> Marketplace</Link>
         <div className={styles.headingRow}>
@@ -236,8 +220,6 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
           </div>
         </form>
           </div>
-        </main>
-      </div>
-    </div>
+    </main>
   );
 }
