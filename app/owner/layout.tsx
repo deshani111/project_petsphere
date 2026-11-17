@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import OwnerLayoutShell from "../../components/owner-dashboard/owner-layout-shell";
 import { getCurrentSession } from "../../lib/session";
-import { prisma } from "../../lib/prisma";
 import { OwnerHeaderNameProvider } from "../../components/owner-dashboard/owner-header-context";
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -25,19 +24,7 @@ export default async function OwnerLayout({
     redirect("/");
   }
 
-  const user = await prisma.users.findUnique({
-    where: {
-      user_id: BigInt(session.sub),
-    },
-    select: {
-      first_name: true,
-      last_name: true,
-    },
-  });
-
-  const userName = `${
-    user?.first_name || "Pet"
-  } ${user?.last_name || "Owner"}`.trim();
+  const userName = `${session.firstName || "Pet"} ${session.lastName || "Owner"}`.trim();
 
   return (
     <OwnerHeaderNameProvider userName={userName}>

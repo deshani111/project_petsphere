@@ -5,10 +5,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 const ThemeContext = createContext(null);
 
 function getInitialTheme() {
-  if (typeof window === "undefined") return "light";
-  const saved = window.localStorage.getItem("petsphere-theme");
-  if (saved === "light" || saved === "dark") return saved;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  // PetSphere's public pages use the light design palette. Following the OS
+  // color scheme here also persisted an unrequested dark theme across visits.
+  return "light";
 }
 
 export function ThemeProvider({ children }) {
