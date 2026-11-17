@@ -122,6 +122,10 @@ export function OwnerSidebar({
   }, [mobileOpen]);
 
   function isActive(label: string, href: string) {
+    if (href === homeHref) {
+      return pathname === href;
+    }
+
     // Marketplace includes both public and owner marketplace pages.
     if (label === "Marketplace") {
       return (

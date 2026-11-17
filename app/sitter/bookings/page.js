@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowLeft,
   CalendarDays,
   Check,
   CircleCheck,
@@ -161,7 +160,7 @@ export default function BookingsPage() {
 
   return <div className={styles.page}><div className={styles.content}>
     <header className={styles.hero}>
-      <div><Link href="/sitter" className={styles.backLink}><ArrowLeft size={15} />Dashboard</Link><p className={styles.eyebrow}>Care schedule</p><h1>My bookings</h1><p className={styles.subtitle}>Your care calendar, thoughtfully organized.</p></div>
+      <div><p className={styles.eyebrow}>Care schedule</p><h1>My bookings</h1><p className={styles.subtitle}>Your care calendar, thoughtfully organized.</p></div>
       <div className={styles.heroMark}><CalendarDays size={34} strokeWidth={1.5} /><span>{counts.confirmed || 0} upcoming</span></div>
     </header>
 
