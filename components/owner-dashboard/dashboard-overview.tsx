@@ -309,6 +309,7 @@ export function DashboardOverview({
               src="/about-hero-dog.webp"
               alt=""
               fill
+              loading="eager"
               sizes="(min-width: 1280px) 48vw, (min-width: 640px) 54vw, 0px"
               className="object-cover object-center"
             />

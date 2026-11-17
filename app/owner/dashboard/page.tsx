@@ -18,15 +18,7 @@ export default async function OwnerDashboardPage() {
 
   const userId = BigInt(session.sub);
 
-  const [user, owner, unreadMessages] = await Promise.all([
-    prisma.users.findUnique({
-      where: { user_id: userId },
-      select: {
-        first_name: true,
-        last_name: true,
-      },
-    }),
-
+  const [owner, unreadMessages] = await Promise.all([
     prisma.pet_owner.findUnique({
       where: { user_id: userId },
       select: {
@@ -71,8 +63,7 @@ export default async function OwnerDashboardPage() {
     }),
   ]);
 
-  const userName =
-    `${user?.first_name || "Pet"} ${user?.last_name || "Owner"}`.trim();
+  const userName = `${session.firstName || "Pet"} ${session.lastName || "Owner"}`.trim();
 
   const bookings = owner?.booking ?? [];
 
