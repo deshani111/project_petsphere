@@ -1,5 +1,4 @@
 .blogPage { --ink: #2a2021; --muted: #75686a; --line: #eadad8; --surface: #fff; --soft: #fff7f4; background: var(--surface); color: var(--ink); font-family: var(--ps-font-sans); transition: background .25s ease, color .25s ease; }
-.darkMode, :global(html[data-theme="dark"]) .blogPage { --ink: #f9eeeb; --muted: #cbb9b5; --line: #483638; --surface: #211a1b; --soft: #302021; }
 .container { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
 .hero { position: relative; overflow: hidden; padding: 82px 0 70px; background: var(--soft); }
 .heroGlow { position: absolute; width: 420px; height: 420px; right: -120px; top: -150px; border-radius: 50%; background: #f7c7b9; opacity: .35; filter: blur(2px); }

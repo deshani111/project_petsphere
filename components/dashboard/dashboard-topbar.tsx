@@ -23,7 +23,7 @@ export function DashboardTopbar({
 }: DashboardTopbarProps) {
   if (variant === "marketplace") {
     return (
-      <header className="sticky top-0 z-40 flex min-h-16 justify-end border-b border-[var(--ps-color-border)] bg-[color:var(--ps-color-surface)]/95 px-4 backdrop-blur sm:px-7">
+      <header className="marketplace-dashboard-topbar sticky top-0 flex min-h-16 justify-end border-b border-[var(--ps-color-border)] bg-[color:var(--ps-color-surface)]/95 px-4 backdrop-blur sm:px-7">
         <div className="flex shrink-0 items-center gap-2.5 sm:gap-4">
         <button type="button" aria-label="View notifications" className="ps-icon-button size-10 rounded-lg">
           <Bell size={18} strokeWidth={1.7} />

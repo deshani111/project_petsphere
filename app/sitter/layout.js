@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Bell, ChevronDown, LogOut, Settings, UserRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "./Sidebar";
 import styles from "./page.module.css";
 
@@ -18,6 +20,7 @@ function initials(name) {
 }
 
 export default function SitterLayout({ children }) {
+  const router = useRouter();
   const [profile, setProfile] = useState(null);
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -46,12 +49,12 @@ export default function SitterLayout({ children }) {
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
-    window.location.assign("/");
+    router.push("/");
   }
 
   const name = profile?.fullName || "Your account";
   return <div className={styles.shell}><Sidebar /><div className={styles.main}><header className={styles.header}>
-    <Link className={styles.notification} href="/sitter/Profile" aria-label="View profile"><Bell size={18} strokeWidth={1.7} />{hasUnreadNotifications && <span aria-hidden="true" />}</Link>
-    <div className={styles.accountMenu} ref={menuRef}><button className={styles.user} type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-haspopup="menu"><span className={styles.avatar}>{profile?.profileImage ? <img src={profile.profileImage} alt="" /> : initials(name)}</span><span>{name}</span><ChevronDown size={15} aria-hidden="true" /></button>{menuOpen && <div className={styles.accountDropdown} role="menu"><Link href="/sitter/Profile" role="menuitem" onClick={() => setMenuOpen(false)}><UserRound size={15} />View profile</Link><Link href="/sitter/Profile/edit" role="menuitem" onClick={() => setMenuOpen(false)}><Settings size={15} />Account settings</Link><button type="button" role="menuitem" onClick={logout}><LogOut size={15} />Log out</button></div>}</div>
+    <Link className={styles.notification} href="/sitter" aria-label="View dashboard updates" title="View dashboard updates"><Bell size={18} strokeWidth={1.7} />{hasUnreadNotifications && <span aria-hidden="true" />}</Link>
+    <div className={styles.accountMenu} ref={menuRef}><button className={styles.user} type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-haspopup="menu"><span className={styles.avatar}>{profile?.profileImage ? <Image src={profile.profileImage} alt="" width={40} height={40} /> : initials(name)}</span><span>{name}</span><ChevronDown size={15} aria-hidden="true" /></button>{menuOpen && <div className={styles.accountDropdown} role="menu"><Link href="/sitter/Profile" role="menuitem" onClick={() => setMenuOpen(false)}><UserRound size={15} />View profile</Link><Link href="/sitter/Profile/edit" role="menuitem" onClick={() => setMenuOpen(false)}><Settings size={15} />Account settings</Link><button type="button" role="menuitem" onClick={logout}><LogOut size={15} />Log out</button></div>}</div>
   </header><main>{children}</main></div></div>;
 }

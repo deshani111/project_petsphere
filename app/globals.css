@@ -204,12 +204,13 @@ button, input, select, textarea { font: inherit; }
 @media (max-width:767px) { .booking-table table { min-width:0 !important; } .booking-table thead { display:none; } .booking-table table,.booking-table tbody,.booking-table tr,.booking-table td { display:block; width:100%; } .booking-table tr { padding:1rem; border-bottom:1px solid var(--line-soft); } .booking-table td { padding:.3rem 0 !important; text-align:left !important; font-size:var(--font-size-sm); } }
 
 .marketplace-sitter-shell {
+  display: flex;
   min-height: 100vh;
 }
 
 .marketplace-sitter-content {
   min-width: 0;
-  margin-left: 248px;
+  flex: 1;
 }
 
 .marketplace-owner-shell {
@@ -303,6 +304,16 @@ button, input, select, textarea { font: inherit; }
   .marketplace-user strong { display: none; }
 }
 
+@media (max-width: 1023px) {
+  .marketplace-sitter-shell {
+    flex-direction: column;
+  }
+
+  .marketplace-sitter-content {
+    margin-left: 0;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -387,7 +398,8 @@ a {
   justify-content: space-between;
   background: var(--surface); color: var(--ink-dark);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 40;
   gap: 24px;
   padding-inline: clamp(20px, 4vw, 72px);

@@ -1,4 +1,3 @@
-
 {
   "name": "petsphere-frontend",
   "version": "0.1.0",
@@ -27,14 +26,13 @@
     "@neondatabase/serverless": "^1.2.0",
     "@prisma/adapter-neon": "7.9.1",
     "@prisma/adapter-pg": "^7.9.1",
-    "@prisma/client": "^7.9.1",
+    "@prisma/client": "^7.10.1",
     "@vercel/blob": "^2.8.0",
     "bcrypt": "^6.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.56.0",
     "next": "16.4.2",
     "pg": "^8.22.0",
-    "prisma": "^7.9.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "react-leaflet": "^5.0.0",
@@ -48,6 +46,7 @@
     "dotenv": "^17.4.2",
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.2",
+    "prisma": "^7.10.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   }
