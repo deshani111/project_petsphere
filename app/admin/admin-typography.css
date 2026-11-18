@@ -17,47 +17,47 @@
   line-height: var(--admin-line-height);
 }
 
-.admin-shell .admin-page-content :where(h1, h2, h3, h4, h5, h6, p, small, label, th, td, button, input, select, textarea) {
+.admin-shell .admin-page-content :where(h1, h2, h3, h4, h5, h6, p, small, label, th, td, button, input, select, textarea):not(.admin-dashboard *) {
   font-family: inherit;
 }
 
-.admin-shell .admin-page-content :where(h1) {
+.admin-shell .admin-page-content :where(h1):not(.admin-dashboard *) {
   font-size: var(--admin-page-title-size) !important;
   font-weight: 800 !important;
   line-height: 1.05 !important;
   letter-spacing: -0.03em !important;
 }
 
-.admin-shell .admin-page-content :where(h2) {
+.admin-shell .admin-page-content :where(h2):not(.admin-dashboard *) {
   font-size: var(--admin-section-title-size) !important;
   font-weight: 800 !important;
   line-height: 1.15 !important;
   letter-spacing: -0.02em !important;
 }
 
-.admin-shell .admin-page-content :where(h3) {
+.admin-shell .admin-page-content :where(h3):not(.admin-dashboard *) {
   font-size: var(--admin-card-title-size) !important;
   font-weight: 800 !important;
   line-height: 1.2 !important;
 }
 
-.admin-shell .admin-page-content :where(p, td, input, select, textarea) {
+.admin-shell .admin-page-content :where(p, td, input, select, textarea):not(.admin-dashboard *) {
   font-size: var(--admin-body-size) !important;
   line-height: 1.5 !important;
 }
 
-.admin-shell .admin-page-content :where(small, label, th) {
+.admin-shell .admin-page-content :where(small, label, th):not(.admin-dashboard *) {
   font-size: var(--admin-label-size) !important;
   line-height: 1.35 !important;
 }
 
-.admin-shell .admin-page-content :where(label, th) {
+.admin-shell .admin-page-content :where(label, th):not(.admin-dashboard *) {
   font-weight: 700 !important;
   letter-spacing: 0.06em !important;
   text-transform: uppercase;
 }
 
-.admin-shell .admin-page-content :where(button) {
+.admin-shell .admin-page-content :where(button):not(.admin-dashboard *) {
   font-size: var(--admin-body-size) !important;
   font-weight: 700 !important;
 }

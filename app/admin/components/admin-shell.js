@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./admin-shell.module.css";
 
 function Icon({ children, className }) {
@@ -117,12 +117,120 @@ export default function AdminShell({ admin, children }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [pendingAds, setPendingAds] = useState(0);
+  const menuButtonRef = useRef(null);
+  const notificationButtonRef = useRef(null);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const unreadNotificationCount = notifications.filter((notification) => !notification.is_read).length;
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const [notificationsError, setNotificationsError] = useState("");
+  const [notificationsActionError, setNotificationsActionError] = useState("");
+  const [notificationsActionLoading, setNotificationsActionLoading] = useState(false);
+  const [notificationRefresh, setNotificationRefresh] = useState(0);
   const name = admin.fullName || "Admin User";
   const roleLabel = getRoleLabel(admin.role);
 
   useEffect(() => {
     fetch("/api/admin/ads?status=pending").then((response) => response.ok ? response.json() : []).then((ads) => setPendingAds(Array.isArray(ads) ? ads.length : 0)).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!menuOpen && !notificationsOpen) return undefined;
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        if (menuOpen) {
+          setMenuOpen(false);
+          menuButtonRef.current?.focus();
+        }
+        if (notificationsOpen) {
+          setNotificationsOpen(false);
+          notificationButtonRef.current?.focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [menuOpen, notificationsOpen]);
+
+  useEffect(() => {
+    if (!notificationsOpen) return undefined;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const response = await fetch("/api/admin/notifications");
+        if (response.status === 401 || response.status === 403) {
+          router.replace("/login");
+          return;
+        }
+
+        let payload;
+        try {
+          payload = await response.json();
+        } catch {
+          throw new Error(`Notification service returned an invalid response (HTTP ${response.status}).`);
+        }
+
+        if (!response.ok) throw new Error(payload.message || `Notifications request failed (HTTP ${response.status}).`);
+        const validNotifications = Array.isArray(payload.notifications)
+          && payload.notifications.every((notification) => notification
+            && typeof notification.notification_id === "string"
+            && typeof notification.is_read === "boolean"
+            && typeof notification.created_date === "string");
+        if (!validNotifications) throw new Error("Notification service returned data in an unexpected format.");
+        if (!cancelled) setNotifications(payload.notifications);
+      } catch (loadError) {
+        if (!cancelled) {
+          setNotificationsError(loadError instanceof TypeError
+            ? "The notification service could not be reached. Check your network and try again."
+            : loadError.message || "Notifications could not be loaded.");
+        }
+      } finally {
+        if (!cancelled) setNotificationsLoading(false);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [notificationsOpen, notificationRefresh, router]);
+
+  async function markAllNotificationsRead() {
+    setNotificationsActionError("");
+    setNotificationsActionLoading(true);
+    try {
+      const response = await fetch("/api/admin/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+
+      let payload;
+      try {
+        payload = await response.json();
+      } catch {
+        throw new Error(`Notification service returned an invalid response (HTTP ${response.status}).`);
+      }
+
+      if (!response.ok) throw new Error(payload.message || `Notifications update failed (HTTP ${response.status}).`);
+      setNotifications((current) => current.map((notification) => ({ ...notification, is_read: true })));
+    } catch (actionError) {
+      setNotificationsActionError(actionError instanceof TypeError
+        ? "The notification service could not be reached. Check your network and try again."
+        : actionError.message || "Notifications could not be updated.");
+    } finally {
+      setNotificationsActionLoading(false);
+    }
+  }
+
+  function toggleNotifications() {
+    setMenuOpen(false);
+    if (!notificationsOpen) {
+      setNotificationsLoading(true);
+      setNotificationsError("");
+    }
+    setNotificationsOpen(!notificationsOpen);
+  }
 
   function isActiveRoute(itemHref) {
     if (itemHref === "/admin/pet-marketplace") {
@@ -141,7 +249,7 @@ export default function AdminShell({ admin, children }) {
   }
 
   const navigation = (
-    <nav className={styles.navigation} aria-label="Admin navigation">
+    <nav id="admin-navigation" className={styles.navigation} aria-label="Admin navigation">
       {navigationItems.map((item) =>
         item.href ? (
           <Link
@@ -168,10 +276,14 @@ export default function AdminShell({ admin, children }) {
     <div className={`${styles.shell} admin-shell`}>
       <aside className={`${styles.sidebar} ${menuOpen ? styles.menuOpen : ""}`}>
         <Link href="/admin/dashboard" className={styles.brand} onClick={() => setMenuOpen(false)}>
-          <span className={styles.brandMark} aria-hidden="true">
-            <Image src="/petsphere-mark.svg" alt="" width={32} height={32} />
-          </span>
-          <span className={styles.brandText}>Pet<span>Sphere</span></span>
+          <Image
+            src="/petsphere-logo.svg"
+            alt="PetSphere"
+            width={165}
+            height={41}
+            priority
+            className={styles.brandLogo}
+          />
         </Link>
         {navigation}
         <button type="button" onClick={handleLogout} className={styles.logoutButton}>
@@ -185,16 +297,73 @@ export default function AdminShell({ admin, children }) {
           <button
             type="button"
             className={styles.menuButton}
+            ref={menuButtonRef}
+            aria-controls="admin-navigation"
             aria-expanded={menuOpen}
-            aria-label="Open navigation"
-            onClick={() => setMenuOpen(true)}
+            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+            onClick={() => {
+              setNotificationsOpen(false);
+              setMenuOpen((isOpen) => !isOpen);
+            }}
           >
-            ☰
+            {menuOpen ? "×" : "☰"}
           </button>
           <div className={styles.headerActions}>
-            <button type="button" className={styles.notificationButton} aria-label="Notifications">
-              {Icons.bell}
-            </button>
+            <div className={styles.notificationWrap}>
+              <button
+                type="button"
+                className={styles.notificationButton}
+                ref={notificationButtonRef}
+                aria-label={`Notifications${notifications.length ? `, ${unreadNotificationCount} unread` : ""}`}
+                aria-controls={notificationsOpen ? "admin-notifications-panel" : undefined}
+                aria-expanded={notificationsOpen}
+                onClick={toggleNotifications}
+              >
+                {Icons.bell}
+                {unreadNotificationCount > 0 && <span className={styles.notificationBadge}>{unreadNotificationCount}</span>}
+              </button>
+              {notificationsOpen && (
+                <section className={styles.notificationPanel} id="admin-notifications-panel" aria-label="Notifications">
+                  <div className={styles.notificationPanelHeading}>
+                    <strong>Notifications</strong>
+                    {unreadNotificationCount > 0 && (
+                      <button type="button" onClick={markAllNotificationsRead} disabled={notificationsActionLoading}>
+                        {notificationsActionLoading ? "Marking…" : "Mark all read"}
+                      </button>
+                    )}
+                  </div>
+                  {notificationsError ? (
+                    <div className={styles.notificationMessage} role="alert">
+                      <p>{notificationsError}</p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNotificationsError("");
+                          setNotificationsLoading(true);
+                          setNotificationRefresh((value) => value + 1);
+                        }}
+                      >
+                        Try again
+                      </button>
+                    </div>
+                  ) : notificationsLoading ? (
+                    <p className={styles.notificationMessage} role="status">Loading notifications…</p>
+                  ) : notifications.length ? (
+                    <ul className={styles.notificationList}>
+                      {notifications.map((notification) => (
+                        <li className={notification.is_read ? styles.notificationItem : `${styles.notificationItem} ${styles.notificationUnread}`} key={notification.notification_id}>
+                          <span>{notification.message || "You have a new notification."}</span>
+                          <time dateTime={notification.created_date}>{new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(new Date(notification.created_date))}</time>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className={styles.notificationMessage}>No notifications yet.</p>
+                  )}
+                  {notificationsActionError && <p className={styles.notificationActionError} role="alert">{notificationsActionError}</p>}
+                </section>
+              )}
+            </div>
             <i aria-hidden="true" />
             <div className={styles.adminIdentity}>
               <div className={styles.identityText}>

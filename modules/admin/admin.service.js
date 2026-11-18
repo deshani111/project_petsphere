@@ -57,6 +57,43 @@ export async function getAdminDashboardData() {
           _count: { select: { booking: true } },
         },
       }),
+      prisma.booking.findMany({
+        orderBy: { booking_date: "desc" },
+        take: 5,
+        select: {
+          booking_id: true,
+          status: true,
+          start_date: true,
+          booking_date: true,
+          pet: { select: { pet_name: true, photo: true } },
+          pet_owner: {
+            select: {
+              users: { select: { first_name: true, last_name: true } },
+            },
+          },
+          service_type: { select: { name: true } },
+        },
+      }),
+      prisma.pet_sitter.findMany({
+        where: { is_verified: false },
+        orderBy: { users: { created_at: "desc" } },
+        take: 5,
+        select: {
+          sitter_id: true,
+          users: {
+            select: {
+              first_name: true,
+              last_name: true,
+              created_at: true,
+            },
+          },
+          verification_documents: {
+            orderBy: { submitted_at: "desc" },
+            take: 1,
+            select: { submitted_at: true },
+          },
+        },
+      }),
     ]);
 
   return {
@@ -78,6 +115,21 @@ export async function getAdminDashboardData() {
     bookingsByService: services.map((service) => ({
       name: service.name,
       bookings: service._count.booking,
+    })),
+    recentBookings: recentBookings.map((booking) => ({
+      id: booking.booking_id.toString(),
+      status: booking.status,
+      petName: booking.pet.pet_name,
+      petPhoto: booking.pet.photo,
+      ownerName: `${booking.pet_owner.users.first_name} ${booking.pet_owner.users.last_name}`.trim(),
+      serviceName: booking.service_type?.name || "Pet care",
+      date: (booking.start_date || booking.booking_date).toISOString(),
+    })),
+    pendingSitters: pendingSitters.map((sitter) => ({
+      id: sitter.sitter_id.toString(),
+      name: `${sitter.users.first_name} ${sitter.users.last_name}`.trim(),
+      submittedAt: (sitter.verification_documents[0]?.submitted_at || sitter.users.created_at).toISOString(),
+      dateLabel: sitter.verification_documents.length ? "Submitted" : "Applied",
     })),
   };
 }

@@ -86,7 +86,7 @@ export default function AdminDashboardClient({ previewData = null, initialError 
   const [isLoading, setIsLoading] = useState(!previewData && !initialError);
 
   useEffect(() => {
-    if (previewData || initialError) return;
+    if (previewData || (initialError && refresh === 0)) return;
     let cancelled = false;
     (async () => {
       try {
@@ -123,8 +123,8 @@ export default function AdminDashboardClient({ previewData = null, initialError 
   const retry = () => { setError(""); setDashboard(null); setIsLoading(true); setRefresh((value) => value + 1); };
   const refreshDashboard = () => { setError(""); setIsLoading(true); setRefresh((value) => value + 1); };
 
-  if (error) return <section className={styles.dashboard}><div className={styles.statePanel} role="alert"><h1>Dashboard unavailable</h1><p>{error}</p><button type="button" onClick={retry}>Try again</button></div></section>;
-  if (!dashboard) return <section className={styles.dashboard} aria-busy="true"><div className={styles.loadingState}><span className={styles.loadingMark} />Loading platform data</div></section>;
+  if (error) return <section className={`admin-dashboard ${styles.dashboard}`}><div className={styles.statePanel} role="alert"><h1>Dashboard unavailable</h1><p>{error}</p><button type="button" onClick={retry}>Try again</button></div></section>;
+  if (!dashboard) return <section className={`admin-dashboard ${styles.dashboard}`} aria-busy="true"><div className={styles.loadingState}><span className={styles.loadingMark} />Loading platform data</div></section>;
 
   const payments = dashboard.revenue || [];
   const selectedPayments = getPeriodPayments(payments, period);
@@ -140,8 +140,16 @@ export default function AdminDashboardClient({ previewData = null, initialError 
   const monthlyRevenue = payments
     .filter((payment) => new Date(payment.date) >= monthStart && new Date(payment.date) <= now)
     .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+  const totalUsers = (dashboard.totalPetOwners || 0) + (dashboard.totalPetSitters || 0);
+  const summary = [
+    { label: "Total users", value: numberFormat.format(totalUsers), detail: `${numberFormat.format(dashboard.totalPetOwners || 0)} owners · ${numberFormat.format(dashboard.totalPetSitters || 0)} sitters`, icon: UsersRound },
+    { label: "Active bookings", value: numberFormat.format(dashboard.activeBookings || 0), detail: "Pending, confirmed and in progress", icon: CalendarDays },
+    { label: "Monthly revenue", value: currencyFormat.format(monthlyRevenue), detail: "Completed payments this month", icon: Banknote, featured: true },
+    { label: "Sitter applications", value: numberFormat.format(dashboard.pendingSitterVerifications || 0), detail: "Awaiting verification", icon: BadgeCheck, alert: dashboard.pendingSitterVerifications > 0 },
+  ];
+
   return (
-    <section className={styles.dashboard}>
+    <section className={`admin-dashboard ${styles.dashboard}`}>
       <header className={styles.pageHeading}>
         <div>
           <div className={styles.eyebrow}><span /> Platform intelligence</div>
@@ -204,18 +212,22 @@ export default function AdminDashboardClient({ previewData = null, initialError 
             <div>
               <span className={styles.sectionKicker}>Operations</span>
               <h2>Recent bookings</h2>
+              <p>Latest activity across the platform</p>
             </div>
             <Link className={styles.textLink} href="/admin/bookings">View bookings <ArrowRight size={15} aria-hidden="true" /></Link>
           </div>
           {dashboard.recentBookings?.length ? (
             <>
-              <div className={styles.bookingHead}><span>Booking</span><span>Customer &amp; pet</span><span>Service</span><span>Date</span><span>Status</span></div>
-              <div className={styles.bookingList}>
+              <div className={styles.bookingHead} aria-hidden="true"><span>Booking</span><span>Pet &amp; owner</span><span>Service</span><span>Date</span><span>Status</span></div>
+              <div className={styles.bookingList} role="list" aria-label="Recent bookings">
                 {dashboard.recentBookings.map((booking) => (
-                  <Link className={styles.bookingRow} key={booking.id} href="/admin/bookings" aria-label={`Open booking #${booking.id} in bookings management`}>
+                  <Link className={styles.bookingRow} key={booking.id} href="/admin/bookings" role="listitem" aria-label={`Open booking #${booking.id} in bookings management`}>
                     <span className={styles.bookingRef}>#{booking.id}</span>
                     <span className={styles.bookingCustomer}>
-                      {booking.petPhoto ? <Image src={booking.petPhoto} alt="" width={34} height={34} unoptimized /> : <span className={styles.petInitial}>{booking.petName?.slice(0, 1) || "P"}</span>}
+                      <span className={styles.petAvatar}>
+                        <span className={styles.petInitial}>{booking.petName?.slice(0, 1) || "P"}</span>
+                        {booking.petPhoto && <Image src={booking.petPhoto} alt="" width={40} height={40} unoptimized onError={(event) => { event.currentTarget.style.display = "none"; }} />}
+                      </span>
                       <span><strong>{booking.petName}</strong><small>{booking.ownerName}</small></span>
                     </span>
                     <span className={styles.bookingService}>{booking.serviceName}</span>
@@ -233,17 +245,28 @@ export default function AdminDashboardClient({ previewData = null, initialError 
             <div>
               <span className={styles.sectionKicker}>Needs attention</span>
               <h2>Pending approvals</h2>
+              <p>Applications waiting for review</p>
             </div>
-            <span className={styles.pendingCount}>{numberFormat.format(dashboard.pendingSitterVerifications || 0)}</span>
+            <span className={styles.pendingCount} aria-label={`${numberFormat.format(dashboard.pendingSitterVerifications || 0)} pending approvals`}>
+              <strong>{numberFormat.format(dashboard.pendingSitterVerifications || 0)}</strong>
+              <span>waiting</span>
+            </span>
           </div>
           {dashboard.pendingSitters?.length ? (
             <div className={styles.approvalList}>
               {dashboard.pendingSitters.map((sitter) => (
-                <div className={styles.approvalRow} key={sitter.id}>
+                <Link className={styles.approvalRow} key={sitter.id} href="/admin/users/pending-verifications" aria-label={`Review verification for ${sitter.name}`}>
                   <span className={styles.approvalAvatar}>{sitter.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}</span>
-                  <span className={styles.approvalPerson}><strong>{sitter.name}</strong><small><Clock3 size={12} aria-hidden="true" /> {sitter.dateLabel || "Submitted"} {formatDate(sitter.submittedAt)}</small><em>Pending verification</em></span>
-                </div>
+                  <span className={styles.approvalPerson}>
+                    <strong>{sitter.name}</strong>
+                    <small><Clock3 size={13} aria-hidden="true" /> {sitter.dateLabel || "Submitted"} {formatDate(sitter.submittedAt)}</small>
+                  </span>
+                  <span className={styles.approvalStatus}>Review <ArrowRight size={13} aria-hidden="true" /></span>
+                </Link>
               ))}
+              {dashboard.pendingSitterVerifications > dashboard.pendingSitters.length && (
+                <p className={styles.approvalMore}>Showing {dashboard.pendingSitters.length} of {numberFormat.format(dashboard.pendingSitterVerifications)} applications</p>
+              )}
               <Link className={styles.approvalLink} href="/admin/users/pending-verifications">Review verification queue <ArrowRight size={15} aria-hidden="true" /></Link>
             </div>
           ) : <p className={styles.emptyState}>All sitter profiles are verified.</p>}
