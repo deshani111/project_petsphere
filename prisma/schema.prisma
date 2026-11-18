@@ -219,28 +219,31 @@ model pet_owner {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model pet_sitter {
-  sitter_id               BigInt                         @id @default(autoincrement())
-  user_id                 BigInt                         @unique
-  address                 String?                        @db.VarChar(255)
-  bio                     String?
-  experience_years        Int                            @default(0)
-  service_area            String?                        @db.VarChar(150)
-  pet_preferences         String?
-  is_available            Boolean                        @default(true)
-  is_verified             Boolean                        @default(false)
-  avg_rating              Decimal                        @default(0) @db.Decimal(3, 2)
-  earning_total           Decimal                        @default(0) @db.Decimal(12, 2)
-  professional_title      String?                        @db.VarChar(150)
-  profile_image           String?                        @db.VarChar(500)
-  notifications_enabled   Boolean                        @default(true)
-  booking                 booking[]
-  users                   users                          @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
-  pet_sitter_service      pet_sitter_service[]
-  sitter_availability     sitter_availability[]
-  sitter_unavailable_date sitter_unavailable_date[]
-  review                  review[]
-  verification_documents  sitter_verification_document[]
-  advertisement           advertisement[]
+  sitter_id                    BigInt                         @id @default(autoincrement())
+  user_id                      BigInt                         @unique
+  address                      String?                        @db.VarChar(255)
+  bio                          String?
+  experience_years             Int                            @default(0)
+  service_area                 String?                        @db.VarChar(150)
+  pet_preferences              String?
+  is_available                 Boolean                        @default(true)
+  is_verified                  Boolean                        @default(false)
+  avg_rating                   Decimal                        @default(0) @db.Decimal(3, 2)
+  earning_total                Decimal                        @default(0) @db.Decimal(12, 2)
+  professional_title           String?                        @db.VarChar(150)
+  profile_image                String?                        @db.VarChar(500)
+  notifications_enabled        Boolean                        @default(true)
+  booking                      booking[]
+  users                        users                          @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  pet_sitter_service           pet_sitter_service[]
+  sitter_availability          sitter_availability[]
+  sitter_unavailable_date      sitter_unavailable_date[]
+  sitter_service_schedule      sitter_service_schedule[]
+  sitter_service_date_override sitter_service_date_override[]
+  sitter_boarding_capacity     sitter_boarding_capacity[]
+  review                       review[]
+  verification_documents       sitter_verification_document[]
+  advertisement                advertisement[]
 
   @@index([user_id], map: "idx_pet_sitter_user_id")
 }
@@ -278,6 +281,68 @@ model sitter_unavailable_date {
   pet_sitter          pet_sitter @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade)
 
   @@unique([sitter_id, unavailable_date])
+}
+
+model sitter_service_schedule {
+  schedule_id     BigInt                     @id @default(autoincrement())
+  sitter_id       BigInt
+  service_type_id BigInt
+  weekday         Int
+  is_available    Boolean                    @default(true)
+  pet_sitter      pet_sitter                 @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade)
+  service_type    service_type               @relation(fields: [service_type_id], references: [service_type_id], onDelete: Cascade)
+  time_slots      sitter_service_time_slot[]
+
+  @@unique([sitter_id, service_type_id, weekday])
+  @@index([sitter_id, service_type_id])
+}
+
+model sitter_service_time_slot {
+  slot_id         BigInt                  @id @default(autoincrement())
+  sitter_id       BigInt
+  service_type_id BigInt
+  weekday         Int
+  start_time      String                  @db.VarChar(5)
+  end_time        String                  @db.VarChar(5)
+  schedule        sitter_service_schedule @relation(fields: [sitter_id, service_type_id, weekday], references: [sitter_id, service_type_id, weekday], onDelete: Cascade)
+
+  @@index([sitter_id, service_type_id, weekday])
+}
+
+model sitter_service_date_override {
+  override_id      BigInt                     @id @default(autoincrement())
+  sitter_id        BigInt
+  service_type_id  BigInt
+  unavailable_date DateTime                   @db.Date
+  is_available     Boolean                    @default(false)
+  reason           String?                    @db.VarChar(255)
+  pet_sitter       pet_sitter                 @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade)
+  service_type     service_type               @relation(fields: [service_type_id], references: [service_type_id], onDelete: Cascade)
+  time_slots       sitter_service_date_slot[]
+
+  @@unique([sitter_id, service_type_id, unavailable_date])
+  @@index([sitter_id, service_type_id, unavailable_date])
+}
+
+model sitter_service_date_slot {
+  slot_id     BigInt                       @id @default(autoincrement())
+  override_id BigInt
+  start_time  String                       @db.VarChar(5)
+  end_time    String                       @db.VarChar(5)
+  override    sitter_service_date_override @relation(fields: [override_id], references: [override_id], onDelete: Cascade)
+
+  @@index([override_id])
+}
+
+model sitter_boarding_capacity {
+  capacity_id     BigInt       @id @default(autoincrement())
+  sitter_id       BigInt
+  service_type_id BigInt
+  max_capacity    Int
+  pet_sitter      pet_sitter   @relation(fields: [sitter_id], references: [sitter_id], onDelete: Cascade)
+  service_type    service_type @relation(fields: [service_type_id], references: [service_type_id], onDelete: Cascade)
+
+  @@unique([sitter_id, service_type_id])
 }
 
 model pet_sitter_service {
@@ -333,11 +398,14 @@ model review {
 }
 
 model service_type {
-  service_type_id    BigInt               @id @default(autoincrement())
-  name               String               @db.VarChar(100)
-  description        String?
-  booking            booking[]
-  pet_sitter_service pet_sitter_service[]
+  service_type_id              BigInt                         @id @default(autoincrement())
+  name                         String                         @db.VarChar(100)
+  description                  String?
+  booking                      booking[]
+  pet_sitter_service           pet_sitter_service[]
+  sitter_service_schedule      sitter_service_schedule[]
+  sitter_service_date_override sitter_service_date_override[]
+  sitter_boarding_capacity     sitter_boarding_capacity[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.

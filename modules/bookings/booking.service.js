@@ -147,7 +147,7 @@ export async function listSitterBookings(sitterId, where = {}) {
   return rows.map(formatBooking);
 }
 
-async function validateSitterAvailability(tx, sitterId, startDate, endDate) {
+async function validateSitterAvailability(tx, sitterId, startDate, endDate, serviceTypeId) {
   if (!startDate) return null;
   const lastDate = endDate ?? startDate;
   const dates = [];
@@ -155,22 +155,64 @@ async function validateSitterAvailability(tx, sitterId, startDate, endDate) {
     dates.push(new Date(date));
   }
 
-  const [sitter, availability, unavailableDates] = await Promise.all([
+  const [sitter, activeService, availability, unavailableDates, overrides] = await Promise.all([
     tx.pet_sitter.findUnique({ where: { sitter_id: sitterId }, select: { is_available: true } }),
-    tx.sitter_availability.findMany({ where: { sitter_id: sitterId } }),
+    serviceTypeId
+      ? tx.pet_sitter_service.findUnique({
+          where: {
+            sitter_id_service_type_id: {
+              sitter_id: sitterId,
+              service_type_id: serviceTypeId,
+            },
+          },
+          include: { service_type: true },
+        })
+      : Promise.resolve(null),
+    serviceTypeId
+      ? tx.sitter_service_schedule.findMany({
+          where: { sitter_id: sitterId, service_type_id: serviceTypeId },
+        })
+      : tx.sitter_availability.findMany({ where: { sitter_id: sitterId } }),
     tx.sitter_unavailable_date.findMany({
       where: { sitter_id: sitterId, unavailable_date: { in: dates } },
       select: { unavailable_date: true },
     }),
+    serviceTypeId
+      ? tx.sitter_service_date_override.findMany({
+          where: {
+            sitter_id: sitterId,
+            service_type_id: serviceTypeId,
+            unavailable_date: { in: dates },
+          },
+        })
+      : Promise.resolve([]),
   ]);
 
   if (!sitter?.is_available) return "This sitter is not currently available.";
-  if (unavailableDates.length) return "The sitter is unavailable for the selected dates.";
+  if (serviceTypeId && !activeService?.is_active) return "This service is no longer active.";
+  if (!serviceTypeId && unavailableDates.length) return "The sitter is unavailable for the selected dates.";
 
-  const availabilityByDay = new Map(availability.map((day) => [day.weekday, day]));
-  if (availability.length) {
-    for (const date of dates) {
-      const weekday = date.getUTCDay();
+  const overrideByDate = new Map(
+    overrides.map((override) => [override.unavailable_date.toISOString().slice(0, 10), override]),
+  );
+  const availabilityByDay = new Map(
+    availability.map((day) => [day.weekday, day]),
+  );
+  for (const date of dates) {
+    const dateKey = date.toISOString().slice(0, 10);
+    const override = overrideByDate.get(dateKey);
+    if (override) {
+      if (!override.is_available) {
+        return "The sitter is unavailable for one or more selected dates.";
+      }
+      continue;
+    }
+    const weekday = date.getUTCDay();
+    if (serviceTypeId && availability.length) {
+      if (!availabilityByDay.get(weekday)?.is_available) {
+        return "The sitter is unavailable for one or more selected dates.";
+      }
+    } else if (!serviceTypeId && availability.length) {
       if (!availabilityByDay.get(weekday)?.is_available) {
         return "The sitter is unavailable for one or more selected dates.";
       }
@@ -181,6 +223,43 @@ async function validateSitterAvailability(tx, sitterId, startDate, endDate) {
 
 async function assertNoConflictingBooking(tx, booking) {
   if (!booking.start_date || !booking.sitter_id) return null;
+  const isBoarding = /boarding/i.test(booking.service_type?.name || "");
+  if (isBoarding) {
+    const capacity = await tx.sitter_boarding_capacity.findUnique({
+      where: {
+        sitter_id_service_type_id: {
+          sitter_id: booking.sitter_id,
+          service_type_id: booking.service_type_id,
+        },
+      },
+    });
+    if (capacity) {
+      const endDate = booking.end_date ?? new Date(booking.start_date.getTime() + 86_400_000);
+      for (
+        let date = new Date(booking.start_date);
+        date < endDate;
+        date.setUTCDate(date.getUTCDate() + 1)
+      ) {
+        const occupied = await tx.booking.count({
+          where: {
+            booking_id: { not: booking.booking_id },
+            sitter_id: booking.sitter_id,
+            service_type_id: booking.service_type_id,
+            status: { in: ["confirmed", "in_progress"] },
+            start_date: { lt: new Date(date.getTime() + 86_400_000) },
+            OR: [
+              { end_date: null, start_date: { lte: date } },
+              { end_date: { gt: date } },
+            ],
+          },
+        });
+        if (occupied >= capacity.max_capacity) {
+          return "The boarding capacity is full for one or more selected dates.";
+        }
+      }
+    }
+    return null;
+  }
   const conflict = await tx.booking.findFirst({
     where: {
       booking_id: { not: booking.booking_id },
@@ -226,7 +305,13 @@ export async function updateSitterBookingStatus(sitterId, bookingId, nextStatus)
       if (existing.start_date && existing.start_date.getTime() < todayUtc) {
         return { error: "This booking request has expired because its start date has passed.", status: 409 };
       }
-      const availabilityError = await validateSitterAvailability(tx, sitterId, existing.start_date, existing.end_date);
+      const availabilityError = await validateSitterAvailability(
+        tx,
+        sitterId,
+        existing.start_date,
+        existing.end_date,
+        existing.service_type_id,
+      );
       if (availabilityError) return { error: availabilityError, status: 409 };
       const conflictError = await assertNoConflictingBooking(tx, existing);
       if (conflictError) return { error: conflictError, status: 409 };

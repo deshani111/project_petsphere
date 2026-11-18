@@ -228,8 +228,14 @@ export function OwnerSidebar({
       )}
 
       {/* Sidebar */}
+      <div
+        aria-hidden="true"
+        className={`hidden shrink-0 lg:block ${
+          collapsed ? "lg:w-19" : "lg:w-62"
+        }`}
+      />
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-67 flex-col overflow-y-auto border-r border-[#EEDFE1] bg-white shadow-xl transition-[transform,width] duration-200 lg:sticky lg:top-0 lg:h-screen lg:shrink-0 lg:translate-x-0 lg:shadow-none ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-67 flex-col overflow-y-auto border-r border-[#EEDFE1] bg-white shadow-xl transition-[transform,width] duration-200 lg:top-0 lg:h-screen lg:shrink-0 lg:translate-x-0 lg:shadow-none ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } ${
           collapsed ? "lg:w-19" : "lg:w-62"
