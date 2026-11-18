@@ -60,12 +60,12 @@
   min-height: 42px;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  border: 1px solid #eadbd9;
-  border-radius: 9px;
-  background: #fff;
-  color: #554746;
-  box-shadow: 0 3px 10px rgba(76, 45, 43, .04);
+  gap: 10px;
+  border: 1px solid #e8cfcf;
+  border-radius: 14px;
+  background: var(--surface);
+  color: #7f6665;
+  box-shadow: 0 6px 16px rgba(134, 76, 76, 0.06);
 }
 
 .periodSelect {
@@ -123,10 +123,10 @@
 .chartCard,
 .tableCard {
   min-width: 0;
-  border: 1px solid #eee2e0;
-  border-radius: 13px;
-  background: #fff;
-  box-shadow: 0 5px 18px rgba(76, 45, 43, .045);
+  border: 1px solid #f1dede;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 10px 24px rgba(132, 82, 82, 0.06);
 }
 
 .summaryCard {
@@ -776,11 +776,12 @@
   justify-content: center;
   gap: 10px;
   padding: 24px;
-  border: 1px solid #eee2e0;
-  border-radius: 13px;
-  background: #fff;
+  border: 1px solid #f1dede;
+  border-radius: 16px;
+  background: var(--surface);
   color: #756969;
   text-align: center;
+  box-shadow: 0 10px 24px rgba(132, 82, 82, 0.06);
 }
 
 .errorState strong {

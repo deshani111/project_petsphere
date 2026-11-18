@@ -3,109 +3,157 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import BookingSummary from "../components/booking-summary";
-import { type ApiPet, getApiMessage } from "../../../../../../lib/pet-api";
+import { useBooking } from "../components/booking-context";
 import {
-  readBookingDraft,
-  updateBookingDraft,
-} from "../../../../../../lib/booking-draft";
+  type ApiPet,
+  getApiMessage,
+} from "../../../../../../lib/pet-api";
+import { SkeletonCard } from "../../../../../../components/shared/skeleton";
 
 export default function SelectPetPage() {
+  const { draft, setDraft } = useBooking();
+
   const [pets, setPets] = useState<ApiPet[]>([]);
-  const [selectedPet, setSelectedPet] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  const selectedPet = draft.pet ?? "";
 
   useEffect(() => {
-    let active = true;
-    const savedPetId = readBookingDraft().petId || "";
-    queueMicrotask(() => {
-      if (active) setSelectedPet(savedPetId);
-    });
+    let cancelled = false;
 
-    fetch("/api/pets")
-      .then(async (response) => {
+    async function loadPets() {
+      try {
+        const response = await fetch("/api/pets");
+
         if (!response.ok) {
           throw new Error(await getApiMessage(response));
         }
 
-        return response.json();
-      })
-      .then((data: ApiPet[]) => {
-        if (active) setPets(data);
-      })
-      .catch((reason) => {
-        if (active) {
+        const data: ApiPet[] = await response.json();
+
+        if (!cancelled) {
+          setPets(data);
+          setError("");
+        }
+      } catch (reason) {
+        if (!cancelled) {
           setError(
             reason instanceof Error
               ? reason.message
               : "Could not load your pets."
           );
         }
-      });
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadPets();
 
     return () => {
-      active = false;
+      cancelled = true;
     };
   }, []);
 
+  function togglePet(petId: string) {
+    setDraft({
+      pet: selectedPet === petId ? null : petId,
+    });
+  }
+
   return (
-    <div className="mx-auto mt-2.5 grid max-w-[747px] grid-cols-1 gap-[15px] px-[14px] pb-6 sm:px-[18px] md:grid-cols-[minmax(420px,1fr)_170px]">
+    <div className="booking-content-grid">
       <section className="min-w-0">
-        <h1 className="text-[21px] font-bold">Select your companion</h1>
-        <p className="mb-5 mt-1 text-sm text-[#7c7071]">
+        <h1 className="text-[21px] font-bold">
+          Select your companion
+        </h1>
+
+        <p className="mb-4 mt-1 text-sm text-[#7c7071]">
           Choose the pet this booking is for.
         </p>
 
         {error ? (
-          <p className="mb-4 text-sm text-red-600">{error}</p>
+          <p role="alert" className="mb-4 text-sm text-red-600">
+            {error}
+          </p>
         ) : null}
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {pets.map((pet) => {
-            const selected = selectedPet === pet.pet_id;
+          {isLoading ? (
+            Array.from({ length: 3 }, (_, index) => (
+              <SkeletonCard image={false} key={index} />
+            ))
+          ) : (
+            pets.map((pet) => {
+              const petId = String(pet.pet_id);
+              const selected = selectedPet === petId;
 
-            return (
-              <button
-                key={pet.pet_id}
-                type="button"
-                onClick={() => setSelectedPet(pet.pet_id)}
-                className={`rounded-xl border bg-white p-3 text-center ${
-                  selected
-                    ? "border-[#A13D3F] ring-1 ring-[#A13D3F]"
-                    : "border-[#f0dfdd]"
-                }`}
-              >
-                {pet.photo ? (
-                  <img
-                    className="mx-auto h-14 w-14 rounded-full object-cover"
-                    src={pet.photo}
-                    alt={pet.pet_name}
-                  />
-                ) : (
-                  <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#fff0ef] text-xl">
-                    🐾
+              return (
+                <button
+                  key={pet.pet_id}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => togglePet(petId)}
+                  className={`min-h-[150px] rounded-[11px] border bg-white p-3 text-center transition ${
+                    selected
+                      ? "border-[#A13D3F] ring-1 ring-[#A13D3F]"
+                      : "border-[#f0dfdd] hover:border-[#DCC0BF]"
+                  }`}
+                >
+                  {pet.photo ? (
+                    <img
+                      className="mx-auto h-14 w-14 rounded-full object-cover"
+                      src={pet.photo}
+                      alt={pet.pet_name}
+                    />
+                  ) : (
+                    <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#fff0ef] text-xl">
+                      🐾
+                    </span>
+                  )}
+
+                  <strong className="mt-2 block text-[12px]">
+                    {pet.pet_name}
+                  </strong>
+
+                  <span className="text-[10px] text-[#655a5b]">
+                    {pet.breed || pet.species || "Pet"}
                   </span>
-                )}
 
-                <strong className="mt-2 block text-sm">
-                  {pet.pet_name}
-                </strong>
-                <span className="text-xs text-[#655a5b]">
-                  {pet.breed || pet.species || "Pet"}
-                </span>
-              </button>
-            );
-          })}
+                  {selected ? (
+                    <span className="mt-1 block text-[9px] font-semibold text-[#A13D3F]">
+                      ✓ Selected
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })
+          )}
 
-          <Link
-            href="/owner/pets/add"
-            className="grid min-h-36 place-items-center rounded-xl border border-dashed border-[#e7b4ad] bg-white p-3 text-center text-sm text-[#A13D3F]"
-          >
-            + Add another pet
-          </Link>
+          {!isLoading && (
+            <Link
+              href="/owner/pets/add"
+              className="grid min-h-[150px] place-items-center rounded-[11px] border border-dashed border-[#e7b4ad] bg-white p-3 text-center text-sm text-[#A13D3F] transition hover:bg-[#fff8f7]"
+            >
+              + Add another pet
+            </Link>
+          )}
         </div>
 
-        <div className="mt-6 flex items-center justify-between border-t border-[#efdcda] pt-4">
-          <Link href="/owner/bookings" className="text-sm text-[#A13D3F]">
+        {!isLoading && pets.length === 0 && !error ? (
+          <p className="mt-3 text-sm text-[#7c7071]">
+            You haven&apos;t added any pets yet. Add a pet before continuing.
+          </p>
+        ) : null}
+
+        <div className="mt-4 flex items-center justify-between border-t border-[#efdcda] pt-3">
+          <Link
+            href="/owner/bookings"
+            className="text-sm text-[#A13D3F]"
+          >
             Cancel
           </Link>
 
@@ -120,13 +168,12 @@ export default function SelectPetPage() {
             {selectedPet ? (
               <Link
                 href="/owner/bookings/new/dates"
-                onClick={() => updateBookingDraft({ petId: selectedPet })}
                 className="rounded-lg bg-[#A13D3F] px-4 py-2 text-sm font-bold text-white"
               >
                 Next →
               </Link>
             ) : (
-              <span className="rounded-lg bg-[#e8c9c6] px-4 py-2 text-sm text-white">
+              <span className="pointer-events-none rounded-lg bg-[#e8c9c6] px-4 py-2 text-sm text-white">
                 Select a pet
               </span>
             )}
@@ -134,7 +181,11 @@ export default function SelectPetPage() {
         </div>
       </section>
 
-      <BookingSummary service="Pet care" price="Pending" unit="" />
+      <BookingSummary
+        service="Pet care"
+        price="Pending"
+        unit=""
+      />
     </div>
   );
 }

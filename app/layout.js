@@ -1,6 +1,6 @@
 
 import "./globals.css";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Manrope, Playfair_Display } from "next/font/google";
 import { cookies } from "next/headers";
 import LayoutShell from "../components/shared/layout-shell";
 import { SESSION_COOKIE_NAME, getCachedSessionAccount } from "../modules/auth/auth.service";
@@ -24,6 +24,13 @@ const playfairDisplay = Playfair_Display({
   weight: "700",
 });
 
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-manrope",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
 export const metadata = {
   title: "PetSphere | Trusted Pet Care",
   description:
@@ -42,8 +49,8 @@ export default async function RootLayout({ children }) {
   const userRole = account?.role ?? null;
 
   return (
-    <html lang="en" data-scroll-behavior="smooth">
-      <body className={`${inter.variable} ${playfairDisplay.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <body className={`${inter.variable} ${playfairDisplay.variable} ${manrope.variable}`}>
         <LayoutShell
           isAuthenticated={isAuthenticated}
           userRole={userRole}

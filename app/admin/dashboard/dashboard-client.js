@@ -9,6 +9,7 @@ import RevenueChart from "./components/revenue-chart";
 import ServiceBookings from "./components/service-bookings";
 import SummaryCard from "./components/summary-card";
 import styles from "./page.module.css";
+import { SkeletonPage } from "../../../components/shared/skeleton";
 
 const numberFormat = new Intl.NumberFormat("en-US");
 const currencyFormat = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -123,8 +124,9 @@ export default function AdminDashboardClient({ previewData = null, initialError 
   const retry = () => { setError(""); setDashboard(null); setIsLoading(true); setRefresh((value) => value + 1); };
   const refreshDashboard = () => { setError(""); setIsLoading(true); setRefresh((value) => value + 1); };
 
-  if (error) return <section className={`admin-dashboard ${styles.dashboard}`}><div className={styles.statePanel} role="alert"><h1>Dashboard unavailable</h1><p>{error}</p><button type="button" onClick={retry}>Try again</button></div></section>;
-  if (!dashboard) return <section className={`admin-dashboard ${styles.dashboard}`} aria-busy="true"><div className={styles.loadingState}><span className={styles.loadingMark} />Loading platform data</div></section>;
+  if (error) return <section className={styles.dashboard}><div className={styles.errorState} role="alert"><h1>Dashboard unavailable</h1><p>{error}</p></div></section>;
+  if (!dashboard) return <SkeletonPage variant="dashboard" />;
+  if (!dashboard) return <section className={styles.dashboard} aria-busy="true"><div className={styles.loadingState}>Loading dashboard data…</div></section>;
 
   const payments = dashboard.revenue || [];
   const selectedPayments = getPeriodPayments(payments, period);

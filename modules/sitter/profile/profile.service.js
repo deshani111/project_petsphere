@@ -1,6 +1,7 @@
 import { prisma } from "../../../lib/prisma";
 import { getCurrentSitter } from "../sitter.service";
 import { saveVerificationFile } from "../verification-documents";
+import { saveProfileImage } from "./profile-image";
 import { normalizeProfileInput, validateProfileInput } from "./profile.validation";
 import { toSitterProfileDTO } from "./profile.dto";
 
@@ -16,14 +17,17 @@ async function loadSitterRecord(sitterId) {
 }
 
 export async function getCurrentSitterProfile() {
-  const sitter = await getCurrentSitter();
-  if (!sitter) return null;
-
-  const record = await loadSitterRecord(sitter.sitter_id);
-  return record ? toSitterProfileDTO(record) : null;
+  const sitter = await getCurrentSitter({
+    include: {
+      users: true,
+      pet_sitter_service: { include: { service_type: true } },
+      verification_documents: true,
+    },
+  });
+  return sitter ? toSitterProfileDTO(sitter) : null;
 }
 
-export async function updateCurrentSitterProfile(body, files = []) {
+export async function updateCurrentSitterProfile(body, files = [], profileImage = null) {
   const sitter = await getCurrentSitter();
   if (!sitter) return { error: "Sitter access is required.", status: 401 };
 
@@ -32,13 +36,18 @@ export async function updateCurrentSitterProfile(body, files = []) {
 
   const input = normalizeProfileInput(body, record);
   const validationMessage = validateProfileInput(input);
-  if (validationMessage) return { error: validationMessage, status: 400 };
+  if (validationMessage && !(profileImage && !input.profileFieldsPresent) && files.length === 0) {
+    return { error: validationMessage, status: 400 };
+  }
 
   try {
     const storedDocuments = [];
     for (const [type, file] of files) {
       storedDocuments.push({ type, url: await saveVerificationFile({ sitterId: record.sitter_id, type, file }) });
     }
+    const profileImageUrl = profileImage
+      ? await saveProfileImage({ sitterId: record.sitter_id, file: profileImage })
+      : null;
 
     const updated = await prisma.$transaction(async (tx) => {
       const profileData = {};
@@ -62,6 +71,10 @@ export async function updateCurrentSitterProfile(body, files = []) {
 
       if (input.notificationsEnabled !== null) {
         profileData.notifications_enabled = input.notificationsEnabled;
+      }
+
+      if (profileImageUrl) {
+        profileData.profile_image = profileImageUrl;
       }
 
       if (storedDocuments.length > 0) {

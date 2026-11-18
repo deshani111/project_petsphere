@@ -19,6 +19,12 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function getSafeNextPath(next) {
+  return typeof next === "string" && next.startsWith("/") && !next.startsWith("//")
+    ? next
+    : null;
+}
+
 export async function POST(request) {
   let body;
 
@@ -36,6 +42,7 @@ export async function POST(request) {
 
   const password = typeof body.password === "string" ? body.password : "";
   const rememberMe = body.rememberMe === true;
+  const nextPath = getSafeNextPath(body.next);
 
   if (!email || !password) {
     return NextResponse.json(
@@ -62,7 +69,7 @@ export async function POST(request) {
       {
         message: "Logged in successfully.",
         account,
-        redirectTo: getDashboardPath(account.role),
+        redirectTo: nextPath || getDashboardPath(account.role),
       },
       { status: 200 }
     );

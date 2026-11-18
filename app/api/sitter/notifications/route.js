@@ -4,10 +4,15 @@ import {
   listUserNotifications,
   markUserNotificationsRead,
 } from "../../../../modules/notifications/notification.service";
+import { prisma } from "../../../../lib/prisma";
 
-export async function GET() {
+export async function GET(request) {
   const sitter = await getCurrentSitter();
   if (!sitter) return NextResponse.json({ message: "Sitter access is required." }, { status: 401 });
+  if (new URL(request.url).searchParams.get("summary") === "1") {
+    const unreadCount = await prisma.notification.count({ where: { user_id: sitter.user_id, is_read: false } });
+    return NextResponse.json({ unreadCount });
+  }
   return NextResponse.json({ notifications: await listUserNotifications(sitter.user_id) });
 }
 

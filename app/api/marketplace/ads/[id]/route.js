@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentMarketplaceSeller } from "../../../../../lib/session";
 import { getCurrentAdmin } from "../../../../../modules/admin/admin.service";
 import {
+  deleteSellerListing,
   getListingById,
   serializeListingDetail,
   updateSellerListing,
@@ -45,5 +46,25 @@ export async function PUT(request, { params }) {
   } catch (error) {
     console.error("Marketplace ad update failed:", error);
     return NextResponse.json({ message: "Could not update your ad. Please try again." }, { status: 500 });
+  }
+}
+
+export async function DELETE(_request, { params }) {
+  const seller = await getCurrentMarketplaceSeller();
+  if (!seller) return NextResponse.json({ message: "Please log in as a pet owner or pet sitter." }, { status: 401 });
+
+  const id = (await params).id;
+  if (!/^\d+$/.test(id)) return NextResponse.json({ message: "Invalid ad." }, { status: 400 });
+
+  try {
+    const deleted = await deleteSellerListing(id, seller);
+    if (!deleted) return NextResponse.json({ message: "Ad was not found or you do not own it." }, { status: 404 });
+    return NextResponse.json({ message: "Your ad was deleted." });
+  } catch (error) {
+    if (error?.code === "P2003") {
+      return NextResponse.json({ message: "This ad cannot be deleted because it has related records." }, { status: 409 });
+    }
+    console.error("Marketplace ad deletion failed:", error);
+    return NextResponse.json({ message: "Could not delete your ad. Please try again." }, { status: 500 });
   }
 }

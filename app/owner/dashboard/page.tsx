@@ -1,10 +1,8 @@
-import { DashboardHeader } from "../../../components/owner-dashboard/dashboard-header";
 import {
   DashboardOverview,
   type DashboardBooking,
 } from "../../../components/owner-dashboard/dashboard-overview";
 import { getCurrentSession } from "../../../lib/session";
-import { OwnerSidebar } from "../../../components/owner-dashboard/owner-sidebar";
 import { prisma } from "../../../lib/prisma";
 import { redirect } from "next/navigation";
 
@@ -20,15 +18,7 @@ export default async function OwnerDashboardPage() {
 
   const userId = BigInt(session.sub);
 
-  const [user, owner, unreadMessages] = await Promise.all([
-    prisma.users.findUnique({
-      where: { user_id: userId },
-      select: {
-        first_name: true,
-        last_name: true,
-      },
-    }),
-
+  const [owner, unreadMessages] = await Promise.all([
     prisma.pet_owner.findUnique({
       where: { user_id: userId },
       select: {
@@ -73,8 +63,7 @@ export default async function OwnerDashboardPage() {
     }),
   ]);
 
-  const userName =
-    `${user?.first_name || "Pet"} ${user?.last_name || "Owner"}`.trim();
+  const userName = `${session.firstName || "Pet"} ${session.lastName || "Owner"}`.trim();
 
   const bookings = owner?.booking ?? [];
 
@@ -110,24 +99,12 @@ export default async function OwnerDashboardPage() {
       : "Pending",
   }));
   return (
-    <div className="flex min-h-screen flex-col bg-[#f6f7f9] lg:flex-row">
-      <OwnerSidebar />
-
-      <div className="min-w-0 flex-1">
-        <DashboardHeader
-          userName={userName}
-          userImage={null}
-          unreadMessages={unreadMessages}
-        />
-
-        <DashboardOverview
-          userName={userName}
-          activeBookings={activeBookings}
-          totalBookings={bookings.length}
-          unreadMessages={unreadMessages}
-          bookings={dashboardBookings}
-        />
-      </div>
-    </div>
+    <DashboardOverview
+      userName={userName}
+      activeBookings={activeBookings}
+      totalBookings={bookings.length}
+      unreadMessages={unreadMessages}
+      bookings={dashboardBookings}
+    />
   );
 }

@@ -1,7 +1,7 @@
 .page {
   min-height: calc(100vh - 51px);
-  background: #fff9f8;
-  color: #302929;
+  background: var(--bg-page);
+  color: var(--ps-color-text);
 }
 
 .content {
@@ -20,25 +20,26 @@
 
 .header h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: var(--ps-text-xl);
   font-weight: 600;
   color: #302929;
 }
 
 .header p {
   margin: 6px 0 0;
-  font-size: 8px;
-  color: #8a7e7a;
+  font-size: var(--ps-text-sm);
+  color: var(--ps-color-text-muted);
   line-height: 12px;
 }
 
 .manageBtn {
+  min-height: 44px;
   padding: 8px 14px;
   border: 0;
   border-radius: 6px;
-  background: #96363a;
+  background: var(--ps-color-primary);
   color: white;
-  font-size: 8px;
+  font-size: var(--ps-text-sm);
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -49,7 +50,7 @@
 }
 
 .manageBtn:hover {
-  background: #813034;
+  background: var(--ps-color-primary-hover);
 }
 
 .servicesList {
@@ -63,10 +64,9 @@
   display: flex;
   gap: 14px;
   padding: 16px;
-  border: 1px solid #eadad8;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(71, 43, 43, 0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--ps-radius-md);
+  background: var(--ps-color-surface); box-shadow: var(--ps-shadow-sm);
   transition: 0.15s ease;
 }
 
@@ -229,7 +229,7 @@
 .addServiceBtn {
   width: 100%;
   padding: 12px;
-  border: 1px solid #eadad8;
+  border: 1px solid var(--border);
   border-radius: 8px;
   background: white;
   color: #96363a;

@@ -1,7 +1,9 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
+import { type ApiPet, getApiMessage } from "../../../../lib/pet-api";
+import { parsePetNotes } from "../../../../lib/pet-notes";
 import {
   Activity,
   ArrowLeft,
@@ -13,25 +15,14 @@ import {
   ShieldCheck,
   Weight,
 } from "lucide-react";
-import { DashboardHeader } from "../../../../components/owner-dashboard/dashboard-header";
-import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
-import { type ApiPet, getApiMessage } from "../../../../lib/pet-api";
-import { parsePetNotes } from "../../../../lib/pet-notes";
+import { SkeletonPage } from "../../../../components/shared/skeleton";
 
 type Params = {
   params: Promise<{ id: string }>;
 };
 
 function OwnerShell({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex flex-col min-h-screen bg-[#fbf7f7] lg:flex-row">
-      <OwnerSidebar />
-      <div className="min-w-0 flex-1">
-        <DashboardHeader />
-        <main className="w-full px-4 py-5 sm:px-6 sm:py-7 lg:px-8">{children}</main>
-      </div>
-    </div>
-  );
+  return <main className="min-h-[calc(100vh-60px)] w-full bg-[#faf5f5] px-6 py-8">{children}</main>;
 }
 
 function formatDate(value: string | null | undefined) {
@@ -103,7 +94,7 @@ export default function PetProfilePage({ params }: Params) {
   }, [params]);
 
   if (isLoading) {
-    return <OwnerShell><div className="mx-auto max-w-6xl rounded-2xl border border-[#f0dddd] bg-white p-8 text-sm text-[#806e70]">Loading pet profile…</div></OwnerShell>;
+    return <OwnerShell><SkeletonPage variant="cards" /></OwnerShell>;
   }
   if (error || !pet) {
     return (
@@ -144,7 +135,7 @@ export default function PetProfilePage({ params }: Params) {
 
         <Card className="p-4 sm:p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="size-20 shrink-0 overflow-hidden rounded-2xl border border-[#f0dddd] bg-[#fff4f3] sm:size-[88px]">
+            <div className="size-20 shrink-0 overflow-hidden rounded-2xl border border-[#f0dddd] bg-[#fff4f3] sm:size-22">
               {pet.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={pet.photo} alt={`${pet.pet_name}`} className="size-full object-cover" />
@@ -168,11 +159,11 @@ export default function PetProfilePage({ params }: Params) {
         <div className="grid gap-4 sm:grid-cols-2">
           <Card className="flex items-center gap-4 p-4 sm:p-5">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#fff0ef] text-[#b34b50]"><Weight size={20} /></span>
-            <div><p className="text-xs font-medium uppercase tracking-[0.1em] text-[#927e80]">Weight</p><p className="mt-0.5 text-xl font-bold text-[#392e30]">{pet.weight_kg ? `${pet.weight_kg} kg` : "Not provided"}</p></div>
+            <div><p className="text-xs font-medium uppercase tracking-widest text-[#927e80]">Weight</p><p className="mt-0.5 text-xl font-bold text-[#392e30]">{pet.weight_kg ? `${pet.weight_kg} kg` : "Not provided"}</p></div>
           </Card>
           <Card className="flex items-center gap-4 p-4 sm:p-5">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#fff6e9] text-[#aa743b]"><Activity size={20} /></span>
-            <div><p className="text-xs font-medium uppercase tracking-[0.1em] text-[#927e80]">Last dental / vaccination date</p><p className="mt-0.5 text-base font-semibold text-[#392e30]">{notes.lastDentalVaccination || "Not recorded"}</p></div>
+            <div><p className="text-xs font-medium uppercase tracking-widest text-[#927e80]">Last dental / vaccination date</p><p className="mt-0.5 text-base font-semibold text-[#392e30]">{notes.lastDentalVaccination || "Not recorded"}</p></div>
           </Card>
         </div>
 

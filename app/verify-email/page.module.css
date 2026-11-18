@@ -5,11 +5,7 @@
   padding: 24px 4%;
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(circle at top, rgba(161, 61, 63, 0.12), transparent 32%),
-    linear-gradient(135deg, rgba(253, 238, 237, 0.9), rgba(255, 255, 255, 0.96) 46%),
-    #fff8f7;
-  color: #2a2021;
+  background: var(--surface); color: #2a2021;
 }
 
 .card {
@@ -110,7 +106,7 @@
 .secondaryAction {
   border: 1px solid #e8d5d3;
   color: #4d4044;
-  background: #fff;
+  background: var(--surface);
 }
 
 .secondaryAction:hover {
@@ -141,3 +137,5 @@
     width: 100%;
   }
 }
+
+

@@ -1,27 +1,76 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { blogCategories, blogPosts, getClientPosts, subscribeToBlogPosts } from "../../../lib/blog-data";
 import styles from "./page.module.css";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-
-const articles = [
-  { title: "5 Tips for Stress-Free Grooming", excerpt: "Help your pet learn to love bath time with these expert-approved desensitization techniques.", date: "May 10, 2024", author: "Mark Hudson", image: "/blog-featured-puppy.webp" },
-  { title: "Understanding Cat Body Language", excerpt: "Slow blinks to tail flicks: what your feline companion is actually trying to tell you.", date: "May 08, 2024", author: "Sarah J. Miller", image: "/blog-cat-behavior.webp" },
-  { title: "Seasonal Allergies in Dogs", excerpt: "How to identify and treat common environmental triggers during the spring season.", date: "May 05, 2024", author: "Dr. Emily Chen", image: "/blog-dog-health.webp" },
-  { title: "The Power of Positive Reinforcement", excerpt: "Why rewards-based training is the most effective way to build a bond with your pet.", date: "May 01, 2024", author: "James Wilson", image: "/blog-training.webp" },
-];
-
 export default function BlogPage() {
-  return <main className={styles.blogPage}>
-    <section className={styles.blogIntro}><h1>Pet Care Blog</h1><p>Expert advice, tips, and stories for every pet parent, curated by veterinary professionals and seasoned pet lovers.</p></section>
-    <section className={styles.featured}>
-      <Link className={styles.featuredImage} href="/blog/new-puppy-care"><Image src="/blog-featured-puppy.webp" alt="A golden puppy relaxing in a warm home" width={1600} height={1000} sizes="(max-width: 700px) 100vw, 70vw" /><div className={styles.featuredOverlay}><span className={styles.featuredTag}>★ Featured</span><h2>The Essential Guide to New Puppy Care</h2><p>Welcoming a new furry friend into your home is an exciting journey. Our comprehensive guide covers everything from the first night to lifelong health habits.</p><div className={styles.featuredAuthor}><span className={styles.avatar}>EC</span><div><strong>Dr. Emily Chen</strong><small>May 12, 2024 · 8 min read</small></div></div></div></Link>
-    </section>
-    <section className={styles.articleSection} id="articles">
-      <div className={styles.articleGrid}>{articles.map((article) => <article className={styles.articleCard} key={article.title}><div className={styles.articleImage}><Image src={article.image} alt="" width={900} height={600} sizes="(max-width: 700px) 100vw, 33vw" /></div><div className={styles.articleBody}><h3>{article.title}</h3><p>{article.excerpt}</p><div className={styles.cardMeta}><span className={styles.avatarSmall}>{article.author.split(" ").map((part) => part[0]).join("").slice(0, 2)}</span><span><strong>{article.author}</strong><small>{article.date}</small></span></div></div></article>)}</div>
-      <div className={styles.pagination}><button type="button">‹</button><button className={styles.current} type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">›</button></div>
-    </section>
-  </main>;
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(6);
+  const [userRole, setUserRole] = useState(null);
+  const posts = useSyncExternalStore(subscribeToBlogPosts, getClientPosts, () => blogPosts);
+
+  useEffect(() => {
+    let ignore = false;
+
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : null)
+      .then((account) => {
+        if (!ignore) setUserRole(account?.role || null);
+      })
+      .catch(() => {
+        if (!ignore) setUserRole(null);
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  const featuredPost = posts.find((post) => post.featured) || posts[0];
+  const filteredPosts = useMemo(() => posts.filter((post) => {
+    return activeCategory === "All" || post.category === activeCategory;
+  }), [activeCategory, posts]);
+  const visiblePosts = filteredPosts.slice(0, visibleCount);
+
+  return (
+    <main className={styles.blogPage}>
+      <section className={styles.hero} aria-labelledby="blog-title">
+        <div className={styles.heroGlow} />
+        <div className={styles.container}>
+          <div className={styles.eyebrow}>The PetSphere journal</div>
+          <h1 id="blog-title">Better days<br /><em>start here.</em></h1>
+          <p>Helpful ideas, expert advice, and real stories for the people who make every pet feel at home.</p>
+          {(userRole === "pet_owner" || userRole === "pet_sitter") && (
+            <div className={styles.authorActions} aria-label="Blog author actions">
+              <Link className={styles.primaryAction} href="/blog/create" prefetch={false}>Post a blog</Link>
+              <Link className={styles.secondaryAction} href="/admin/blogs">View my blogs</Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className={styles.container}>
+        <section className={styles.featured} aria-labelledby="featured-title">
+          <Link className={styles.featuredImage} href={`/blog/${featuredPost.slug}`}><Image src={featuredPost.image} alt={featuredPost.imageAlt} fill priority sizes="(max-width: 800px) 100vw, 58vw" /></Link>
+          <div className={styles.featuredContent}>
+            <span className={styles.tag}>Featured story</span><h2 id="featured-title"><Link href={`/blog/${featuredPost.slug}`}>{featuredPost.title}</Link></h2><p>{featuredPost.excerpt}</p>
+            <div className={styles.authorRow}><span className={styles.avatar}>{featuredPost.author.avatar}</span><span><strong>{featuredPost.author.name}</strong><small>{featuredPost.date} <i /> {featuredPost.readTime}</small></span></div>
+            <Link className={styles.readLink} href={`/blog/${featuredPost.slug}`}>Read the story <span aria-hidden="true">→</span></Link>
+          </div>
+        </section>
+
+        <section className={styles.postsSection} id="articles" aria-labelledby="latest-title">
+          <div className={styles.sectionHeading}><div><span className={styles.sectionKicker}>Fresh from the journal</span><h2 id="latest-title">Latest stories</h2></div><span className={styles.resultCount} aria-live="polite">{filteredPosts.length} stories</span></div>
+          <fieldset className={styles.chips}><legend className={styles.srOnly}>Filter by category</legend>{blogCategories.map((category) => <button key={category} className={activeCategory === category ? styles.chipActive : ""} type="button" onClick={() => { setActiveCategory(category); setVisibleCount(6); }} aria-pressed={activeCategory === category}>{category}</button>)}</fieldset>
+          {visiblePosts.length ? <div className={styles.postGrid}>{visiblePosts.map((post) => <article className={styles.postCard} key={post.slug}><Link href={`/blog/${post.slug}`} className={styles.postImage}><Image src={post.image} alt={post.imageAlt} fill loading="lazy" sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw" /><span>{post.category}</span></Link><div className={styles.postBody}><h3><Link href={`/blog/${post.slug}`}>{post.title}</Link></h3><p>{post.excerpt}</p><div className={styles.cardMeta}><span className={styles.avatarSmall}>{post.author.avatar}</span><span><strong>{post.author.name}</strong><small>{post.date} <i /> {post.readTime}</small></span></div></div></article>)}</div> : <p className={styles.emptyState} aria-live="polite">No stories match this category.</p>}
+          {visibleCount < filteredPosts.length && <button className={styles.loadMore} type="button" onClick={() => setVisibleCount((count) => count + 3)}>Load more stories <span aria-hidden="true">↓</span></button>}
+        </section>
+
+        <section className={styles.popularSection} aria-labelledby="popular-title">        <div className={styles.sectionHeading}><div><span className={styles.sectionKicker}>Worth a read</span><h2 id="popular-title">Popular posts</h2></div></div><div className={styles.popularGrid}>{posts.slice(0, 3).map((post, index) => <Link className={styles.popularCard} href={`/blog/${post.slug}`} key={post.slug}><span>0{index + 1}</span><div><strong>{post.title}</strong><small>{post.category} <i /> {post.readTime}</small></div></Link>)}</div></section>
+      </div>
+    </main>
+  );
 }

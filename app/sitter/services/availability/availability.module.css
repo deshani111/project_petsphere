@@ -1,6 +1,6 @@
 .page {
   min-height: calc(100vh - 51px);
-  background: #fff9f8;
+  background: var(--bg-page);
   color: #302929;
 }
 
@@ -57,7 +57,7 @@
 
 .tab {
   padding: 12px;
-  border: 2px solid #eadad8;
+  border: 2px solid var(--border);
   border-radius: 8px;
   background: white;
   cursor: pointer;
@@ -116,7 +116,7 @@
 .serviceDropdown select {
   width: 100%;
   padding: 8px;
-  border: 1px solid #eadad8;
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 9px;
   background: white;
@@ -132,7 +132,7 @@
 
 .section {
   padding: 20px;
-  border: 1px solid #eadad8;
+  border: 1px solid var(--border);
   border-radius: 10px;
   background: white;
   box-shadow: 0 2px 8px rgba(71, 43, 43, 0.06);
@@ -161,8 +161,8 @@
 }
 
 .dayBtn {
-  padding: 10px;
-  border: 1px solid #eadad8;
+  min-height:44px;padding: 10px;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background: white;
   cursor: pointer;
@@ -188,12 +188,7 @@
   accent-color: #24875b;
 }
 
-.dayCheckbox {
-  width: 14px;
-  height: 14px;
-  cursor: pointer;
-  accent-color: #96363a;
-}
+.dayIndicator{width:18px;height:18px;border:1px solid #bfa8a4;border-radius:4px;display:grid;place-items:center;color:#fff;font-size:12px}.dayBtn.selected .dayIndicator{border-color:#24875b;background:#24875b}
 
 .dayBtn span {
   font-size: 8px;
@@ -228,8 +223,8 @@
 
 .minusBtn,
 .plusBtn {
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 6px;
   background: #f5ebe6;
@@ -295,7 +290,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px;
-  border: 1px solid #eadad8;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background: #fff5f3;
 }
@@ -327,8 +322,8 @@
 }
 
 .removeBtn {
-  width: 24px;
-  height: 24px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 4px;
   background: transparent;
@@ -358,7 +353,7 @@
   justify-content: space-between;
   gap: 12px;
   padding-top: 24px;
-  border-top: 1px solid #eadad8;
+  border-top: 1px solid var(--border);
 }
 
 .warning {
@@ -380,7 +375,7 @@
 }
 
 .saveBtn {
-  padding: 10px 16px;
+  min-height:44px;padding: 10px 16px;
   border: 0;
   border-radius: 6px;
   background: #96363a;
@@ -396,6 +391,7 @@
 .saveBtn:hover {
   background: #813034;
 }
+.success,.error{margin:12px 0 0;font-size:var(--font-size-sm)}.success{color:#18734d}.error{color:#96363a}.blockedDateForm{display:grid;gap:16px}.blockedDateForm label{display:grid;gap:6px;font-size:var(--font-size-sm);font-weight:700}.blockedDateForm input{min-height:44px;padding:0 10px;border:1px solid var(--border);border-radius:8px}.blockedDateForm>div{display:flex;justify-content:flex-end;gap:10px}.blockedDateForm button{min-height:44px;padding:0 14px;border:0;border-radius:8px;background:#96363a;color:#fff;font-weight:700;cursor:pointer}.blockedDateForm button:first-child{border:1px solid #d4b5b0;background:var(--surface);color:#96363a}
 
 @media (max-width: 1000px) {
   .sections {

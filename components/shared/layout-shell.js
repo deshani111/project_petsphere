@@ -1,19 +1,20 @@
-
 "use client";
 
 import { usePathname } from "next/navigation";
+
 import { SiteFooter, SiteHeader } from "./site-chrome";
 import SitterSidebar from "../../app/sitter/Sidebar";
 import { OwnerSidebar } from "../owner-dashboard/owner-sidebar";
 import { DashboardTopbar } from "../dashboard/dashboard-topbar";
+import { ThemeProvider } from "./theme-provider";
 
-export default function LayoutShell({
+function LayoutShellContent({
   children,
   isAuthenticated,
   userRole,
   userName = "",
 }) {
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
 
   const isAuthPage =
     pathname === "/register" ||
@@ -22,39 +23,98 @@ export default function LayoutShell({
     pathname === "/forgot-password" ||
     pathname === "/reset-password";
 
-  const hideMarketplaceNavigation = pathname.startsWith("/marketplace/");
-  const hideChrome = pathname.startsWith("/sitter") || pathname.startsWith("/admin") || hideMarketplaceNavigation;
+  const hideMarketplaceNavigation =
+    pathname.startsWith("/marketplace/");
+
+  const hideChrome =
+    pathname.startsWith("/sitter") ||
+    pathname.startsWith("/admin") ||
+    hideMarketplaceNavigation;
+
   const isMarketplaceRoute =
     pathname === "/marketplace" ||
     pathname === "/marketplace/new" ||
     pathname === "/marketplace/my-ads" ||
-    /^\/marketplace\/\d+$/.test(pathname);
+    (/^\/marketplace\/[^/]+$/.test(pathname) &&
+      pathname !== "/marketplace/new" &&
+      pathname !== "/marketplace/my-ads");
 
+  const isBlogRoute =
+    pathname === "/blog" || pathname.startsWith("/blog/");
+
+  // Blog pages for pet sitters use the sitter dashboard layout.
+  if (isBlogRoute && userRole === "pet_sitter") {
+    return (
+      <div className="marketplace-sitter-shell">
+        <SitterSidebar />
+
+        <div className="marketplace-dashboard-main marketplace-sitter-content">
+          <DashboardTopbar
+            userName={userName}
+            variant="marketplace"
+          />
+
+          <main>{children}</main>
+        </div>
+      </div>
+    );
+  }
+
+  // Blog pages for pet owners use the owner dashboard layout.
+  if (isBlogRoute && userRole === "pet_owner") {
+    return (
+      <div className="marketplace-owner-shell">
+        <OwnerSidebar />
+
+        <div className="marketplace-dashboard-main marketplace-owner-content">
+          <DashboardTopbar
+            userName={userName}
+            variant="marketplace"
+          />
+
+          <main>{children}</main>
+        </div>
+      </div>
+    );
+  }
+
+  // Marketplace pages for pet sitters.
   if (isMarketplaceRoute && userRole === "pet_sitter") {
     return (
       <div className="marketplace-sitter-shell">
         <SitterSidebar />
+
         <div className="marketplace-dashboard-main marketplace-sitter-content">
-          <DashboardTopbar userName={userName} variant="marketplace" />
+          <DashboardTopbar
+            userName={userName}
+            variant="marketplace"
+          />
+
           <main>{children}</main>
         </div>
       </div>
     );
   }
 
+  // Marketplace pages for pet owners.
   if (isMarketplaceRoute && userRole === "pet_owner") {
     return (
       <div className="marketplace-owner-shell">
         <OwnerSidebar />
+
         <div className="marketplace-dashboard-main marketplace-owner-content">
-          <DashboardTopbar userName={userName} variant="marketplace" />
+          <DashboardTopbar
+            userName={userName}
+            variant="marketplace"
+          />
+
           <main>{children}</main>
         </div>
       </div>
     );
   }
 
-  // Login, registration, and email verification pages
+  // Login, registration, and email verification pages.
   if (isAuthPage) {
     return (
       <div
@@ -69,25 +129,31 @@ export default function LayoutShell({
           userRole={userRole}
           userName={userName}
         />
+
         {children}
       </div>
     );
   }
 
-  // Sitter and owner pages have their own navigation/layout
+  // Sitter and owner pages have their own navigation/layout.
   if (hideChrome || pathname.startsWith("/owner")) {
     if (hideMarketplaceNavigation) {
       return (
         <>
-          <SiteHeader isAuthenticated={isAuthenticated} hideNavigation />
+          <SiteHeader
+            isAuthenticated={isAuthenticated}
+            hideNavigation
+          />
+
           {children}
         </>
       );
     }
+
     return <>{children}</>;
   }
 
-  // All normal pages
+  // All normal public pages.
   return (
     <>
       <SiteHeader
@@ -98,12 +164,20 @@ export default function LayoutShell({
 
       {children}
 
-
-<SiteFooter
-  isAuthenticated={isAuthenticated}
-  userRole={userRole}
-/>
-
+      <SiteFooter
+        isAuthenticated={isAuthenticated}
+        userRole={userRole}
+      />
     </>
+  );
+}
+
+export default function LayoutShell(
+  props
+) {
+  return (
+    <ThemeProvider>
+      <LayoutShellContent {...props} />
+    </ThemeProvider>
   );
 }

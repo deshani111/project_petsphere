@@ -16,9 +16,10 @@ import {
   Sparkles,
   Star,
   UserRound,
-  X,
 } from "lucide-react";
 import styles from "./profile.module.css";
+import { ModalDialog } from "../../../components/shared/modal-dialog";
+import { SkeletonPage } from "../../../components/shared/skeleton";
 
 const fallbackProfile = {
   fullName: "Your profile",
@@ -53,11 +54,13 @@ export default function SitterProfilePage() {
   const [savingPreference, setSavingPreference] = useState(false);
   const [error, setError] = useState("");
   const [selectedDocument, setSelectedDocument] = useState(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
     let mounted = true;
 
-    fetch("/api/sitter/profile")
+    fetch("/api/sitter/profile", { signal: controller.signal, cache: "no-store" })
       .then(async (response) => {
         const body = await response.json();
         if (!response.ok) {
@@ -72,7 +75,7 @@ export default function SitterProfilePage() {
         }
       })
       .catch((err) => {
-        if (mounted) setError(err.message || "Unable to load your profile.");
+        if (mounted && err.name !== "AbortError") setError(err.message || "Unable to load your profile.");
       })
       .finally(() => {
         if (mounted) setLoading(false);
@@ -80,8 +83,15 @@ export default function SitterProfilePage() {
 
     return () => {
       mounted = false;
+      controller.abort();
     };
-  }, []);
+  }, [reloadKey]);
+
+  function retryProfile() {
+    setLoading(true);
+    setError("");
+    setReloadKey((key) => key + 1);
+  }
 
   async function toggleNotifications() {
     if (savingPreference) return;
@@ -116,6 +126,8 @@ export default function SitterProfilePage() {
 
   const completion = Math.max(0, Math.min(100, profile.stats?.profileCompleteness ?? 0));
 
+  if (loading) return <SkeletonPage variant="profile" />;
+
   return (
     <div className={styles.page}>
       <div className={styles.content}>
@@ -132,12 +144,12 @@ export default function SitterProfilePage() {
         <section className={styles.hero}>
           <div className={styles.heroMain}>
             <div className={styles.avatarShell}>
-              <div className={styles.avatar}>
-                <span>{initials(profile.fullName)}</span>
+              <Link href="/sitter/Profile/edit" className={styles.avatar} aria-label="Add or change profile picture">
+                {profile.profileImage ? <img className={styles.avatarImage} src={profile.profileImage} alt="" /> : <span>{initials(profile.fullName)}</span>}
                 <i>
                   <Camera size={10} />
                 </i>
-              </div>
+              </Link>
             </div>
 
             <div className={styles.heroBody}>
@@ -236,7 +248,7 @@ export default function SitterProfilePage() {
           </aside>
         </section>
 
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <div className={styles.error} role="alert"><span>{error}</span><button type="button" onClick={retryProfile}>Try again</button></div>}
 
         <section className={styles.columns}>
           <div className={styles.leftColumn}>
@@ -347,23 +359,9 @@ export default function SitterProfilePage() {
         </section>
       </div>
 
-      {selectedDocument && (
-        <div className={styles.modalBg} onClick={() => setSelectedDocument(null)}>
-          <div className={styles.modal} onClick={(event) => event.stopPropagation()}>
-            <button className={styles.close} onClick={() => setSelectedDocument(null)} aria-label="Close preview">
-              <X size={15} />
-            </button>
-            <h3>{labelFromType(selectedDocument.type)}</h3>
-            <p>{selectedDocument.submittedAt ? `Submitted ${new Date(selectedDocument.submittedAt).toLocaleDateString()}` : "Document preview"}</p>
-            <div className={styles.modalPreview}>
-              {selectedDocument.url ? <img src={selectedDocument.url} alt={`${selectedDocument.type} preview`} /> : <ShieldCheck size={30} />}
-            </div>
-            <button className={styles.modalButton} onClick={() => setSelectedDocument(null)}>
-              Close preview
-            </button>
-          </div>
-        </div>
-      )}
+      <ModalDialog open={Boolean(selectedDocument)} title={selectedDocument ? labelFromType(selectedDocument.type) : "Document preview"} onClose={() => setSelectedDocument(null)}>
+        {selectedDocument ? <><p>{selectedDocument.submittedAt ? `Submitted ${new Date(selectedDocument.submittedAt).toLocaleDateString()}` : "Document preview"}</p><div className={styles.modalPreview}>{selectedDocument.url ? <img src={selectedDocument.url} alt={`${selectedDocument.type} preview`} /> : <ShieldCheck size={30} />}</div></> : null}
+      </ModalDialog>
     </div>
   );
 }

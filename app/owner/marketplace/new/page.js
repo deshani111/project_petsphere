@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { OwnerSidebar } from "../../../../components/owner-dashboard/owner-sidebar";
-import SitterSidebar from "../../../../app/sitter/Sidebar";
 import styles from "./page.module.css";
 
 const initialForm = {
@@ -12,6 +10,7 @@ const initialForm = {
   name: "",
   breed: "",
   age: "",
+  ageMonths: "",
   gender: "",
   description: "",
   price: "",
@@ -22,7 +21,21 @@ const checks = [
   ["health", "Health details are accurate"],
 ];
 
-export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketplaceShell = false }) {
+function splitAge(age) {
+  const value = String(age || "").trim();
+  const match = value.match(/^(?:(\d+)\s*years?)?\s*(?:(\d+)\s*months?)?$/i);
+  if (!match || (!match[1] && !match[2])) return { years: value, months: "" };
+  return { years: match[1] || "", months: match[2] || "" };
+}
+
+function formatAge(years, months) {
+  const parts = [];
+  if (years) parts.push(`${years} ${years === "1" ? "year" : "years"}`);
+  if (months) parts.push(`${months} ${months === "1" ? "month" : "months"}`);
+  return parts.join(" ");
+}
+
+export default function NewMarketplaceAdPage() {
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
   const [form, setForm] = useState(initialForm);
@@ -38,15 +51,6 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
   const [confirmed, setConfirmed] = useState({});
   const [notice, setNotice] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [userName, setUserName] = useState("Pet Owner");
-
-  useEffect(() => {
-    fetch("/api/auth/me", { credentials: "same-origin" })
-      .then((response) => response.ok ? response.json() : null)
-      .then((payload) => { if (payload?.name) setUserName(payload.name); })
-      .catch(() => {});
-  }, []);
-
   useEffect(() => {
     if (!editId) return;
     fetch(`/api/marketplace/ads/${editId}?mode=edit`)
@@ -55,12 +59,14 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
         return response.json();
       })
       .then((ad) => {
+        const age = splitAge(ad.age);
         setForm((current) => ({
           ...current,
           type: ad.petType || current.type,
           name: ad.petName || "",
           breed: ad.breed || "",
-          age: ad.age || "",
+          age: age.years,
+          ageMonths: age.months,
           gender: ad.gender ? `${ad.gender[0].toUpperCase()}${ad.gender.slice(1)}` : "",
           description: ad.description || "",
           price: ad.price || "",
@@ -71,7 +77,7 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
   }, [editId]);
 
   const requiredFields = ["name", "breed", "age", "description", "location"];
-  const completedFields = requiredFields.filter((field) => form[field].trim()).length;
+  const completedFields = requiredFields.filter((field) => field === "age" ? form.age || form.ageMonths : form[field].trim()).length;
   const completedChecks = Object.values(confirmed).filter(Boolean).length;
   const completion = Math.round(((photos.length > 0 ? 1 : 0) + completedFields + completedChecks) / (requiredFields.length + 2) * 100);
 
@@ -106,7 +112,10 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
     setSubmitting(true);
     setNotice("");
     const body = new FormData();
-    Object.entries(form).forEach(([key, value]) => body.append(key, value));
+    const age = formatAge(form.age, form.ageMonths);
+    Object.entries(form).forEach(([key, value]) => {
+      if (key !== "ageMonths") body.append(key, key === "age" ? age : value);
+    });
     photos.forEach((photo) => body.append("photos", photo.file));
     Object.entries(care).forEach(([key, value]) => {
       if (value) body.append(key, "true");
@@ -122,7 +131,7 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
               type: form.type,
               name: form.name,
               breed: form.breed,
-              age: form.age,
+              age,
               gender: form.gender,
               care,
             }),
@@ -145,12 +154,7 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
   };
 
   return (
-    <div className={marketplaceShell ? undefined : styles.dashboardShell}>
-      {!marketplaceShell && sellerRole === "pet_sitter" ? <SitterSidebar /> : null}
-      {!marketplaceShell && sellerRole !== "pet_sitter" ? <OwnerSidebar /> : null}
-      <div className={marketplaceShell ? undefined : styles.dashboardMain}>
-        {!marketplaceShell && <header className={styles.dashboardHeader}><Link href="/owner/dashboard" className={styles.headerUser} aria-label="Open owner dashboard"><span>{userName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "PO"}</span><b>{userName}</b></Link></header>}
-        <main className={styles.page}>
+    <main className={styles.page}>
           <div className={styles.shell}>
         <Link href="/marketplace" className={styles.back}><span aria-hidden="true">←</span> Marketplace</Link>
         <div className={styles.headingRow}>
@@ -178,7 +182,7 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
                   <label>Pet type<select name="type" value={form.type} onChange={update}><option>Dog</option><option>Cat</option><option>Bird</option><option>Rabbit</option><option>Other</option></select></label>
                   <label>Pet name<input name="name" value={form.name} onChange={update} placeholder="e.g. Cooper" /></label>
                   <label>Breed<input name="breed" value={form.breed} onChange={update} placeholder="e.g. Golden Retriever" /></label>
-                  <label>Age<input name="age" type="number" min="0" step="any" value={form.age} onChange={update} placeholder="e.g. 3" /></label>
+                  <label>Age<div style={{ display: "grid", gridTemplateColumns: "1fr 1.35fr", gap: 8 }}><input name="age" type="number" min="0" step="1" value={form.age} onChange={update} placeholder="Years" aria-label="Age in years" /><select name="ageMonths" value={form.ageMonths} onChange={update} aria-label="Additional age in months"><option value="">Months</option>{Array.from({ length: 12 }, (_, month) => <option key={month} value={month}>{month} {month === 1 ? "month" : "months"}</option>)}</select></div></label>
                   <label>Gender<select name="gender" value={form.gender} onChange={update}><option value="">Select gender</option><option>Male</option><option>Female</option></select></label>
                   <label>Location<input name="location" value={form.location} onChange={update} placeholder="City or town" /></label>
                 </div>
@@ -216,8 +220,6 @@ export default function NewMarketplaceAdPage({ sellerRole = "pet_owner", marketp
           </div>
         </form>
           </div>
-        </main>
-      </div>
-    </div>
+    </main>
   );
 }

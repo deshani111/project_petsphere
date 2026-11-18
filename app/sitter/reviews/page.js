@@ -18,6 +18,7 @@ import {
   Users,
 } from "lucide-react";
 import styles from "./page.module.css";
+import { SkeletonPage } from "../../../components/shared/skeleton";
 
 const fallback = {
   sitter: { name: "Your reviews", verified: false },
@@ -112,6 +113,8 @@ export default function SitterReviewsPage() {
       icon: <ShieldCheck size={14} />,
     },
   ];
+
+  if (loading) return <SkeletonPage variant="table" />;
 
   return (
     <div className={styles.page}>

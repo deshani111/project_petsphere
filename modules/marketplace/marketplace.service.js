@@ -88,6 +88,13 @@ function capitalizeFirstLetter(value) {
   return value ? `${value[0].toUpperCase()}${value.slice(1)}` : value;
 }
 
+function isValidAge(value) {
+  if (/^\d+(\.\d+)?$/.test(value)) return Number(value) >= 0;
+  const match = value.match(/^(?:(\d+)\s*years?)?\s*(?:(\d+)\s*months?)?$/i);
+  if (!match || (!match[1] && !match[2])) return false;
+  return (!match[1] || Number(match[1]) >= 0) && (!match[2] || Number(match[2]) >= 0 && Number(match[2]) < 12);
+}
+
 function splitListingDescription(description = "") {
   const markerIndex = description.lastIndexOf(LOCATION_MARKER);
   const listingText = markerIndex === -1 ? description : description.slice(0, markerIndex);
@@ -240,8 +247,8 @@ export function validateNewListing(input) {
   if (!values.type || !values.breed || !values.age || !["male", "female"].includes(values.gender)) {
     return { error: "Complete the pet details before submitting your ad." };
   }
-  if (!/^\d+(\.\d+)?$/.test(values.age) || Number(values.age) < 0) {
-    return { error: "Age must be a valid number." };
+  if (!isValidAge(values.age)) {
+    return { error: "Enter a valid age in years and months." };
   }
   if (values.name.length < 2 || values.description.length < 20) {
     return { error: "Please provide a valid pet name and a little more detail for your listing." };
@@ -260,6 +267,10 @@ export async function getPublicListings() {
     select: publicAdSelect,
   });
   return advertisements.map(serializePublicListing);
+}
+
+export async function getPublicListingCount() {
+  return prisma.advertisement.count({ where: { status: "approved" } });
 }
 
 export async function getListingById(id, { includeUnpublished = false } = {}) {
@@ -286,6 +297,17 @@ export async function getSellerListing(id, seller) {
     where: { ad_id: adId, ...sellerWhere(seller) },
     select: listingSelect,
   });
+}
+
+export async function deleteSellerListing(id, seller) {
+  const adId = parseId(id);
+  if (!adId) return null;
+
+  const result = await prisma.advertisement.deleteMany({
+    where: { ad_id: adId, ...sellerWhere(seller) },
+  });
+
+  return result.count === 1;
 }
 
 export async function createListing({ seller, values, photoUrls, care }) {
@@ -345,7 +367,7 @@ export function prepareListingUpdate(body, existing) {
   if (priceValue && (!Number.isFinite(price) || price < 0)) {
     return { error: "Enter a valid listing price." };
   }
-  if (petFieldsSent && (!petType || !petName || !breed || !age || !["male", "female"].includes(gender) || !/^\d+(\.\d+)?$/.test(age) || Number(age) < 0)) {
+  if (petFieldsSent && (!petType || !petName || !breed || !age || !["male", "female"].includes(gender) || !isValidAge(age))) {
     return { error: "Complete the pet details with a valid age and gender." };
   }
 
